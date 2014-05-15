@@ -22,8 +22,3 @@ public class TreeModelAdapter
   {
   }
 }
-
-/* Location:           /Users/tnarik/Desktop/emssn00p.jar
- * Qualified Name:     emssn00p.viewer.categoryexplorer.TreeModelAdapter
- * JD-Core Version:    0.6.1
- */

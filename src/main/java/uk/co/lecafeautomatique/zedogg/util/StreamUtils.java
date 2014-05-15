@@ -1,51 +1,46 @@
-/*     */ package uk.co.lecafeautomatique.zedogg.util;
-/*     */ 
-/*     */ import java.io.ByteArrayOutputStream;
-/*     */ import java.io.IOException;
-/*     */ import java.io.InputStream;
-/*     */ import java.io.OutputStream;
-/*     */ 
-/*     */ public abstract class StreamUtils
-/*     */ {
-/*     */   public static final int DEFAULT_BUFFER_SIZE = 2048;
-/*     */ 
-/*     */   public static void copy(InputStream input, OutputStream output)
-/*     */     throws IOException
-/*     */   {
-/*  57 */     copy(input, output, 2048);
-/*     */   }
-/*     */ 
-/*     */   public static void copy(InputStream input, OutputStream output, int bufferSize)
-/*     */     throws IOException
-/*     */   {
-/*  69 */     byte[] buf = new byte[bufferSize];
-/*  70 */     int bytesRead = input.read(buf);
-/*  71 */     while (bytesRead != -1) {
-/*  72 */       output.write(buf, 0, bytesRead);
-/*  73 */       bytesRead = input.read(buf);
-/*     */     }
-/*  75 */     output.flush();
-/*     */   }
-/*     */ 
-/*     */   public static void copyThenClose(InputStream input, OutputStream output)
-/*     */     throws IOException
-/*     */   {
-/*  85 */     copy(input, output);
-/*  86 */     input.close();
-/*  87 */     output.close();
-/*     */   }
-/*     */ 
-/*     */   public static byte[] getBytes(InputStream input)
-/*     */     throws IOException
-/*     */   {
-/*  97 */     ByteArrayOutputStream result = new ByteArrayOutputStream();
-/*  98 */     copy(input, result);
-/*  99 */     result.close();
-/* 100 */     return result.toByteArray();
-/*     */   }
-/*     */ }
+package uk.co.lecafeautomatique.zedogg.util;
 
-/* Location:           /Users/tnarik/Desktop/emssn00p.jar
- * Qualified Name:     emssn00p.util.StreamUtils
- * JD-Core Version:    0.6.1
- */
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public abstract class StreamUtils
+{
+  public static final int DEFAULT_BUFFER_SIZE = 2048;
+
+  public static void copy(InputStream input, OutputStream output)
+    throws IOException
+  {
+    copy(input, output, 2048);
+  }
+
+  public static void copy(InputStream input, OutputStream output, int bufferSize)
+    throws IOException
+  {
+    byte[] buf = new byte[bufferSize];
+    int bytesRead = input.read(buf);
+    while (bytesRead != -1) {
+      output.write(buf, 0, bytesRead);
+      bytesRead = input.read(buf);
+    }
+    output.flush();
+  }
+
+  public static void copyThenClose(InputStream input, OutputStream output)
+    throws IOException
+  {
+    copy(input, output);
+    input.close();
+    output.close();
+  }
+
+  public static byte[] getBytes(InputStream input)
+    throws IOException
+  {
+    ByteArrayOutputStream result = new ByteArrayOutputStream();
+    copy(input, result);
+    result.close();
+    return result.toByteArray();
+  }
+}

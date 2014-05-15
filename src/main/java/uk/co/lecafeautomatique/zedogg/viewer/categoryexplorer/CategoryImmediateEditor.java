@@ -1,84 +1,79 @@
-/*     */ package uk.co.lecafeautomatique.zedogg.viewer.categoryexplorer;
-/*     */ 
-/*     */ import java.awt.Dimension;
-/*     */ import java.awt.Rectangle;
-/*     */ import java.awt.event.MouseEvent;
-/*     */ import java.util.EventObject;
-/*     */ import javax.swing.Icon;
-/*     */ import javax.swing.JTree;
-/*     */ import javax.swing.tree.DefaultTreeCellEditor;
-/*     */ import javax.swing.tree.TreePath;
-/*     */ 
-/*     */ public class CategoryImmediateEditor extends DefaultTreeCellEditor
-/*     */ {
-/*     */   private CategoryNodeRenderer renderer;
-/*  35 */   protected Icon editingIcon = null;
-/*     */ 
-/*     */   public CategoryImmediateEditor(JTree tree, CategoryNodeRenderer renderer, CategoryNodeEditor editor)
-/*     */   {
-/*  47 */     super(tree, renderer, editor);
-/*  48 */     this.renderer = renderer;
-/*  49 */     renderer.setIcon(null);
-/*  50 */     renderer.setLeafIcon(null);
-/*  51 */     renderer.setOpenIcon(null);
-/*  52 */     renderer.setClosedIcon(null);
-/*     */ 
-/*  54 */     this.editingIcon = null;
-/*     */   }
-/*     */ 
-/*     */   public boolean shouldSelectCell(EventObject e)
-/*     */   {
-/*  61 */     boolean rv = false;
-/*     */ 
-/*  63 */     if ((e instanceof MouseEvent)) {
-/*  64 */       MouseEvent me = (MouseEvent)e;
-/*  65 */       TreePath path = this.tree.getPathForLocation(me.getX(), me.getY());
-/*     */ 
-/*  67 */       CategoryNode node = (CategoryNode)path.getLastPathComponent();
-/*     */ 
-/*  70 */       rv = node.isLeaf();
-/*     */     }
-/*  72 */     return rv;
-/*     */   }
-/*     */ 
-/*     */   public boolean inCheckBoxHitRegion(MouseEvent e) {
-/*  76 */     TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
-/*     */ 
-/*  78 */     if (path == null) {
-/*  79 */       return false;
-/*     */     }
-/*  81 */     CategoryNode node = (CategoryNode)path.getLastPathComponent();
-/*  82 */     boolean rv = false;
-/*     */ 
-/*  88 */     Rectangle bounds = this.tree.getRowBounds(this.lastRow);
-/*  89 */     Dimension checkBoxOffset = this.renderer.getCheckBoxOffset();
-/*     */ 
-/*  92 */     bounds.translate(this.offset + checkBoxOffset.width, checkBoxOffset.height);
-/*     */ 
-/*  95 */     rv = bounds.contains(e.getPoint());
-/*     */ 
-/*  97 */     return true;
-/*     */   }
-/*     */ 
-/*     */   protected boolean canEditImmediately(EventObject e)
-/*     */   {
-/* 105 */     boolean rv = false;
-/*     */ 
-/* 107 */     if ((e instanceof MouseEvent)) {
-/* 108 */       MouseEvent me = (MouseEvent)e;
-/* 109 */       rv = inCheckBoxHitRegion(me);
-/*     */     }
-/*     */ 
-/* 112 */     return rv;
-/*     */   }
-/*     */ 
-/*     */   protected void determineOffset(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row)
-/*     */   {
-/* 119 */     this.offset = 0;
-/*     */   }
-/*     */ }
+package uk.co.lecafeautomatique.zedogg.viewer.categoryexplorer;
 
-/* Location:           /Users/tnarik/Desktop/emssn00p.jar
- * Qualified Name:     emssn00p.viewer.categoryexplorer.CategoryImmediateEditor
- * JD-Core Version:    0.6.1
- */
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
+import javax.swing.Icon;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.TreePath;
+
+public class CategoryImmediateEditor extends DefaultTreeCellEditor
+{
+  private CategoryNodeRenderer renderer;
+  protected Icon editingIcon = null;
+
+  public CategoryImmediateEditor(JTree tree, CategoryNodeRenderer renderer, CategoryNodeEditor editor)
+  {
+    super(tree, renderer, editor);
+    this.renderer = renderer;
+    renderer.setIcon(null);
+    renderer.setLeafIcon(null);
+    renderer.setOpenIcon(null);
+    renderer.setClosedIcon(null);
+
+    this.editingIcon = null;
+  }
+
+  public boolean shouldSelectCell(EventObject e)
+  {
+    boolean rv = false;
+
+    if ((e instanceof MouseEvent)) {
+      MouseEvent me = (MouseEvent)e;
+      TreePath path = this.tree.getPathForLocation(me.getX(), me.getY());
+
+      CategoryNode node = (CategoryNode)path.getLastPathComponent();
+
+      rv = node.isLeaf();
+    }
+    return rv;
+  }
+
+  public boolean inCheckBoxHitRegion(MouseEvent e) {
+    TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
+
+    if (path == null) {
+      return false;
+    }
+    CategoryNode node = (CategoryNode)path.getLastPathComponent();
+    boolean rv = false;
+
+    Rectangle bounds = this.tree.getRowBounds(this.lastRow);
+    Dimension checkBoxOffset = this.renderer.getCheckBoxOffset();
+
+    bounds.translate(this.offset + checkBoxOffset.width, checkBoxOffset.height);
+
+    rv = bounds.contains(e.getPoint());
+
+    return true;
+  }
+
+  protected boolean canEditImmediately(EventObject e)
+  {
+    boolean rv = false;
+
+    if ((e instanceof MouseEvent)) {
+      MouseEvent me = (MouseEvent)e;
+      rv = inCheckBoxHitRegion(me);
+    }
+
+    return rv;
+  }
+
+  protected void determineOffset(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row)
+  {
+    this.offset = 0;
+  }
+}
