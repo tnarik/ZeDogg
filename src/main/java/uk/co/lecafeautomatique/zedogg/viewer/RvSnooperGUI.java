@@ -148,7 +148,7 @@ public class RvSnooperGUI
       {
         EMSParameters p = (EMSParameters)itrl.next();
 
-        p.setDescription(" <a href=\"http://emsn00p.sf.net\">EMSSn00p v2.0.3</a> ");
+        p.setDescription(" <a href=\""+URL+"\">"+VERSION+"</a> ");
 
         EMSController.startListener(p, this);
 
@@ -200,15 +200,12 @@ public class RvSnooperGUI
   {
     String sBanner = null;
     if (this._name != null) {
-      sBanner = this._name;
-      sBanner = sBanner + " ";
-      sBanner = sBanner + EMSController.getTransports().toString();
+      sBanner = this._name + " " + EMSController.getTransports().toString();
     } else {
       sBanner = EMSController.getTransports().toString();
     }
 
-    sBanner = sBanner + " ";
-    sBanner = sBanner + "EMSSn00p v2.0.3";
+    sBanner = sBanner + " " + VERSION;
 
     setTitle(sBanner);
   }
@@ -342,7 +339,7 @@ public class RvSnooperGUI
     this._statusLabel.setText("All listeners are now paused");
 
     ImageIcon pbIcon = null;
-    URL pbIconURL = this._cl.getResource("rvsn00p/viewer/images/restart.gif");
+    URL pbIconURL = this._cl.getResource("restart.gif");
 
     if (pbIconURL != null) {
       pbIcon = new ImageIcon(pbIconURL);
@@ -368,7 +365,7 @@ public class RvSnooperGUI
     this._statusLabel.setText("All listeners are now active");
 
     ImageIcon pbIcon = null;
-    URL pbIconURL = this._cl.getResource("rvsn00p/viewer/images/pauseon.gif");
+    URL pbIconURL = this._cl.getResource("pauseon.gif");
 
     if (pbIconURL != null) {
       pbIcon = new ImageIcon(pbIconURL);
@@ -535,9 +532,9 @@ public class RvSnooperGUI
 
     this._logMonitorFrame.setDefaultCloseOperation(0);
 
-    String resource = "/emssn00p/viewer/images/eye.gif";
+    String resource = "/eye.gif";
 
-    URL iconURL = getClass().getResource("/emssn00p/viewer/images/eye.gif");
+    URL iconURL = getClass().getResource("/eye.gif");
 
     if (iconURL != null) {
       this._logMonitorFrame.setIconImage(new ImageIcon(iconURL).getImage());
@@ -732,7 +729,7 @@ public class RvSnooperGUI
 
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              RvSnooperFileHandler.saveMsgAsTextFile(sSubject, sMsg, "EMSSn00p v2.0.3 http://emsn00p.sf.net", RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel);
+              RvSnooperFileHandler.saveMsgAsTextFile(sSubject, sMsg, VERSION+" "+URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel);
             }
           });
         }
@@ -984,7 +981,7 @@ public class RvSnooperGUI
     result.setMnemonic('h');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        RvSnooperFileHandler.saveTableToHtml("EMSSn00p v2.0.3", "http://emsn00p.sf.net", RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
+        RvSnooperFileHandler.saveTableToHtml(VERSION, URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
       }
     });
     return result;
@@ -1044,7 +1041,7 @@ public class RvSnooperGUI
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { RvSnooperFileHandler.saveTableToTextFile("EMSSn00p v2.0.3 http://emsn00p.sf.net", RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
+        try { RvSnooperFileHandler.saveTableToTextFile(VERSION+" "+URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
         } catch (Exception ex) {
           error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), ex.getMessage());
         }
@@ -1337,7 +1334,7 @@ public class RvSnooperGUI
 
   protected void showAboutDialog(String title)
   {
-    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { "EMSSn00p v2.0.3", " ", "Constructed by Orjan Lundberg <lundberg@home.se>", " ", "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ", "Thanks goes to (in no special order):", " ", "Julian Lo, Dan McLean ", " ", "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ", "Copyright (C) The Apache Software Foundation. All rights reserved.", " ", "This software is published under the terms of the Apache Software", "License version 1.1, a copy of which has been included with this", "distribution in the LICENSE.txt file. ", " " }, title, -1);
+    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { VERSION, " ", "Constructed by Orjan Lundberg <lundberg@home.se>", " ", "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ", "Thanks goes to (in no special order):", " ", "Julian Lo, Dan McLean ", " ", "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ", "Copyright (C) The Apache Software Foundation. All rights reserved.", " ", "This software is published under the terms of the Apache Software", "License version 1.1, a copy of which has been included with this", "distribution in the LICENSE.txt file. ", " " }, title, -1);
   }
 
   protected JMenu createEditMenu()
@@ -1691,7 +1688,7 @@ public class RvSnooperGUI
     if (this._cl == null) {
       this._cl = ClassLoader.getSystemClassLoader();
     }
-    URL newIconURL = this._cl.getResource("emssn00p/viewer/images/channelexplorer_new.gif");
+    URL newIconURL = this._cl.getResource("channelexplorer_new.gif");
 
     ImageIcon newIcon = null;
 
@@ -1715,7 +1712,7 @@ public class RvSnooperGUI
     });
     JButton newButton = new JButton("Clear Log Table");
 
-    URL tcIconURL = this._cl.getResource("emssn00p/viewer/images/trash.gif");
+    URL tcIconURL = this._cl.getResource("trash.gif");
 
     ImageIcon tcIcon = null;
 
@@ -1778,8 +1775,8 @@ public class RvSnooperGUI
 
   private void addRenderersToRendererCombo(JComboBox rendererCombo)
   {
-    rendererCombo.addItem("emssn00p.util.ems.MarshalJMSMsgToStringImpl");
-    rendererCombo.addItem("emssn00p.util.ems.MarshalJMSMsgToStringJMSStreamImpl");
+    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl");
+    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringJMSStreamImpl");
 
     String env = System.getenv("EMSSNOOP_RENDERERS");
     try
@@ -1798,7 +1795,7 @@ public class RvSnooperGUI
   String getLastUsedRenderer()
   {
     if (this._lastUsedRenderer == null) {
-      return "emssn00p.util.ems.MarshalJMSMsgToStringImpl";
+      return "uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl";
     }
     return this._lastUsedRenderer;
   }
@@ -1980,7 +1977,7 @@ public class RvSnooperGUI
       if (inputDialog.isOK()) {
         this._lastUsedRvParameters = inputDialog.getRvParameters();
 
-        this._lastUsedRvParameters.setDescription("<a href=\"http://emsn00p.sf.net\">EMSSn00p v2.0.3</a> ");
+        this._lastUsedRvParameters.setDescription("<a href=\""+URL+"\">"+VERSION+"</a> ");
         EMSController.startListener(this._lastUsedRvParameters, this);
         updateBanner();
       }
