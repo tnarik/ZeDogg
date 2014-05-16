@@ -9,6 +9,7 @@
 	</dependencies>
 	<profiles>
 		<profile>
+			<id>java1.6</id>
 			<activation>
 				<jdk>1.6</jdk>
 			</activation>
@@ -21,6 +22,7 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>java1.7</id>
 			<activation>
 				<jdk>1.7</jdk>
 			</activation>
