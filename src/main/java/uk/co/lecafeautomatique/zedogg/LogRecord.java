@@ -6,7 +6,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 public class LogRecord implements Serializable {
-  private static final long serialVersionUID = 3257003254792337720L;
   protected static long _seqCount = 0L;
   protected EventActionType _type;
   protected long _sequenceNumber;

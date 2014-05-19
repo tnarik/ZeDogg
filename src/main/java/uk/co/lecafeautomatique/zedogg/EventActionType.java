@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class EventActionType implements Serializable {
-  private static final long serialVersionUID = 3977580307551565621L;
   public static final EventActionType RECEIVE = new EventActionType("RECEIVE", 0);
   public static final EventActionType SEND = new EventActionType("SEND", 1);
   public static final EventActionType ACKNOWLEDGE = new EventActionType("ACKNOWLEDGE", 2);

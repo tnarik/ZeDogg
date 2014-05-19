@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class EMSParameters implements Cloneable, Serializable {
-  private static final long serialVersionUID = 3257001077244114230L;
   protected int _hashCode = 0;
   protected String _serverURL;
   protected String _userName;
