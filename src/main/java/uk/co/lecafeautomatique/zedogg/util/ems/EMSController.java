@@ -1,11 +1,13 @@
 package uk.co.lecafeautomatique.zedogg.util.ems;
 
-//WIP import com.tibco.tibjms.TibjmsTopicConnectionFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.TopicConnection;
@@ -26,13 +28,32 @@ public class EMSController
         return (TopicConnection)_mapEMSConnections.get(p);
       }
 
-      TopicConnectionFactory factory = null; // WIP new TibjmsTopicConnectionFactory(p.getServerURL());
-
+      TopicConnectionFactory factory = null;
+      
+      Class topicConnectionFactoryClass = Class.forName("com.tibco.tibjms.TibjmsTopicConnectionFactory");
+      Constructor constructors[] = topicConnectionFactoryClass.getDeclaredConstructors();
+      for (Constructor ctor : constructors) {
+  		Class<?>[] pType  = ctor.getParameterTypes();
+  		if ( (pType.length == 1) && (pType[0].equals(java.lang.String.class)) ){
+  		  System.out.println(ctor);
+  		  factory = (TopicConnectionFactory) ctor.newInstance(p.getServerURL());
+  		  break;
+  		}
+  	  }
+      
       return factory.createTopicConnection(p.getUserName(), p.getPassword());
     }
     catch (JMSException ex)
     {
       throw ex;
+    }
+    catch (ClassNotFoundException ex)
+    {
+    	return null;
+    }
+    catch (Exception ex)
+    {
+    	return null;
     }
   }
 

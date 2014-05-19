@@ -1,8 +1,11 @@
 package uk.co.lecafeautomatique.zedogg.util.ems;
 
-// WIP import com.tibco.tibjms.Tibjms;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import uk.co.lecafeautomatique.zedogg.EventActionType;
 import uk.co.lecafeautomatique.zedogg.LogRecord;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -13,6 +16,16 @@ import javax.swing.JLabel;
 
 public class LogRecordFactory
 {
+	protected static Class<?> tibjmsClass;
+	public LogRecordFactory () {
+	     try {
+		   tibjmsClass = Class.forName("com.tibco.tibjms.Tibjms");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
   public static LogRecord createLogRecordFromJMSMessage(JLabel _statusLabel, Message msg)
   {
     LogRecord r = LogRecord.getInstance();
@@ -95,7 +108,26 @@ public class LogRecordFactory
     try
     {
       if (mapMsg.itemExists("message_bytes")) {
-        realMsg = null; // WIP Tibjms.createFromBytes(mapMsg.getBytes("message_bytes"));
+    	  Method createFromBytesMethod = null;
+    	  try {
+    	      createFromBytesMethod = tibjmsClass.getMethod("createFromBytes", byte[].class);
+    	  } catch (NoSuchMethodException ex)
+    	  {
+    		  realMsg = null;
+    	  }
+    	  
+    	  try {
+    		  realMsg = (Message) createFromBytesMethod.invoke(mapMsg.getBytes("message_bytes"));
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
       } else {
         createLogRecordNormal(r, _statusLabel, strJMSDestination, msg);
         return;
