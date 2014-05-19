@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LogTableColumn
-  implements Serializable
-{
+public class LogTableColumn implements Serializable {
   private static final long serialVersionUID = 3833747702537597495L;
   public static final LogTableColumn DATE = new LogTableColumn("Date");
   public static final LogTableColumn MESSAGE_NUM = new LogTableColumn("Msg#");
@@ -31,8 +29,7 @@ public class LogTableColumn
   protected static int[] _colWidths = { 8, 1, 30, 150, 40, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
   protected static String[] _colNames;
 
-  public static String[] getColNames()
-  {
+  public static String[] getColNames() {
     return _colNames;
   }
 
@@ -44,18 +41,15 @@ public class LogTableColumn
     this._label = label;
   }
 
-  public String getLabel()
-  {
+  public String getLabel() {
     return this._label;
   }
 
-  public static LogTableColumn valueOf(String column)
-    throws LogTableColumnFormatException
-  {
+  public static LogTableColumn valueOf(String column) throws LogTableColumnFormatException {
     LogTableColumn tableColumn = null;
     if (column != null) {
       column = column.trim();
-      tableColumn = (LogTableColumn)_logTableColumnMap.get(column);
+      tableColumn = (LogTableColumn) _logTableColumnMap.get(column);
     }
 
     if (tableColumn == null) {
@@ -67,13 +61,10 @@ public class LogTableColumn
     return tableColumn;
   }
 
-  public boolean equals(Object o)
-  {
+  public boolean equals(Object o) {
     boolean equals = false;
 
-    if (((o instanceof LogTableColumn)) && 
-      (getLabel() == ((LogTableColumn)o).getLabel()))
-    {
+    if (((o instanceof LogTableColumn)) && (getLabel() == ((LogTableColumn) o).getLabel())) {
       equals = true;
     }
 
@@ -88,8 +79,7 @@ public class LogTableColumn
     return this._label;
   }
 
-  public static List getLogTableColumns()
-  {
+  public static List getLogTableColumns() {
     return Arrays.asList(_emssColumns);
   }
 
@@ -97,9 +87,9 @@ public class LogTableColumn
     return _emssColumns;
   }
 
-  static
-  {
-    _emssColumns = new LogTableColumn[] { DATE, MESSAGE_NUM, EVENTACTION, SUBJECT, TID, EC, ER, SRV, CH, CU, TO, TN, TDT, CT };
+  static {
+    _emssColumns = new LogTableColumn[] { DATE, MESSAGE_NUM, EVENTACTION, SUBJECT, TID, EC, ER, SRV, CH, CU, TO, TN,
+        TDT, CT };
 
     _logTableColumnMap = new HashMap();
     _colNames = new String[_emssColumns.length];

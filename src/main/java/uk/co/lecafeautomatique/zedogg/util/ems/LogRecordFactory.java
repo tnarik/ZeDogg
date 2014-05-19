@@ -14,34 +14,28 @@ import javax.jms.Queue;
 import javax.jms.Topic;
 import javax.swing.JLabel;
 
-public class LogRecordFactory
-{
-	protected static Class<?> tibjmsClass;
-	static {
-	     try {
-		   tibjmsClass = Class.forName("com.tibco.tibjms.Tibjms");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-  public static LogRecord createLogRecordFromJMSMessage(JLabel _statusLabel, Message msg)
-  {
+public class LogRecordFactory {
+  protected static Class<?> tibjmsClass;
+  static {
+    try {
+      tibjmsClass = Class.forName("com.tibco.tibjms.Tibjms");
+    } catch (ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  public static LogRecord createLogRecordFromJMSMessage(JLabel _statusLabel, Message msg) {
     LogRecord r = LogRecord.getInstance();
     String strJMSDestination;
-    try
-    {
+    try {
       Destination dest = msg.getJMSDestination();
       if (Topic.class.isInstance(dest)) {
-        strJMSDestination = ((Topic)dest).getTopicName();
-      }
-      else
-      {
+        strJMSDestination = ((Topic) dest).getTopicName();
+      } else {
         if (Queue.class.isInstance(dest)) {
-          strJMSDestination = ((Queue)dest).getQueueName();
-        }
-        else
+          strJMSDestination = ((Queue) dest).getQueueName();
+        } else
           strJMSDestination = null;
       }
     } catch (JMSException e1) {
@@ -61,73 +55,62 @@ public class LogRecordFactory
     return r;
   }
 
-  private static void createLogRecordNormal(LogRecord r, JLabel _statusLabel, String strJMSDestination, Message msg)
-  {
+  private static void createLogRecordNormal(LogRecord r, JLabel _statusLabel, String strJMSDestination, Message msg) {
     setJMSParameters(r, msg);
-    try
-    {
+    try {
       r.setMessage(msg);
     } catch (Exception ex) {
       ex.printStackTrace();
       _statusLabel.setText(ex.getMessage());
     }
-    try
-    {
+    try {
       r.setJMSCorrelationID(msg.getJMSCorrelationID());
-    }
-    catch (JMSException e) {
+    } catch (JMSException e) {
     }
     r.setJMSDestination(strJMSDestination);
-    try
-    {
+    try {
       String strJMSReplyTo;
       if (Topic.class.isInstance(msg.getJMSReplyTo())) {
-        strJMSReplyTo = ((Topic)msg.getJMSReplyTo()).getTopicName();
-      }
-      else
-      {
+        strJMSReplyTo = ((Topic) msg.getJMSReplyTo()).getTopicName();
+      } else {
         if (Queue.class.isInstance(msg.getJMSReplyTo()))
-          strJMSReplyTo = ((Queue)msg.getJMSReplyTo()).getQueueName();
+          strJMSReplyTo = ((Queue) msg.getJMSReplyTo()).getQueueName();
         else {
           strJMSReplyTo = null;
         }
       }
       r.setJMSReplyTo(strJMSReplyTo);
-    }
-    catch (JMSException e2) {
+    } catch (JMSException e2) {
       _statusLabel.setText(e2.getMessage());
     }
 
     r.setType(EventActionType.UNKNOWN);
   }
 
-  private static void createLogRecordMonitor(LogRecord r, JLabel _statusLabel, String strJMSDestination, Message msg)
-  {
-    MapMessage mapMsg = (MapMessage)msg;
+  private static void createLogRecordMonitor(LogRecord r, JLabel _statusLabel, String strJMSDestination, Message msg) {
+    MapMessage mapMsg = (MapMessage) msg;
     Message realMsg = null;
-    try
-    {
+    try {
       if (mapMsg.itemExists("message_bytes")) {
-    	  Method createFromBytesMethod = null;
-    	  try {
-    	      createFromBytesMethod = tibjmsClass.getMethod("createFromBytes", byte[].class);
-    	  } catch (NoSuchMethodException ex)
-    	  {
-    		  realMsg = null;
-    	  }
-    	  
-    	  try {
-    		  realMsg = (Message) createFromBytesMethod.invoke(null, mapMsg.getBytes("message_bytes"));
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        Method createFromBytesMethod = null;
+        try {
+          createFromBytesMethod = tibjmsClass.getMethod("createFromBytes", byte[].class);
+        } catch (NoSuchMethodException ex) {
+          realMsg = null;
+        }
+
+        try {
+          realMsg = (Message) createFromBytesMethod.invoke(null, mapMsg.getBytes("message_bytes"));
+        } catch (IllegalAccessException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       } else {
         createLogRecordNormal(r, _statusLabel, strJMSDestination, msg);
         return;
@@ -140,8 +123,7 @@ public class LogRecordFactory
 
     setJMSParameters(r, realMsg);
     setMonitoringParameters(r, mapMsg);
-    try
-    {
+    try {
       if (strJMSDestination != null) {
         int ix = strJMSDestination.indexOf(".") + 1;
         ix = strJMSDestination.indexOf(".", ix) + 1;
@@ -150,71 +132,56 @@ public class LogRecordFactory
 
         strJMSDestination = strJMSDestination.substring(ix, strJMSDestination.length());
       }
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       _statusLabel.setText(e.getMessage());
     }
 
     r.setJMSDestination(strJMSDestination);
-    try
-    {
+    try {
       r.setMessage(realMsg);
     } catch (Exception ex) {
       ex.printStackTrace();
       _statusLabel.setText(ex.getMessage());
     }
-    try
-    {
+    try {
       r.setJMSCorrelationID(realMsg.getJMSCorrelationID());
+    } catch (JMSException e) {
     }
-    catch (JMSException e)
-    {
-    }
-    try
-    {
+    try {
       String strJMSReplyTo;
       if (Topic.class.isInstance(realMsg.getJMSReplyTo())) {
-        strJMSReplyTo = ((Topic)realMsg.getJMSReplyTo()).getTopicName();
-      }
-      else
-      {
+        strJMSReplyTo = ((Topic) realMsg.getJMSReplyTo()).getTopicName();
+      } else {
         if (Queue.class.isInstance(msg.getJMSReplyTo()))
-          strJMSReplyTo = ((Queue)realMsg.getJMSReplyTo()).getQueueName();
+          strJMSReplyTo = ((Queue) realMsg.getJMSReplyTo()).getQueueName();
         else {
           strJMSReplyTo = null;
         }
       }
       r.setJMSReplyTo(strJMSReplyTo);
-    }
-    catch (JMSException e2) {
+    } catch (JMSException e2) {
       _statusLabel.setText(e2.getMessage());
     }
   }
 
-  private static void setMonitoringParameters(LogRecord r, MapMessage msg)
-  {
-    try
-    {
+  private static void setMonitoringParameters(LogRecord r, MapMessage msg) {
+    try {
       r.setEventReason(msg.getStringProperty("event_reason"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
 
-    try
-    {
+    try {
       r.setTargetDestType(msg.getStringProperty("target_dest_type"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setTargetName(msg.getStringProperty("target_name"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       String sEventAction = msg.getStringProperty("event_action");
       if (sEventAction.compareTo("receive") == 0)
         r.setType(EventActionType.RECEIVE);
@@ -222,115 +189,86 @@ public class LogRecordFactory
         r.setType(EventActionType.ACKNOWLEDGE);
       else if (sEventAction.compareTo("send") == 0)
         r.setType(EventActionType.SEND);
-    }
-    catch (JMSException e)
-    {
+    } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setConnType(msg.getStringProperty("conn_type"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setEventClass(msg.getStringProperty("event_class"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setTargetObject(msg.getStringProperty("target_object"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setConnUserName(msg.getStringProperty("conn_username"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setEventReason(msg.getStringProperty("event_reason"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setConnHostName(msg.getStringProperty("conn_hostname"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
-    try
-    {
+    try {
       r.setServer(msg.getStringProperty("server"));
     } catch (JMSException e) {
       e.printStackTrace();
     }
   }
 
-  private static void setJMSParameters(LogRecord r, Message msg)
-  {
-    try
-    {
+  private static void setJMSParameters(LogRecord r, Message msg) {
+    try {
       r.setJMSMessageID(msg.getJMSMessageID());
     } catch (JMSException e3) {
       e3.printStackTrace();
     }
 
-    try
-    {
+    try {
       String strJMSCorrelationID = msg.getJMSCorrelationID();
-    }
-    catch (JMSException e4)
-    {
+    } catch (JMSException e4) {
       String strJMSCorrelationID;
       e4.printStackTrace();
     }
-    try
-    {
+    try {
       String strJMSDeliveryMode = String.valueOf(msg.getJMSDeliveryMode());
-    }
-    catch (JMSException e5)
-    {
+    } catch (JMSException e5) {
       String strJMSDeliveryMode;
       e5.printStackTrace();
     }
-    try
-    {
+    try {
       String strJMSPriority = String.valueOf(msg.getJMSPriority());
-    }
-    catch (JMSException e6)
-    {
+    } catch (JMSException e6) {
       String strJMSPriority;
       e6.printStackTrace();
     }
-    try
-    {
+    try {
       String strJMSType = msg.getJMSType() == null ? null : msg.getJMSType().toString();
-    }
-    catch (JMSException e7)
-    {
+    } catch (JMSException e7) {
       String strJMSType;
       e7.printStackTrace();
     }
-    try
-    {
+    try {
       String strJMSExpiration = msg.getJMSExpiration() == 0L ? null : String.valueOf(msg.getJMSExpiration());
-    }
-    catch (JMSException e8)
-    {
+    } catch (JMSException e8) {
       String strJMSExpiration;
       e8.printStackTrace();
     }
-    try
-    {
+    try {
       String strJMSTimestamp = msg.getJMSTimestamp() == 0L ? null : String.valueOf(msg.getJMSTimestamp());
-    }
-    catch (JMSException e9)
-    {
+    } catch (JMSException e9) {
       String strJMSTimestamp;
       e9.printStackTrace();
     }

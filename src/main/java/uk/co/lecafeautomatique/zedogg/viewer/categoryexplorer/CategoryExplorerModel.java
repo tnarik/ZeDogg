@@ -10,8 +10,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-public class CategoryExplorerModel extends DefaultTreeModel
-{
+public class CategoryExplorerModel extends DefaultTreeModel {
   private static final long serialVersionUID = 4050480127479461941L;
   protected boolean _renderFatal = true;
 
@@ -19,22 +18,19 @@ public class CategoryExplorerModel extends DefaultTreeModel
 
   protected ActionEvent _event = new ActionEvent(this, 1001, "Nodes Selection changed");
 
-  public CategoryExplorerModel(CategoryNode node)
-  {
+  public CategoryExplorerModel(CategoryNode node) {
     super(node);
   }
 
-  public void addLogRecord(LogRecord lr)
-  {
+  public void addLogRecord(LogRecord lr) {
     CategoryPath path = new CategoryPath(lr.getJMSDestination());
     addCategory(path);
     CategoryNode node = getCategoryNode(path);
     node.addRecord();
   }
 
-  public CategoryNode getRootCategoryNode()
-  {
-    return (CategoryNode)getRoot();
+  public CategoryNode getRootCategoryNode() {
+    return (CategoryNode) getRoot();
   }
 
   public CategoryNode getCategoryNode(String category) {
@@ -42,9 +38,8 @@ public class CategoryExplorerModel extends DefaultTreeModel
     return getCategoryNode(path);
   }
 
-  public CategoryNode getCategoryNode(CategoryPath path)
-  {
-    CategoryNode root = (CategoryNode)getRoot();
+  public CategoryNode getCategoryNode(CategoryPath path) {
+    CategoryNode root = (CategoryNode) getRoot();
     CategoryNode parent = root;
 
     for (int i = 0; i < path.size(); i++) {
@@ -54,7 +49,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
 
       boolean categoryAlreadyExists = false;
       while (children.hasMoreElements()) {
-        CategoryNode node = (CategoryNode)children.nextElement();
+        CategoryNode node = (CategoryNode) children.nextElement();
         String title = node.getTitle().toLowerCase();
 
         String pathLC = element.getTitle().toLowerCase();
@@ -74,9 +69,8 @@ public class CategoryExplorerModel extends DefaultTreeModel
     return parent;
   }
 
-  public boolean isCategoryPathActive(CategoryPath path)
-  {
-    CategoryNode root = (CategoryNode)getRoot();
+  public boolean isCategoryPathActive(CategoryPath path) {
+    CategoryNode root = (CategoryNode) getRoot();
     CategoryNode parent = root;
     boolean active = false;
 
@@ -89,7 +83,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
       active = false;
 
       while (children.hasMoreElements()) {
-        CategoryNode node = (CategoryNode)children.nextElement();
+        CategoryNode node = (CategoryNode) children.nextElement();
         String title = node.getTitle().toLowerCase();
 
         String pathLC = element.getTitle().toLowerCase();
@@ -98,7 +92,8 @@ public class CategoryExplorerModel extends DefaultTreeModel
 
           parent = node;
 
-          if (!parent.isSelected()) break;
+          if (!parent.isSelected())
+            break;
           active = true;
           break;
         }
@@ -113,9 +108,8 @@ public class CategoryExplorerModel extends DefaultTreeModel
     return active;
   }
 
-  public CategoryNode addCategory(CategoryPath path)
-  {
-    CategoryNode root = (CategoryNode)getRoot();
+  public CategoryNode addCategory(CategoryPath path) {
+    CategoryNode root = (CategoryNode) getRoot();
     CategoryNode parent = root;
     boolean addedCategory = false;
 
@@ -126,7 +120,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
 
       boolean categoryAlreadyExists = false;
       while (children.hasMoreElements()) {
-        CategoryNode node = (CategoryNode)children.nextElement();
+        CategoryNode node = (CategoryNode) children.nextElement();
         String title = node.getTitle().toLowerCase();
 
         String pathLC = element.getTitle().toLowerCase();
@@ -138,8 +132,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
         }
       }
 
-      if (!categoryAlreadyExists)
-      {
+      if (!categoryAlreadyExists) {
         CategoryNode newNode = new CategoryNode(element.getTitle());
 
         insertNodeInto(newNode, parent, parent.getChildCount());
@@ -158,7 +151,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
 
         boolean categoryAlreadyExists = false;
         while (children.hasMoreElements()) {
-          CategoryNode node = (CategoryNode)children.nextElement();
+          CategoryNode node = (CategoryNode) children.nextElement();
           refresh(node);
         }
       }
@@ -184,7 +177,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
     Enumeration descendants = node.depthFirstEnumeration();
 
     while (descendants.hasMoreElements()) {
-      CategoryNode current = (CategoryNode)descendants.nextElement();
+      CategoryNode current = (CategoryNode) descendants.nextElement();
 
       if (current.isSelected() != selected) {
         current.setSelected(selected);
@@ -199,7 +192,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
     int len = nodes.length;
 
     for (int i = 1; i < len; i++) {
-      CategoryNode parent = (CategoryNode)nodes[i];
+      CategoryNode parent = (CategoryNode) nodes[i];
       if (parent.isSelected() != selected) {
         parent.setSelected(selected);
         nodeChanged(parent);
@@ -220,7 +213,7 @@ public class CategoryExplorerModel extends DefaultTreeModel
     Enumeration nodes = getRootCategoryNode().depthFirstEnumeration();
 
     while (nodes.hasMoreElements()) {
-      CategoryNode current = (CategoryNode)nodes.nextElement();
+      CategoryNode current = (CategoryNode) nodes.nextElement();
       current.resetNumberOfContainedRecords();
       nodeChanged(current);
     }
@@ -230,29 +223,25 @@ public class CategoryExplorerModel extends DefaultTreeModel
     Enumeration nodes = getRootCategoryNode().preorderEnumeration();
 
     while (nodes.hasMoreElements()) {
-      CategoryNode current = (CategoryNode)nodes.nextElement();
+      CategoryNode current = (CategoryNode) nodes.nextElement();
       nodeChanged(current);
     }
   }
 
-  public TreePath getTreePathToRoot(CategoryNode node)
-  {
+  public TreePath getTreePathToRoot(CategoryNode node) {
     if (node == null) {
       return null;
     }
     return new TreePath(getPathToRoot(node));
   }
 
-  protected void notifyActionListeners()
-  {
+  protected void notifyActionListeners() {
     if (this._listener != null)
       this._listener.actionPerformed(this._event);
   }
 
-  protected void refresh(final CategoryNode node)
-  {
-    SwingUtilities.invokeLater(new Runnable()
-    {
+  protected void refresh(final CategoryNode node) {
+    SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         CategoryExplorerModel.this.nodeChanged(node);
       }

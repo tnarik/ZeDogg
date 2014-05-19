@@ -1,7 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.util;
 
-public class HTMLEncoder
-{
+public class HTMLEncoder {
   public static final String AMP_HTML_STRING = "&amp;";
   public static final String GT_HTML_STRING = "&gt;";
   public static final String LT_HTML_STRING = "&lt;";
@@ -13,8 +12,7 @@ public class HTMLEncoder
   public static final char LT_CHAR = '<';
   public static final char NON_BREAKING_CHAR = ' ';
 
-  public static String encodeString(String sEncode)
-  {
+  public static String encodeString(String sEncode) {
     if (sEncode == null) {
       return null;
     }

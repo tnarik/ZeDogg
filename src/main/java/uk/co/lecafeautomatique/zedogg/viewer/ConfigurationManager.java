@@ -33,8 +33,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ConfigurationManager
-{
+public class ConfigurationManager {
   private static final String CONFIG_FILE_NAME = "conf.xml";
   public static final String CONFIG_DIR_NAME = ".zedogg";
   private static final String NAME = "name";
@@ -78,25 +77,21 @@ public class ConfigurationManager
   private LogTable _table = null;
   private String _fileName;
 
-  public ConfigurationManager(RvSnooperGUI gui, LogTable table)
-  {
+  public ConfigurationManager(RvSnooperGUI gui, LogTable table) {
     this._gui = gui;
     this._table = table;
     this._fileName = getDefaultFilename();
     load();
   }
 
-  public ConfigurationManager(RvSnooperGUI gui, LogTable table, String fileName)
-  {
+  public ConfigurationManager(RvSnooperGUI gui, LogTable table, String fileName) {
     this._gui = gui;
     this._table = table;
     this._fileName = fileName;
     load();
   }
 
-  public void save()
-    throws IOException
-  {
+  public void save() throws IOException {
     CategoryExplorerModel model = this._gui.getCategoryExplorerTree().getExplorerModel();
     CategoryNode root = model.getRootCategoryNode();
 
@@ -126,8 +121,7 @@ public class ConfigurationManager
     store(xml.toString());
   }
 
-  private void processLastUsedRenderer(String lastUsedRenderer, StringBuffer xml)
-  {
+  private void processLastUsedRenderer(String lastUsedRenderer, StringBuffer xml) {
     if (lastUsedRenderer == null) {
       return;
     }
@@ -135,33 +129,33 @@ public class ConfigurationManager
     xml.append("</").append("RENDERER").append(">\n");
   }
 
-  private void processListeners(Iterator it, StringBuffer xml)
-  {
+  private void processListeners(Iterator it, StringBuffer xml) {
     if (it == null) {
       return;
     }
     xml.append("\t<").append("SUBSCRIPTIONS").append(">\n");
 
     while (it.hasNext()) {
-      exportListener((EMSParameters)it.next(), xml);
+      exportListener((EMSParameters) it.next(), xml);
     }
 
     xml.append("\t</").append("SUBSCRIPTIONS").append(">\n");
   }
 
-  private void exportListener(EMSParameters rvParam, StringBuffer xml)
-  {
+  private void exportListener(EMSParameters rvParam, StringBuffer xml) {
     xml.append("\t\t<").append("TIBLISTENER").append(" ");
-    xml.append("SERVERURL").append("=\"").append(rvParam.getServerURL() == null ? "" : rvParam.getServerURL()).append("\" ");
+    xml.append("SERVERURL").append("=\"").append(rvParam.getServerURL() == null ? "" : rvParam.getServerURL())
+        .append("\" ");
     xml.append("USER").append("=\"").append(rvParam.getUserName() == null ? "" : rvParam.getUserName()).append("\" ");
-    xml.append("PASSWORD").append("=\"").append(rvParam.getPassword() == null ? "" : rvParam.getPassword()).append("\" >\n");
+    xml.append("PASSWORD").append("=\"").append(rvParam.getPassword() == null ? "" : rvParam.getPassword())
+        .append("\" >\n");
 
     Set s = rvParam.getTopics();
     if (s != null) {
       Iterator it = s.iterator();
       while (it.hasNext()) {
         xml.append("\t\t\t<").append("TOPIC").append(" ");
-        String Ttopic = (String)it.next();
+        String Ttopic = (String) it.next();
         Ttopic = Ttopic.replaceAll(">", "&gt;");
         xml.append("ID").append("=\"").append(Ttopic).append("\" />\n");
       }
@@ -169,17 +163,16 @@ public class ConfigurationManager
     xml.append("\t\t</").append("TIBLISTENER").append(">\n");
   }
 
-  private void processWindowPosition(RvSnooperGUI gui, StringBuffer xml)
-  {
+  private void processWindowPosition(RvSnooperGUI gui, StringBuffer xml) {
     exportWindowPosition(gui.getWindowBounds(), xml);
   }
 
   private void exportWindowPosition(Rectangle r, StringBuffer xml) {
     xml.append("\t<").append("windowpos").append(" ");
-    xml.append("windowsx").append("=\"").append(String.valueOf((int)r.getX())).append("\"").append(" ");
-    xml.append("windowy").append("=\"").append(String.valueOf((int)r.getY())).append("\"").append(" ");
-    xml.append("windowwidth").append("=\"").append(String.valueOf((int)r.getWidth())).append("\"").append(" ");
-    xml.append("windowheight").append("=\"").append(String.valueOf((int)r.getHeight())).append("\"").append(" ");
+    xml.append("windowsx").append("=\"").append(String.valueOf((int) r.getX())).append("\"").append(" ");
+    xml.append("windowy").append("=\"").append(String.valueOf((int) r.getY())).append("\"").append(" ");
+    xml.append("windowwidth").append("=\"").append(String.valueOf((int) r.getWidth())).append("\"").append(" ");
+    xml.append("windowheight").append("=\"").append(String.valueOf((int) r.getHeight())).append("\"").append(" ");
     xml.append("/>\n\r");
   }
 
@@ -194,22 +187,18 @@ public class ConfigurationManager
     xml.append("/>\n\r");
   }
 
-  private void processDateFormat(RvSnooperGUI gui, StringBuffer xml)
-  {
+  private void processDateFormat(RvSnooperGUI gui, StringBuffer xml) {
     exportDateFormatPattern(gui.getDateFormat(), xml);
   }
 
-  private void exportDateFormatPattern(String pattern, StringBuffer xml)
-  {
+  private void exportDateFormatPattern(String pattern, StringBuffer xml) {
     xml.append("\t<").append("dateformat").append(" ");
     xml.append("pattern").append("=\"").append(pattern).append("\"").append(" ");
     xml.append("/>\n\r");
   }
 
-  protected void processDateFormat(Document doc)
-  {
-    try
-    {
+  protected void processDateFormat(Document doc) {
+    try {
       NodeList nodes = doc.getElementsByTagName("dateformat");
 
       Node n = nodes.item(0);
@@ -219,27 +208,23 @@ public class ConfigurationManager
       if (dateFormatPattern != null) {
         this._gui.setDateFormat(dateFormatPattern);
       }
-    }
-    catch (Exception e1)
-    {
+    } catch (Exception e1) {
       this._gui.setDateFormat("HH:mm:ss.S");
     }
   }
 
-  public void reset()
-  {
+  public void reset() {
     deleteConfigurationFile();
     collapseTree();
     selectAllNodes();
   }
 
-  public static String treePathToString(TreePath path)
-  {
+  public static String treePathToString(TreePath path) {
     StringBuffer sb = new StringBuffer();
     CategoryNode n = null;
     Object[] objects = path.getPath();
     for (int i = 1; i < objects.length; i++) {
-      n = (CategoryNode)objects[i];
+      n = (CategoryNode) objects[i];
       if (i > 1) {
         sb.append(".");
       }
@@ -248,8 +233,7 @@ public class ConfigurationManager
     return sb.toString();
   }
 
-  protected void load()
-  {
+  protected void load() {
     File file = new File(getFilename());
     if (file.exists()) {
       try {
@@ -269,21 +253,17 @@ public class ConfigurationManager
 
         processListeners(doc);
         processRenderer(doc);
-      }
-      catch (Exception e)
-      {
-        System.err.println("Unable process configuration file at " + getFilename() + ". Error Message=" + e.getMessage());
+      } catch (Exception e) {
+        System.err.println("Unable process configuration file at " + getFilename() + ". Error Message="
+            + e.getMessage());
       }
 
-    }
-    else
-    {
+    } else {
       this._table.setDateFormatManager(new DateFormatManager("HH:mm:ss.S"));
     }
   }
 
-  private void processRenderer(Document doc)
-  {
+  private void processRenderer(Document doc) {
     NodeList nodeList = doc.getElementsByTagName("RENDERER");
 
     for (int i = 0; i < nodeList.getLength(); i++) {
@@ -306,10 +286,10 @@ public class ConfigurationManager
     }
   }
 
-  private String getType(Node n)
-  {
+  private String getType(Node n) {
     int type = n.getNodeType();
-    switch (type) { case 1:
+    switch (type) {
+    case 1:
       return "Element";
     case 2:
       return "Attribute";
@@ -332,14 +312,13 @@ public class ConfigurationManager
     case 11:
       return "Document Fragment";
     case 12:
-      return "Notation"; }
+      return "Notation";
+    }
     return "Unknown Type";
   }
 
-  private void processListeners(Document doc)
-  {
-    try
-    {
+  private void processListeners(Document doc) {
+    try {
       NodeList tiblisternodes = doc.getElementsByTagName("SUBSCRIPTIONS");
 
       if (tiblisternodes == null) {
@@ -352,10 +331,8 @@ public class ConfigurationManager
       for (int i = 0; i < len; i++) {
         EMSParameters p = new EMSParameters();
         Node listener = ln.item(i);
-        if (listener.getNodeType() != 3)
-        {
-          if (listener.hasAttributes())
-          {
+        if (listener.getNodeType() != 3) {
+          if (listener.hasAttributes()) {
             NamedNodeMap nnm = listener.getAttributes();
 
             Node server = nnm.getNamedItem("SERVERURL");
@@ -373,10 +350,8 @@ public class ConfigurationManager
           for (int iSubscription = 0; iSubscription < leni; iSubscription++) {
             Node subscription = subs.item(iSubscription);
 
-            if (subscription.getNodeType() != 3)
-            {
-              if (subscription.hasAttributes())
-              {
+            if (subscription.getNodeType() != 3) {
+              if (subscription.hasAttributes()) {
                 NamedNodeMap nnm = subscription.getAttributes();
                 Node id = nnm.getNamedItem("ID");
                 String Ttopic = id.getNodeValue();
@@ -397,10 +372,8 @@ public class ConfigurationManager
     }
   }
 
-  private void processWindowPosition(Document doc)
-  {
-    try
-    {
+  private void processWindowPosition(Document doc) {
+    try {
       NodeList nodes = doc.getElementsByTagName("windowpos");
 
       Node n = nodes.item(0);
@@ -410,29 +383,23 @@ public class ConfigurationManager
       String windowX = getValue(map, "windowsx");
       String windowY = getValue(map, "windowy");
 
-      if ((windowHeight != null) && (windowWidth != null) && (windowX != null) && (windowY != null))
-      {
-        Rectangle r = new Rectangle(Integer.parseInt(windowX), Integer.parseInt(windowY), Integer.parseInt(windowWidth), Integer.parseInt(windowHeight));
+      if ((windowHeight != null) && (windowWidth != null) && (windowX != null) && (windowY != null)) {
+        Rectangle r = new Rectangle(Integer.parseInt(windowX), Integer.parseInt(windowY),
+            Integer.parseInt(windowWidth), Integer.parseInt(windowHeight));
 
         this._gui.setWindowBounds(r);
-      }
-      else
-      {
+      } else {
         throw new Exception("");
       }
-    }
-    catch (Exception e1)
-    {
+    } catch (Exception e1) {
       e1.printStackTrace();
 
       this._gui.updateFrameSize();
     }
   }
 
-  protected void processSplitPanes(Document doc)
-  {
-    try
-    {
+  protected void processSplitPanes(Document doc) {
+    try {
       NodeList nodes = doc.getElementsByTagName("splitpanepos");
 
       Node n = nodes.item(0);
@@ -443,20 +410,16 @@ public class ConfigurationManager
       if ((sizeHorizontal != null) && (sizeHorizontal != null)) {
         this._gui.setSplitPaneTableViewerPos(Integer.parseInt(sizeHorizontal));
         this._gui.setSplitPaneVerticalPos(Integer.parseInt(sizeVertical));
-      }
-      else {
+      } else {
         throw new Exception("");
       }
-    }
-    catch (Exception e1)
-    {
+    } catch (Exception e1) {
       this._gui.setSplitPaneVerticalPos(130);
       this._gui.setSplitPaneTableViewerPos(350);
     }
   }
 
-  protected void processCategories(Document doc)
-  {
+  protected void processCategories(Document doc) {
     CategoryExplorerTree tree = this._gui.getCategoryExplorerTree();
     CategoryExplorerModel model = tree.getExplorerModel();
     NodeList nodeList = doc.getElementsByTagName("subject");
@@ -469,13 +432,13 @@ public class ConfigurationManager
       map = n.getAttributes();
       CategoryNode chnode = model.addCategory(new CategoryPath(getValue(map, "path")));
       chnode.setSelected(getValue(map, "selected").equalsIgnoreCase("true"));
-      if (getValue(map, "expanded").equalsIgnoreCase("true"));
+      if (getValue(map, "expanded").equalsIgnoreCase("true"))
+        ;
       tree.expandPath(model.getTreePathToRoot(chnode));
     }
   }
 
-  protected void processMsgTypes(Document doc)
-  {
+  protected void processMsgTypes(Document doc) {
     NodeList nodeList = doc.getElementsByTagName("type");
     Map menuItems = this._gui.getLogLevelMenuItems();
 
@@ -484,11 +447,10 @@ public class ConfigurationManager
       NamedNodeMap map = n.getAttributes();
       String name = getValue(map, "name");
       try {
-        JCheckBoxMenuItem item = (JCheckBoxMenuItem)menuItems.get(EventActionType.valueOf(name));
+        JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuItems.get(EventActionType.valueOf(name));
 
         item.setSelected(getValue(map, "selected").equalsIgnoreCase("true"));
-      }
-      catch (MsgTypeFormatException e) {
+      } catch (MsgTypeFormatException e) {
       }
     }
   }
@@ -514,17 +476,13 @@ public class ConfigurationManager
         Color c = new Color(red, green, blue);
         if (level != null)
           level.setLogLevelColorMap(level, c);
-      }
-      catch (MsgTypeFormatException e)
-      {
+      } catch (MsgTypeFormatException e) {
       }
     }
   }
 
-  protected void processFont(Document doc)
-  {
-    try
-    {
+  protected void processFont(Document doc) {
+    try {
       NodeList nodes = doc.getElementsByTagName("fontinfo");
 
       String fontSize = null;
@@ -540,9 +498,7 @@ public class ConfigurationManager
         this._gui.setFontSize(Integer.parseInt(fontStyle));
         this._gui.setFontName(fontName);
       }
-    }
-    catch (Exception e1)
-    {
+    } catch (Exception e1) {
       this._gui.setFontSize(12);
     }
   }
@@ -551,8 +507,7 @@ public class ConfigurationManager
     exportFont(f.getFontName(), f.getStyle(), f.getSize(), xml);
   }
 
-  private void exportFont(String fontName, int style, int size, StringBuffer xml)
-  {
+  private void exportFont(String fontName, int style, int size, StringBuffer xml) {
     xml.append("\t<").append("fontinfo").append(" ");
     xml.append("name").append("=\"").append(fontName).append("\"").append(" ");
     xml.append("style").append("=\"").append(style).append("\"").append(" ");
@@ -584,19 +539,16 @@ public class ConfigurationManager
       }
       NamedNodeMap map = n.getAttributes();
       String name = getValue(map, "name");
-      try
-      {
+      try {
         LogTableColumn column = LogTableColumn.valueOf(name);
-        JCheckBoxMenuItem item = (JCheckBoxMenuItem)menuItems.get(column);
+        JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuItems.get(column);
 
         item.setSelected(getValue(map, "selected").equalsIgnoreCase("true"));
 
         if (item.isSelected()) {
           selectedColumns.add(column);
         }
-      }
-      catch (LogTableColumnFormatException e)
-      {
+      } catch (LogTableColumnFormatException e) {
       }
     }
     if (selectedColumns.isEmpty())
@@ -612,40 +564,34 @@ public class ConfigurationManager
         return;
       }
       NamedNodeMap map = n.getAttributes();
-      try
-      {
+      try {
         String name = getValue(map, "name");
         String width = getValue(map, "columnsize");
 
         this._table.setColumnWidth(name, Integer.parseInt(width));
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
       }
     }
   }
 
-  protected String getValue(NamedNodeMap map, String attr)
-  {
+  protected String getValue(NamedNodeMap map, String attr) {
     Node n = map.getNamedItem(attr);
     return n.getNodeValue();
   }
 
-  protected void collapseTree()
-  {
+  protected void collapseTree() {
     CategoryExplorerTree tree = this._gui.getCategoryExplorerTree();
     for (int i = tree.getRowCount() - 1; i > 0; i--)
       tree.collapseRow(i);
   }
 
-  protected void selectAllNodes()
-  {
+  protected void selectAllNodes() {
     CategoryExplorerModel model = this._gui.getCategoryExplorerTree().getExplorerModel();
     CategoryNode root = model.getRootCategoryNode();
     Enumeration all = root.breadthFirstEnumeration();
     CategoryNode n = null;
     while (all.hasMoreElements()) {
-      n = (CategoryNode)all.nextElement();
+      n = (CategoryNode) all.nextElement();
       n.setSelected(true);
     }
   }
@@ -661,11 +607,8 @@ public class ConfigurationManager
       }
   }
 
-  protected void store(String s)
-    throws IOException
-  {
-    try
-    {
+  protected void store(String s) throws IOException {
+    try {
       createConfigurationDirectory();
 
       File f = new File(getFilename());
@@ -674,8 +617,7 @@ public class ConfigurationManager
         try {
           f.createNewFile();
         } catch (Exception e) {
-        }
-        finally {
+        } finally {
           f = null;
         }
 
@@ -685,26 +627,22 @@ public class ConfigurationManager
 
       writer.print(s);
       writer.close();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw e;
     }
   }
 
-  protected void deleteConfigurationFile()
-  {
+  protected void deleteConfigurationFile() {
     try {
       File f = new File(getFilename());
       if (f.exists())
         f.delete();
-    }
-    catch (SecurityException e) {
+    } catch (SecurityException e) {
       System.err.println("Cannot delete " + getFilename() + " because a security violation occured.");
     }
   }
 
-  protected String getDefaultFilename()
-  {
+  protected String getDefaultFilename() {
     String home = System.getProperty("user.home");
     return home + SEP + CONFIG_DIR_NAME + SEP + CONFIG_FILE_NAME;
   }
@@ -717,25 +655,23 @@ public class ConfigurationManager
     this._fileName = fileName;
   }
 
-  private void processConfigurationNode(CategoryNode node, StringBuffer xml)
-  {
+  private void processConfigurationNode(CategoryNode node, StringBuffer xml) {
     CategoryExplorerModel model = this._gui.getCategoryExplorerTree().getExplorerModel();
 
     Enumeration all = node.breadthFirstEnumeration();
     CategoryNode n = null;
     while (all.hasMoreElements()) {
-      n = (CategoryNode)all.nextElement();
+      n = (CategoryNode) all.nextElement();
       exportXMLElement(n, model.getTreePathToRoot(n), xml);
     }
   }
 
-  private void processMsgTypes(Map logLevelMenuItems, StringBuffer xml)
-  {
+  private void processMsgTypes(Map logLevelMenuItems, StringBuffer xml) {
     xml.append("\t<msgtypes>\r\n");
     Iterator it = logLevelMenuItems.keySet().iterator();
     while (it.hasNext()) {
-      EventActionType level = (EventActionType)it.next();
-      JCheckBoxMenuItem item = (JCheckBoxMenuItem)logLevelMenuItems.get(level);
+      EventActionType level = (EventActionType) it.next();
+      JCheckBoxMenuItem item = (JCheckBoxMenuItem) logLevelMenuItems.get(level);
       exportLogLevelXMLElement(level.getLabel(), item.isSelected(), xml);
     }
 
@@ -747,21 +683,20 @@ public class ConfigurationManager
 
     Iterator it = logLevelMenuItems.keySet().iterator();
     while (it.hasNext()) {
-      EventActionType level = (EventActionType)it.next();
+      EventActionType level = (EventActionType) it.next();
 
-      Color color = (Color)logLevelColors.get(level);
+      Color color = (Color) logLevelColors.get(level);
       exportLogLevelColorXMLElement(level.getLabel(), color, xml);
     }
 
     xml.append("\t</msgtypescolors>\r\n");
   }
 
-  private void processLogTableColumns(List logTableColumnMenuItems, StringBuffer xml)
-  {
+  private void processLogTableColumns(List logTableColumnMenuItems, StringBuffer xml) {
     xml.append("\t<logtablecolumns>\r\n");
     Iterator it = logTableColumnMenuItems.iterator();
     while (it.hasNext()) {
-      LogTableColumn column = (LogTableColumn)it.next();
+      LogTableColumn column = (LogTableColumn) it.next();
       JCheckBoxMenuItem item = this._gui.getTableColumnMenuItem(column);
       int size = this._table.getColumnWidth(column.getLabel());
       exportLogTableColumnXMLElement(column.getLabel(), item.isSelected(), size, xml);
@@ -770,8 +705,7 @@ public class ConfigurationManager
     xml.append("\t</logtablecolumns>\r\n");
   }
 
-  private void openXMLDocument(StringBuffer xml)
-  {
+  private void openXMLDocument(StringBuffer xml) {
     xml.append("<?xml version=\"1.0\" encoding=\"" + System.getProperty("file.encoding") + "\" ?>\r\n");
   }
 

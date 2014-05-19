@@ -4,38 +4,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class Resource
-{
+public class Resource {
   protected String _name;
 
-  public Resource()
-  {
+  public Resource() {
   }
 
-  public Resource(String name)
-  {
+  public Resource(String name) {
     this._name = name;
   }
 
-  public void setName(String name)
-  {
+  public void setName(String name) {
     this._name = name;
   }
 
-  public String getName()
-  {
+  public String getName() {
     return this._name;
   }
 
-  public InputStream getInputStream()
-  {
+  public InputStream getInputStream() {
     InputStream in = ResourceUtils.getResourceAsStream(this, this);
 
     return in;
   }
 
-  public InputStreamReader getInputStreamReader()
-  {
+  public InputStreamReader getInputStreamReader() {
     InputStream in = ResourceUtils.getResourceAsStream(this, this);
 
     if (in == null) {
@@ -47,8 +40,7 @@ public class Resource
     return reader;
   }
 
-  public URL getURL()
-  {
+  public URL getURL() {
     return ResourceUtils.getResourceAsURL(this, this);
   }
 }

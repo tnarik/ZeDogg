@@ -12,8 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-public class FilteredLogTableModel extends AbstractTableModel
-{
+public class FilteredLogTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 3258408417834841649L;
   protected LogRecordFilter _filter = new PassingLogRecordFilter();
   protected List<LogRecord> _allRecords = new ArrayList();
@@ -27,8 +26,7 @@ public class FilteredLogTableModel extends AbstractTableModel
   protected final StringBuffer _conversionStrBuf = new StringBuffer(15);
   protected final StringBuffer _outStrBuf = new StringBuffer(15);
 
-  public void setDateFormatManager(DateFormatManager dfm)
-  {
+  public void setDateFormatManager(DateFormatManager dfm) {
     if (dfm != null)
       this._dfm = dfm;
   }
@@ -71,8 +69,7 @@ public class FilteredLogTableModel extends AbstractTableModel
       this._maxNumberOfLogRecords = maxNumRecords;
   }
 
-  public synchronized boolean addLogRecord(LogRecord record)
-  {
+  public synchronized boolean addLogRecord(LogRecord record) {
     this._allRecords.add(record);
 
     if (!this._filter.passes(record)) {
@@ -84,8 +81,7 @@ public class FilteredLogTableModel extends AbstractTableModel
     return true;
   }
 
-  public synchronized void refresh()
-  {
+  public synchronized void refresh() {
     this._filteredRecords = createFilteredRecordsList();
     fireTableDataChanged();
   }
@@ -95,15 +91,13 @@ public class FilteredLogTableModel extends AbstractTableModel
     fireTableRowsDeleted(0, 0);
   }
 
-  public synchronized void clear()
-  {
+  public synchronized void clear() {
     this._allRecords.clear();
     this._filteredRecords.clear();
     fireTableDataChanged();
   }
 
-  protected List<LogRecord> getFilteredRecords()
-  {
+  protected List<LogRecord> getFilteredRecords() {
     if (this._filteredRecords == null) {
       refresh();
     }
@@ -115,7 +109,7 @@ public class FilteredLogTableModel extends AbstractTableModel
     Iterator records = this._allRecords.iterator();
 
     while (records.hasNext()) {
-      LogRecord current = (LogRecord)records.next();
+      LogRecord current = (LogRecord) records.next();
       if (this._filter.passes(current)) {
         result.add(current);
       }
@@ -123,15 +117,14 @@ public class FilteredLogTableModel extends AbstractTableModel
     return result;
   }
 
-  public StringBuffer createFilteredHTMLTable(DateFormatManager dfMgr)
-  {
+  public StringBuffer createFilteredHTMLTable(DateFormatManager dfMgr) {
     StringBuffer strbuf = new StringBuffer(_lastHTMLBufLength);
     Iterator records = this._filteredRecords.iterator();
     StringBuffer buffer = new StringBuffer();
 
     addHtmlTableHeaderString(strbuf, dfMgr);
     while (records.hasNext()) {
-      LogRecord current = (LogRecord)records.next();
+      LogRecord current = (LogRecord) records.next();
 
       strbuf.append("<tr>\n\t");
       addHTMLTDString(current, strbuf, dfMgr, buffer);
@@ -144,13 +137,12 @@ public class FilteredLogTableModel extends AbstractTableModel
     return strbuf;
   }
 
-  public StringBuffer createFilteredTextFromMsg()
-  {
+  public StringBuffer createFilteredTextFromMsg() {
     StringBuffer strbuf = new StringBuffer();
     Iterator records = this._filteredRecords.iterator();
 
     while (records.hasNext()) {
-      LogRecord current = (LogRecord)records.next();
+      LogRecord current = (LogRecord) records.next();
       strbuf.append("\n");
       strbuf.append(current.getMessage());
     }
@@ -159,11 +151,9 @@ public class FilteredLogTableModel extends AbstractTableModel
     return strbuf;
   }
 
-  protected void addHTMLTDString(LogRecord lr, StringBuffer buf, DateFormatManager dfMgr, StringBuffer Tbuffer)
-  {
+  protected void addHTMLTDString(LogRecord lr, StringBuffer buf, DateFormatManager dfMgr, StringBuffer Tbuffer) {
     if (lr != null) {
-      for (int i = 0; i < getColumnCount(); i++)
-      {
+      for (int i = 0; i < getColumnCount(); i++) {
         buf.append("<td>");
 
         addColumnToStringBuffer(buf, i, lr, dfMgr);
@@ -177,14 +167,12 @@ public class FilteredLogTableModel extends AbstractTableModel
       HTMLEncoder.encodeStringBuffer(Tbuffer);
       buf.append(Tbuffer);
       buf.append("</code></td>");
-    }
-    else {
+    } else {
       buf.append("<td></td>");
     }
   }
 
-  protected void addHtmlTableHeaderString(StringBuffer buf, DateFormatManager dfMgr)
-  {
+  protected void addHtmlTableHeaderString(StringBuffer buf, DateFormatManager dfMgr) {
     buf.append("<table border=\"1\" width=\"100%\">\n");
     buf.append("<tr>\n");
 
@@ -209,14 +197,13 @@ public class FilteredLogTableModel extends AbstractTableModel
     List records = getFilteredRecords();
     int size = records.size();
     if (row < size) {
-      return (LogRecord)records.get(row);
+      return (LogRecord) records.get(row);
     }
 
-    return (LogRecord)records.get(size - 1);
+    return (LogRecord) records.get(size - 1);
   }
 
-  protected Object getColumn(int col, LogRecord lr, DateFormatManager dfm)
-  {
+  protected Object getColumn(int col, LogRecord lr, DateFormatManager dfm) {
     if (lr == null) {
       return "NULL";
     }
@@ -263,8 +250,7 @@ public class FilteredLogTableModel extends AbstractTableModel
     throw new IllegalArgumentException(message);
   }
 
-  protected void addColumnToStringBuffer(StringBuffer sb, int col, LogRecord lr, DateFormatManager dfm)
-  {
+  protected void addColumnToStringBuffer(StringBuffer sb, int col, LogRecord lr, DateFormatManager dfm) {
     if (lr == null) {
       sb.append("NULL Column");
     }
@@ -333,14 +319,12 @@ public class FilteredLogTableModel extends AbstractTableModel
     return getColumn(col, lr, this._dfm);
   }
 
-  protected void trimRecords()
-  {
+  protected void trimRecords() {
     if (needsTrimming())
       trimOldestRecords();
   }
 
-  protected boolean needsTrimming()
-  {
+  protected boolean needsTrimming() {
     return this._allRecords.size() > this._maxNumberOfLogRecords;
   }
 
@@ -352,7 +336,7 @@ public class FilteredLogTableModel extends AbstractTableModel
 
         Iterator records = oldRecords.iterator();
         while (records.hasNext()) {
-          LogRecord.freeInstance((LogRecord)records.next());
+          LogRecord.freeInstance((LogRecord) records.next());
         }
         oldRecords.clear();
         refresh();
@@ -363,8 +347,7 @@ public class FilteredLogTableModel extends AbstractTableModel
     }
   }
 
-  private int numberOfRecordsToTrim()
-  {
+  private int numberOfRecordsToTrim() {
     return this._allRecords.size() - this._maxNumberOfLogRecords;
   }
 }

@@ -4,21 +4,18 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-public class CategoryNode extends DefaultMutableTreeNode
-{
+public class CategoryNode extends DefaultMutableTreeNode {
   private static final long serialVersionUID = 3256723991824513331L;
   protected boolean _selected = true;
   protected int _numberOfContainedRecords = 0;
   protected int _numberOfRecordsFromChildren = 0;
 
-  public CategoryNode(String title)
-  {
+  public CategoryNode(String title) {
     setUserObject(title);
   }
 
-  public String getTitle()
-  {
-    return (String)getUserObject();
+  public String getTitle() {
+    return (String) getUserObject();
   }
 
   public void setSelected(boolean s) {
@@ -26,28 +23,25 @@ public class CategoryNode extends DefaultMutableTreeNode
       this._selected = s;
   }
 
-  public boolean isSelected()
-  {
+  public boolean isSelected() {
     return this._selected;
   }
 
   /** @deprecated */
-  public void setAllDescendantsSelected()
-  {
+  public void setAllDescendantsSelected() {
     Enumeration children = children();
     while (children.hasMoreElements()) {
-      CategoryNode node = (CategoryNode)children.nextElement();
+      CategoryNode node = (CategoryNode) children.nextElement();
       node.setSelected(true);
       node.setAllDescendantsSelected();
     }
   }
 
   /** @deprecated */
-  public void setAllDescendantsDeSelected()
-  {
+  public void setAllDescendantsDeSelected() {
     Enumeration children = children();
     while (children.hasMoreElements()) {
-      CategoryNode node = (CategoryNode)children.nextElement();
+      CategoryNode node = (CategoryNode) children.nextElement();
       node.setSelected(false);
       node.setAllDescendantsDeSelected();
     }
@@ -59,7 +53,7 @@ public class CategoryNode extends DefaultMutableTreeNode
 
   public boolean equals(Object obj) {
     if ((obj instanceof CategoryNode)) {
-      CategoryNode node = (CategoryNode)obj;
+      CategoryNode node = (CategoryNode) obj;
       String tit1 = getTitle().toLowerCase();
       String tit2 = node.getTitle().toLowerCase();
 
@@ -88,13 +82,11 @@ public class CategoryNode extends DefaultMutableTreeNode
     this._numberOfRecordsFromChildren = 0;
   }
 
-  protected int getTotalNumberOfRecords()
-  {
+  protected int getTotalNumberOfRecords() {
     return getNumberOfRecordsFromChildren() + getNumberOfContainedRecords();
   }
 
-  protected void addRecordFromChild()
-  {
+  protected void addRecordFromChild() {
     this._numberOfRecordsFromChildren += 1;
     addRecordToParent();
   }
@@ -108,6 +100,6 @@ public class CategoryNode extends DefaultMutableTreeNode
     if (parent == null) {
       return;
     }
-    ((CategoryNode)parent).addRecordFromChild();
+    ((CategoryNode) parent).addRecordFromChild();
   }
 }

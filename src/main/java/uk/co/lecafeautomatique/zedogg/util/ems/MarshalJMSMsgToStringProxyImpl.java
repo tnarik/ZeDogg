@@ -3,13 +3,10 @@ package uk.co.lecafeautomatique.zedogg.util.ems;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-public class MarshalJMSMsgToStringProxyImpl
-  implements IMarshalJMSToString
-{
+public class MarshalJMSMsgToStringProxyImpl implements IMarshalJMSToString {
   private static IMarshalJMSToString _impl = null;
 
-  public void setImpl(IMarshalJMSToString _impl)
-  {
+  public void setImpl(IMarshalJMSToString _impl) {
     _impl = _impl;
   }
 

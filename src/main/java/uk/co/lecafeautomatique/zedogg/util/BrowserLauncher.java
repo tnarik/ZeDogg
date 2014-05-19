@@ -7,8 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BrowserLauncher
-{
+public class BrowserLauncher {
   private static int jvm;
   private static Object browser;
   private static boolean loadedWithoutErrors = true;
@@ -49,8 +48,7 @@ public class BrowserLauncher
   private static final String NETSCAPE_OPEN_PARAMETER_END = ")'";
   private static String errorMessage;
 
-  private static boolean loadClasses()
-  {
+  private static boolean loadClasses() {
     switch (jvm) {
     case 0:
       try {
@@ -61,7 +59,8 @@ public class BrowserLauncher
         aeDescClass = Class.forName("com.apple.MacOS.AEDesc");
 
         aeTargetConstructor = aeTargetClass.getDeclaredConstructor(new Class[] { Integer.TYPE });
-        appleEventConstructor = appleEventClass.getDeclaredConstructor(new Class[] { Integer.TYPE, Integer.TYPE, aeTargetClass, Integer.TYPE, Integer.TYPE });
+        appleEventConstructor = appleEventClass.getDeclaredConstructor(new Class[] { Integer.TYPE, Integer.TYPE,
+            aeTargetClass, Integer.TYPE, Integer.TYPE });
         aeDescConstructor = aeDescClass.getDeclaredConstructor(new Class[] { String.class });
 
         makeOSType = osUtilsClass.getDeclaredMethod("makeOSType", new Class[] { String.class });
@@ -69,11 +68,11 @@ public class BrowserLauncher
         sendNoReply = appleEventClass.getDeclaredMethod("sendNoReply", new Class[0]);
 
         Field keyDirectObjectField = aeClass.getDeclaredField("keyDirectObject");
-        keyDirectObject = (Integer)keyDirectObjectField.get(null);
+        keyDirectObject = (Integer) keyDirectObjectField.get(null);
         Field autoGenerateReturnIDField = appleEventClass.getDeclaredField("kAutoGenerateReturnID");
-        kAutoGenerateReturnID = (Integer)autoGenerateReturnIDField.get(null);
+        kAutoGenerateReturnID = (Integer) autoGenerateReturnIDField.get(null);
         Field anyTransactionIDField = appleEventClass.getDeclaredField("kAnyTransactionID");
-        kAnyTransactionID = (Integer)anyTransactionIDField.get(null);
+        kAnyTransactionID = (Integer) anyTransactionIDField.get(null);
       } catch (ClassNotFoundException cnfe) {
         errorMessage = cnfe.getMessage();
         return false;
@@ -88,8 +87,7 @@ public class BrowserLauncher
         return false;
       }
     case 1:
-      try
-      {
+      try {
         mrjFileUtilsClass = Class.forName("com.apple.mrj.MRJFileUtils");
         mrjOSTypeClass = Class.forName("com.apple.mrj.MRJOSType");
         Field systemFolderField = mrjFileUtilsClass.getDeclaredField("kSystemFolderType");
@@ -114,8 +112,7 @@ public class BrowserLauncher
         return false;
       }
     case 3:
-      try
-      {
+      try {
         Class linker = Class.forName("com.apple.mrj.jdirect.Linker");
         Constructor constructor = linker.getConstructor(new Class[] { Class.class });
         linkage = constructor.newInstance(new Object[] { BrowserLauncher.class });
@@ -136,8 +133,7 @@ public class BrowserLauncher
         return false;
       }
     case 4:
-      try
-      {
+      try {
         mrjFileUtilsClass = Class.forName("com.apple.mrj.MRJFileUtils");
         openURL = mrjFileUtilsClass.getDeclaredMethod("openURL", new Class[] { String.class });
       } catch (ClassNotFoundException cnfe) {
@@ -154,21 +150,19 @@ public class BrowserLauncher
     return true;
   }
 
-  private static Object locateBrowser()
-  {
+  private static Object locateBrowser() {
     if (browser != null) {
       return browser;
     }
     switch (jvm) {
     case 0:
       try {
-        Integer finderCreatorCode = (Integer)makeOSType.invoke(null, new Object[] { "MACS" });
+        Integer finderCreatorCode = (Integer) makeOSType.invoke(null, new Object[] { "MACS" });
         Object aeTarget = aeTargetConstructor.newInstance(new Object[] { finderCreatorCode });
-        Integer gurlType = (Integer)makeOSType.invoke(null, new Object[] { "GURL" });
-        return appleEventConstructor.newInstance(new Object[] { gurlType, gurlType, aeTarget, kAutoGenerateReturnID, kAnyTransactionID });
-      }
-      catch (IllegalAccessException iae)
-      {
+        Integer gurlType = (Integer) makeOSType.invoke(null, new Object[] { "GURL" });
+        return appleEventConstructor.newInstance(new Object[] { gurlType, gurlType, aeTarget, kAutoGenerateReturnID,
+            kAnyTransactionID });
+      } catch (IllegalAccessException iae) {
         browser = null;
         errorMessage = iae.getMessage();
         return browser;
@@ -184,7 +178,7 @@ public class BrowserLauncher
     case 1:
       File systemFolder;
       try {
-        systemFolder = (File)findFolder.invoke(null, new Object[] { kSystemFolderType });
+        systemFolder = (File) findFolder.invoke(null, new Object[] { kSystemFolderType });
       } catch (IllegalArgumentException iare) {
         browser = null;
         errorMessage = iare.getMessage();
@@ -203,8 +197,7 @@ public class BrowserLauncher
       for (int i = 0; i < systemFolderFiles.length; i++) {
         try {
           File file = new File(systemFolder, systemFolderFiles[i]);
-          if (file.isFile())
-          {
+          if (file.isFile()) {
             Object fileType = getFileType.invoke(null, new Object[] { file });
             if ("FNDR".equals(fileType.toString())) {
               Object fileCreator = getFileCreator.invoke(null, new Object[] { file });
@@ -241,14 +234,13 @@ public class BrowserLauncher
       break;
     case -1:
     case 2:
-    }browser = "netscape";
+    }
+    browser = "netscape";
 
     return browser;
   }
 
-  public static void openURL(String url)
-    throws IOException
-  {
+  public static void openURL(String url) throws IOException {
     if (!loadedWithoutErrors) {
       throw new IOException("Exception in finding browser: " + errorMessage);
     }
@@ -275,7 +267,7 @@ public class BrowserLauncher
       }
       break;
     case 1:
-      Runtime.getRuntime().exec(new String[] { (String)browser, url });
+      Runtime.getRuntime().exec(new String[] { (String) browser, url });
       break;
     case 3:
       int[] instance = new int[1];
@@ -286,14 +278,11 @@ public class BrowserLauncher
         int[] selectionEnd = { urlBytes.length };
         result = ICLaunchURL(instance[0], new byte[] { 0 }, urlBytes, urlBytes.length, selectionStart, selectionEnd);
 
-        if (result == 0)
-        {
+        if (result == 0) {
           ICStop(instance);
-        }
-        else throw new IOException("Unable to launch URL: " + result); 
-      }
-      else
-      {
+        } else
+          throw new IOException("Unable to launch URL: " + result);
+      } else {
         throw new IOException("Unable to create an Internet Config instance: " + result);
       }
       break;
@@ -308,9 +297,8 @@ public class BrowserLauncher
 
     case 5:
     case 6:
-      process = Runtime.getRuntime().exec(new String[] { (String)browser, "/c", "start", "\"\"", '"' + url + '"' });
-      try
-      {
+      process = Runtime.getRuntime().exec(new String[] { (String) browser, "/c", "start", "\"\"", '"' + url + '"' });
+      try {
         process.waitFor();
         process.exitValue();
       } catch (InterruptedException ie) {
@@ -318,20 +306,18 @@ public class BrowserLauncher
       }
 
     case -1:
-      process = Runtime.getRuntime().exec(new String[] { (String)browser, "-remote", "'openURL(" + url + ")'" });
-      try
-      {
+      process = Runtime.getRuntime().exec(new String[] { (String) browser, "-remote", "'openURL(" + url + ")'" });
+      try {
         int exitCode = process.waitFor();
         if (exitCode != 0)
-          Runtime.getRuntime().exec(new String[] { (String)browser, url });
-      }
-      catch (InterruptedException ie) {
+          Runtime.getRuntime().exec(new String[] { (String) browser, url });
+      } catch (InterruptedException ie) {
         throw new IOException("InterruptedException while launching browser: " + ie.getMessage());
       }
 
     case 2:
     default:
-      Runtime.getRuntime().exec(new String[] { (String)browser, url });
+      Runtime.getRuntime().exec(new String[] { (String) browser, url });
     }
   }
 
@@ -339,10 +325,10 @@ public class BrowserLauncher
 
   private static native int ICStop(int[] paramArrayOfInt);
 
-  private static native int ICLaunchURL(int paramInt1, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2, int paramInt2, int[] paramArrayOfInt1, int[] paramArrayOfInt2);
+  private static native int ICLaunchURL(int paramInt1, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2,
+      int paramInt2, int[] paramArrayOfInt1, int[] paramArrayOfInt2);
 
-  static
-  {
+  static {
     String osName = System.getProperty("os.name");
     if (osName.startsWith("Mac OS")) {
       String mrjVersion = System.getProperty("mrj.version");
@@ -351,13 +337,11 @@ public class BrowserLauncher
         double version = Double.valueOf(majorMRJVersion).doubleValue();
         if (version == 2.0D) {
           jvm = 0;
-        } else if ((version >= 2.1D) && (version < 3.0D))
-        {
+        } else if ((version >= 2.1D) && (version < 3.0D)) {
           jvm = 1;
         } else if (version == 3.0D) {
           jvm = 3;
-        } else if (version >= 3.1D)
-        {
+        } else if (version >= 3.1D) {
           jvm = 4;
         } else {
           loadedWithoutErrors = false;
@@ -372,8 +356,7 @@ public class BrowserLauncher
         jvm = 6;
       else
         jvm = 5;
-    }
-    else {
+    } else {
       jvm = -1;
     }
 

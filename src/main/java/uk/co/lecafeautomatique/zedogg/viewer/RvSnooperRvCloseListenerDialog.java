@@ -13,16 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class RvSnooperRvCloseListenerDialog extends RvSnooperDialog
-{
+public class RvSnooperRvCloseListenerDialog extends RvSnooperDialog {
   private static final long serialVersionUID = 3760566373390300467L;
   private JTextField _tPassword;
   private JTextField _tUser;
   private JTextField _tServer;
   private JTextField _tTopic;
 
-  public RvSnooperRvCloseListenerDialog(JFrame jframe, String title, EMSParameters defaultParameters)
-  {
+  public RvSnooperRvCloseListenerDialog(JFrame jframe, String title, EMSParameters defaultParameters) {
     super(jframe, title, true);
 
     JPanel bottom = new JPanel();
@@ -81,8 +79,7 @@ public class RvSnooperRvCloseListenerDialog extends RvSnooperDialog
     setVisible(true);
   }
 
-  public EMSParameters getRvParameters()
-  {
+  public EMSParameters getRvParameters() {
     EMSParameters p = new EMSParameters();
 
     p.setServerURL(this._tServer.getText());
@@ -92,4 +89,3 @@ public class RvSnooperRvCloseListenerDialog extends RvSnooperDialog
     return p;
   }
 }
-

@@ -5,19 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class StreamUtils
-{
+public abstract class StreamUtils {
   public static final int DEFAULT_BUFFER_SIZE = 2048;
 
-  public static void copy(InputStream input, OutputStream output)
-    throws IOException
-  {
+  public static void copy(InputStream input, OutputStream output) throws IOException {
     copy(input, output, 2048);
   }
 
-  public static void copy(InputStream input, OutputStream output, int bufferSize)
-    throws IOException
-  {
+  public static void copy(InputStream input, OutputStream output, int bufferSize) throws IOException {
     byte[] buf = new byte[bufferSize];
     int bytesRead = input.read(buf);
     while (bytesRead != -1) {
@@ -27,17 +22,13 @@ public abstract class StreamUtils
     output.flush();
   }
 
-  public static void copyThenClose(InputStream input, OutputStream output)
-    throws IOException
-  {
+  public static void copyThenClose(InputStream input, OutputStream output) throws IOException {
     copy(input, output);
     input.close();
     output.close();
   }
 
-  public static byte[] getBytes(InputStream input)
-    throws IOException
-  {
+  public static byte[] getBytes(InputStream input) throws IOException {
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     copy(input, result);
     result.close();

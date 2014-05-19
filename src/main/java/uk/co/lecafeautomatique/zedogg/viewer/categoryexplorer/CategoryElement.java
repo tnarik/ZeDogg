@@ -1,20 +1,16 @@
 package uk.co.lecafeautomatique.zedogg.viewer.categoryexplorer;
 
-public class CategoryElement
-{
+public class CategoryElement {
   protected String _categoryTitle;
 
-  public CategoryElement()
-  {
+  public CategoryElement() {
   }
 
-  public CategoryElement(String title)
-  {
+  public CategoryElement(String title) {
     this._categoryTitle = title;
   }
 
-  public String getTitle()
-  {
+  public String getTitle() {
     return this._categoryTitle;
   }
 

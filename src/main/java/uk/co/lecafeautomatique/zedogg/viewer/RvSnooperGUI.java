@@ -70,9 +70,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
-public class RvSnooperGUI
-  implements MessageListener
-{
+public class RvSnooperGUI implements MessageListener {
   public static final String DETAILED_VIEW = "Detailed";
   public static final String VERSION = "EMSSn00p v2.0.3";
   public static final String URL = "http://emsn00p.sf.net";
@@ -125,8 +123,7 @@ public class RvSnooperGUI
   private JComboBox _rendererCombo;
   protected String _lastUsedRenderer;
 
-  public RvSnooperGUI(List MsgTypes, Set listeners, String name)
-  {
+  public RvSnooperGUI(List MsgTypes, Set listeners, String name) {
     this._levels = MsgTypes;
     this._columns = LogTableColumn.getLogTableColumns();
     this._columns = LogTableColumn.getLogTableColumns();
@@ -139,26 +136,21 @@ public class RvSnooperGUI
     startListeners(listeners);
   }
 
-  protected void startListeners(Set listeners)
-  {
+  protected void startListeners(Set listeners) {
     Iterator itrl = listeners.iterator();
     RvSnooperErrorDialog error;
     while (itrl.hasNext()) {
-      try
-      {
-        EMSParameters p = (EMSParameters)itrl.next();
+      try {
+        EMSParameters p = (EMSParameters) itrl.next();
 
-        p.setDescription(" <a href=\""+URL+"\">"+VERSION+"</a> ");
+        p.setDescription(" <a href=\"" + URL + "\">" + VERSION + "</a> ");
 
         EMSController.startListener(p, this);
 
         this._lastUsedRvParameters = p;
-      }
-      catch (ClassCastException ex) {
+      } catch (ClassCastException ex) {
         error = new RvSnooperErrorDialog(getBaseFrame(), ex.getMessage());
-      }
-      catch (JMSException ex)
-      {
+      } catch (JMSException ex) {
         RvSnooperErrorDialog error1;
         error1 = new RvSnooperErrorDialog(getBaseFrame(), "EMS Exception" + ex.getMessage());
       }
@@ -168,13 +160,11 @@ public class RvSnooperGUI
     updateBanner();
   }
 
-  public void onError(Object tibrvObject, int errorCode, String message, Throwable throwable)
-  {
+  public void onError(Object tibrvObject, int errorCode, String message, Throwable throwable) {
     RvSnooperErrorDialog error = new RvSnooperErrorDialog(getBaseFrame(), "A System error occured " + message);
   }
 
-  public void show(final int delay)
-  {
+  public void show(final int delay) {
     if (this._logMonitorFrame.isVisible()) {
       return;
     }
@@ -196,8 +186,7 @@ public class RvSnooperGUI
     updateBanner();
   }
 
-  public void updateBanner()
-  {
+  public void updateBanner() {
     String sBanner = null;
     if (this._name != null) {
       sBanner = this._name + " " + EMSController.getTransports().toString();
@@ -210,15 +199,12 @@ public class RvSnooperGUI
     setTitle(sBanner);
   }
 
-  public void dispose()
-  {
+  public void dispose() {
     this._logMonitorFrame.dispose();
     this._isDisposed = true;
-    try
-    {
+    try {
       EMSController.shutdownAll();
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       System.err.println(ex.getMessage());
     }
 
@@ -226,18 +212,15 @@ public class RvSnooperGUI
       System.exit(0);
   }
 
-  public void hide()
-  {
+  public void hide() {
     this._logMonitorFrame.setVisible(false);
   }
 
-  DateFormatManager getDateFormatManager()
-  {
+  DateFormatManager getDateFormatManager() {
     return this._table.getDateFormatManager();
   }
 
-  void setDateFormatManager(DateFormatManager dfm)
-  {
+  void setDateFormatManager(DateFormatManager dfm) {
     this._table.setDateFormatManager(dfm);
   }
 
@@ -252,20 +235,16 @@ public class RvSnooperGUI
     return pattern;
   }
 
-  public boolean getCallSystemExitOnClose()
-  {
+  public boolean getCallSystemExitOnClose() {
     return this._callSystemExitOnClose;
   }
 
-  public void setCallSystemExitOnClose(boolean callSystemExitOnClose)
-  {
+  public void setCallSystemExitOnClose(boolean callSystemExitOnClose) {
     this._callSystemExitOnClose = callSystemExitOnClose;
   }
 
-  public void addMessage(LogRecord lr)
-  {
-    if (this._isDisposed == true)
-    {
+  public void addMessage(LogRecord lr) {
+    if (this._isDisposed == true) {
       return;
     }
 
@@ -299,8 +278,7 @@ public class RvSnooperGUI
     changeIntCombo(this._fontSizeCombo, fontSize);
   }
 
-  public void addDisplayedProperty(Object messageLine)
-  {
+  public void addDisplayedProperty(Object messageLine) {
     this._displayedLogBrokerProperties.add(messageLine);
   }
 
@@ -320,13 +298,11 @@ public class RvSnooperGUI
     return this._subjectExplorerTree;
   }
 
-  protected boolean isPaused()
-  {
+  protected boolean isPaused() {
     return this._isPaused;
   }
 
-  protected void pauseListeners()
-  {
+  protected void pauseListeners() {
     try {
       EMSController.pauseAll();
     } catch (JMSException e) {
@@ -349,10 +325,8 @@ public class RvSnooperGUI
       this._pauseButton.setIcon(pbIcon);
   }
 
-  protected void unPauseListeners()
-  {
-    try
-    {
+  protected void unPauseListeners() {
+    try {
       EMSController.resumeAll();
     } catch (JMSException e) {
       this._statusLabel.setText("Resume all listeners failed " + e.getMessage());
@@ -375,13 +349,11 @@ public class RvSnooperGUI
       this._pauseButton.setIcon(pbIcon);
   }
 
-  protected void setSearchText(String text)
-  {
+  protected void setSearchText(String text) {
     this._searchText = text;
   }
 
-  protected void findSearchText()
-  {
+  protected void findSearchText() {
     String text = this._searchText;
     if ((text == null) || (text.length() == 0)) {
       return;
@@ -406,8 +378,7 @@ public class RvSnooperGUI
     SwingUtils.selectRow(foundRow, this._table, this._logTableScrollPane);
   }
 
-  protected int findRecord(int startRow, String searchText, List records)
-  {
+  protected int findRecord(int startRow, String searchText, List records) {
     if (startRow < 0)
       startRow = 0;
     else {
@@ -416,14 +387,14 @@ public class RvSnooperGUI
     int len = records.size();
 
     for (int i = startRow; i < len; i++) {
-      if (matches((LogRecord)records.get(i), searchText)) {
+      if (matches((LogRecord) records.get(i), searchText)) {
         return i;
       }
     }
 
     len = startRow;
     for (int i = 0; i < len; i++) {
-      if (matches((LogRecord)records.get(i), searchText)) {
+      if (matches((LogRecord) records.get(i), searchText)) {
         return i;
       }
     }
@@ -431,23 +402,21 @@ public class RvSnooperGUI
     return -1;
   }
 
-  protected static boolean matches(LogRecord record, String text)
-  {
+  protected static boolean matches(LogRecord record, String text) {
     String message = record.toString(_marshalImpl);
     if (((message == null) && (_JMSCorrelationIDTextFilter == null)) || (text == null)) {
       return false;
     }
 
-    if ((message.toLowerCase().indexOf(text.toLowerCase()) == -1) && (_JMSCorrelationIDTextFilter.indexOf(text.toLowerCase()) == -1))
-    {
+    if ((message.toLowerCase().indexOf(text.toLowerCase()) == -1)
+        && (_JMSCorrelationIDTextFilter.indexOf(text.toLowerCase()) == -1)) {
       return false;
     }
 
     return true;
   }
 
-  protected static void refresh(JTextArea textArea)
-  {
+  protected static void refresh(JTextArea textArea) {
     String text = textArea.getText();
     textArea.setText("");
     textArea.setText(text);
@@ -461,8 +430,7 @@ public class RvSnooperGUI
     this._table._detailTextArea.setText("");
   }
 
-  public static int changeIntCombo(JComboBox box, int requestedSize)
-  {
+  public static int changeIntCombo(JComboBox box, int requestedSize) {
     int len = box.getItemCount();
 
     Object selectedObject = box.getItemAt(0);
@@ -479,8 +447,7 @@ public class RvSnooperGUI
     return selectedValue;
   }
 
-  public static String changeStringCombo(JComboBox box, String requestedName)
-  {
+  public static String changeStringCombo(JComboBox box, String requestedName) {
     int len = box.getItemCount();
 
     String currentValue = null;
@@ -497,8 +464,7 @@ public class RvSnooperGUI
     return currentValue;
   }
 
-  protected void setFontSizeSilently(int fontSize)
-  {
+  protected void setFontSizeSilently(int fontSize) {
     setFontSize(fontSize);
     setFontSize(this._table._detailTextArea, fontSize);
     selectRow(0);
@@ -520,14 +486,11 @@ public class RvSnooperGUI
   protected static void pause(int millis) {
     try {
       Thread.sleep(millis);
-    }
-    catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
     }
   }
 
-  protected void initComponents()
-  {
+  protected void initComponents() {
     this._logMonitorFrame = new JFrame(this._name);
 
     this._logMonitorFrame.setDefaultCloseOperation(0);
@@ -608,14 +571,14 @@ public class RvSnooperGUI
     LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
         CategoryPath path = new CategoryPath(record.getJMSDestination());
-        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected()) && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
+        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected())
+            && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
       }
     };
     return result;
   }
 
-  protected void updateStatusLabel()
-  {
+  protected void updateStatusLabel() {
     StringBuffer sb = new StringBuffer(100);
     getRecordsDisplayedMessage(sb);
     getFileEncodingMessage(sb);
@@ -650,8 +613,7 @@ public class RvSnooperGUI
     });
   }
 
-  protected static void getStatusText(int displayedRows, int totalRows, StringBuffer sb)
-  {
+  protected static void getStatusText(int displayedRows, int totalRows, StringBuffer sb) {
     sb.append("Displaying: ");
     sb.append(displayedRows);
     sb.append(" records out of a total of: ");
@@ -661,8 +623,7 @@ public class RvSnooperGUI
     sb.append(" are filtered.");
   }
 
-  protected void makeLogTableListenToCategoryExplorer()
-  {
+  protected void makeLogTableListenToCategoryExplorer() {
     ActionListener listener = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperGUI.this._table.getFilteredLogTableModel().refresh();
@@ -708,13 +669,11 @@ public class RvSnooperGUI
     return menuBar;
   }
 
-  protected JMenuItem createSaveSelectedAsTextFileMenuItem()
-  {
+  protected JMenuItem createSaveSelectedAsTextFileMenuItem() {
     JMenuItem result = new JMenuItem("Save selected as txt");
     result.setMnemonic('r');
 
-    result.addActionListener(new ActionListener()
-    {
+    result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         ListSelectionModel lsm = RvSnooperGUI.this._table.getSelectionModel();
         if (lsm.isSelectionEmpty()) {
@@ -724,12 +683,15 @@ public class RvSnooperGUI
 
           FilteredLogTableModel ftm = RvSnooperGUI.this._table.getFilteredLogTableModel();
 
-          final String sMsg = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getMsgColumnID());
-          final String sSubject = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getSubjectColumnID());
+          final String sMsg = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getMsgColumnID());
+          final String sSubject = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getSubjectColumnID());
 
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              RvSnooperFileHandler.saveMsgAsTextFile(sSubject, sMsg, VERSION+" "+URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel);
+              RvSnooperFileHandler.saveMsgAsTextFile(sSubject, sMsg, VERSION + " " + URL,
+                  RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel);
             }
           });
         }
@@ -740,13 +702,12 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenu createMsgTypeMenu()
-  {
+  protected JMenu createMsgTypeMenu() {
     JMenu result = new JMenu("Event Action");
     result.setMnemonic('a');
     Iterator imsgtypes = getMsgTypes();
     while (imsgtypes.hasNext()) {
-      result.add(getMenuItem((EventActionType)imsgtypes.next()));
+      result.add(getMenuItem((EventActionType) imsgtypes.next()));
     }
 
     result.addSeparator();
@@ -790,7 +751,7 @@ public class RvSnooperGUI
     colorMenu.setMnemonic('c');
     Iterator levels = getMsgTypes();
     while (levels.hasNext()) {
-      colorMenu.add(createSubMenuItem((EventActionType)levels.next()));
+      colorMenu.add(createSubMenuItem((EventActionType) levels.next()));
     }
 
     return colorMenu;
@@ -799,8 +760,7 @@ public class RvSnooperGUI
   protected JMenuItem createResetLogLevelColorMenuItem() {
     JMenuItem result = new JMenuItem("Reset Event Actions Colors");
     result.setMnemonic('r');
-    result.addActionListener(new ActionListener()
-    {
+    result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         EventActionType.resetLogLevelColorMap();
 
@@ -813,12 +773,11 @@ public class RvSnooperGUI
   protected void selectAllMsgTypes(boolean selected) {
     Iterator levels = getMsgTypes();
     while (levels.hasNext())
-      getMenuItem((EventActionType)levels.next()).setSelected(selected);
+      getMenuItem((EventActionType) levels.next()).setSelected(selected);
   }
 
-  protected JCheckBoxMenuItem getMenuItem(EventActionType level)
-  {
-    JCheckBoxMenuItem result = (JCheckBoxMenuItem)this._logLevelMenuItems.get(level);
+  protected JCheckBoxMenuItem getMenuItem(EventActionType level) {
+    JCheckBoxMenuItem result = (JCheckBoxMenuItem) this._logLevelMenuItems.get(level);
     if (result == null) {
       result = createMenuItem(level);
       this._logLevelMenuItems.put(level, result);
@@ -839,20 +798,18 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected void showLogLevelColorChangeDialog(JMenuItem result, EventActionType level)
-  {
+  protected void showLogLevelColorChangeDialog(JMenuItem result, EventActionType level) {
     JMenuItem menuItem = result;
-    Color newColor = JColorChooser.showDialog(this._logMonitorFrame, "Choose Event Actions Color", result.getForeground());
+    Color newColor = JColorChooser.showDialog(this._logMonitorFrame, "Choose Event Actions Color",
+        result.getForeground());
 
-    if (newColor != null)
-    {
+    if (newColor != null) {
       level.setLogLevelColorMap(level, newColor);
       this._table.getFilteredLogTableModel().refresh();
     }
   }
 
-  protected JCheckBoxMenuItem createMenuItem(EventActionType level)
-  {
+  protected JCheckBoxMenuItem createMenuItem(EventActionType level) {
     JCheckBoxMenuItem result = new JCheckBoxMenuItem(level.toString());
     result.setSelected(true);
     result.setMnemonic(level.toString().charAt(0));
@@ -865,13 +822,12 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenu createViewMenu()
-  {
+  protected JMenu createViewMenu() {
     JMenu result = new JMenu("View");
     result.setMnemonic('v');
     Iterator columns = getLogTableColumns();
     while (columns.hasNext()) {
-      result.add(getLogTableColumnMenuItem((LogTableColumn)columns.next()));
+      result.add(getLogTableColumnMenuItem((LogTableColumn) columns.next()));
     }
 
     result.addSeparator();
@@ -881,7 +837,7 @@ public class RvSnooperGUI
   }
 
   protected JCheckBoxMenuItem getLogTableColumnMenuItem(LogTableColumn column) {
-    JCheckBoxMenuItem result = (JCheckBoxMenuItem)this._logTableColumnMenuItems.get(column);
+    JCheckBoxMenuItem result = (JCheckBoxMenuItem) this._logTableColumnMenuItems.get(column);
     if (result == null) {
       result = createLogTableColumnMenuItem(column);
       this._logTableColumnMenuItems.put(column, result);
@@ -895,8 +851,7 @@ public class RvSnooperGUI
 
     result.setSelected(true);
     result.setMnemonic(column.toString().charAt(0));
-    result.addActionListener(new ActionListener()
-    {
+    result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         List selectedColumns = RvSnooperGUI.this.updateView();
         RvSnooperGUI.this._table.setView(selectedColumns);
@@ -909,7 +864,7 @@ public class RvSnooperGUI
     ArrayList updatedList = new ArrayList();
     Iterator columnIterator = this._columns.iterator();
     while (columnIterator.hasNext()) {
-      LogTableColumn column = (LogTableColumn)columnIterator.next();
+      LogTableColumn column = (LogTableColumn) columnIterator.next();
       JCheckBoxMenuItem result = getLogTableColumnMenuItem(column);
 
       if (result.isSelected()) {
@@ -951,11 +906,10 @@ public class RvSnooperGUI
   protected void selectAllLogTableColumns(boolean selected) {
     Iterator columns = getLogTableColumns();
     while (columns.hasNext())
-      getLogTableColumnMenuItem((LogTableColumn)columns.next()).setSelected(selected);
+      getLogTableColumnMenuItem((LogTableColumn) columns.next()).setSelected(selected);
   }
 
-  protected JMenu createFileMenu()
-  {
+  protected JMenu createFileMenu() {
     JMenu fileMenu = new JMenu("File");
     fileMenu.setMnemonic('f');
 
@@ -975,26 +929,26 @@ public class RvSnooperGUI
     return fileMenu;
   }
 
-  protected JMenuItem createSaveHTML()
-  {
+  protected JMenuItem createSaveHTML() {
     JMenuItem result = new JMenuItem("Save Table to HTML file");
     result.setMnemonic('h');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        RvSnooperFileHandler.saveTableToHtml(VERSION, URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
+        RvSnooperFileHandler.saveTableToHtml(VERSION, URL, RvSnooperGUI.this.getBaseFrame(),
+            RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
       }
     });
     return result;
   }
 
-  protected JMenuItem createFileSaveConfigMI()
-  {
+  protected JMenuItem createFileSaveConfigMI() {
     JMenuItem result = new JMenuItem("Save configuration to file");
     result.setMnemonic('c');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { FileDialog fd = new FileDialog(RvSnooperGUI.this.getBaseFrame(), "Save config File", 1);
+        try {
+          FileDialog fd = new FileDialog(RvSnooperGUI.this.getBaseFrame(), "Save config File", 1);
           fd.setDirectory(RvSnooperGUI.this._configurationManager.getFilename());
           fd.setFile("*.rs0");
           fd.setVisible(true);
@@ -1011,14 +965,14 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createFileLoadConfigMI()
-  {
+  protected JMenuItem createFileLoadConfigMI() {
     JMenuItem result = new JMenuItem("Load configuration from file");
     result.setMnemonic('c');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { FileDialog fd = new FileDialog(RvSnooperGUI.this.getBaseFrame(), "Open config File", 0);
+        try {
+          FileDialog fd = new FileDialog(RvSnooperGUI.this.getBaseFrame(), "Open config File", 0);
           fd.setDirectory(RvSnooperGUI.this._configurationManager.getFilename());
           fd.setFile("*.rs0");
           fd.setVisible(true);
@@ -1035,13 +989,14 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createSaveAsTextMI()
-  {
+  protected JMenuItem createSaveAsTextMI() {
     JMenuItem result = new JMenuItem("Save Table to text file");
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { RvSnooperFileHandler.saveTableToTextFile(VERSION+" "+URL, RvSnooperGUI.this.getBaseFrame(), RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
+        try {
+          RvSnooperFileHandler.saveTableToTextFile(VERSION + " " + URL, RvSnooperGUI.this.getBaseFrame(),
+              RvSnooperGUI.this._statusLabel, RvSnooperGUI.this._table);
         } catch (Exception ex) {
           error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), ex.getMessage());
         }
@@ -1050,8 +1005,7 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createOpenMI()
-  {
+  protected JMenuItem createOpenMI() {
     JMenuItem result = new JMenuItem("New Listener...");
     result.setMnemonic('n');
     result.setAccelerator(KeyStroke.getKeyStroke("control N"));
@@ -1063,8 +1017,7 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createSaveConfigMI()
-  {
+  protected JMenuItem createSaveConfigMI() {
     JMenuItem result = new JMenuItem("Save Listeners to file");
     result.setMnemonic('s');
     result.addActionListener(new ActionListener() {
@@ -1086,8 +1039,7 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createCloseListener()
-  {
+  protected JMenuItem createCloseListener() {
     JMenuItem result = new JMenuItem("Close All Listeners");
     result.setMnemonic('c');
     result.setAccelerator(KeyStroke.getKeyStroke("control Q"));
@@ -1104,14 +1056,12 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected void createMRUListnerListMI(JMenu menu)
-  {
+  protected void createMRUListnerListMI(JMenu menu) {
     String[] parameters = this._mruListnerManager.getMRUFileList();
 
     if (parameters != null) {
       menu.addSeparator();
-      for (int i = 0; i < parameters.length; i++)
-      {
+      for (int i = 0; i < parameters.length; i++) {
         JMenuItem result = new JMenuItem(i + 1 + " " + parameters[i]);
         result.setMnemonic(i + 1);
         result.addActionListener(new ActionListener() {
@@ -1149,8 +1099,7 @@ public class RvSnooperGUI
   protected JMenuItem createConfigureSave() {
     JMenuItem result = new JMenuItem("Save");
     result.setMnemonic('s');
-    result.addActionListener(new ActionListener()
-    {
+    result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperGUI.this.saveConfiguration();
       }
@@ -1169,8 +1118,7 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createConfigureMaxRecords()
-  {
+  protected JMenuItem createConfigureMaxRecords() {
     JMenuItem result = new JMenuItem("Set Max Number of Records");
     result.setMnemonic('m');
     result.addActionListener(new ActionListener() {
@@ -1187,8 +1135,7 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected JMenuItem createConfigureDateFormat()
-  {
+  protected JMenuItem createConfigureDateFormat() {
     JMenuItem result = new JMenuItem("Configure Date Format");
     result.setMnemonic('d');
 
@@ -1199,6 +1146,7 @@ public class RvSnooperGUI
     });
     return result;
   }
+
   protected void saveConfiguration() {
     RvSnooperErrorDialog error;
     try {
@@ -1209,8 +1157,7 @@ public class RvSnooperGUI
     }
   }
 
-  protected void resetConfiguration()
-  {
+  protected void resetConfiguration() {
     this._configurationManager.reset();
   }
 
@@ -1223,14 +1170,14 @@ public class RvSnooperGUI
       try {
         setMaxNumberOfLogRecords(Integer.parseInt(temp));
       } catch (NumberFormatException e) {
-        RvSnooperErrorDialog error = new RvSnooperErrorDialog(getBaseFrame(), "'" + temp + "' is an invalid parameter.\nPlease try again.");
+        RvSnooperErrorDialog error = new RvSnooperErrorDialog(getBaseFrame(), "'" + temp
+            + "' is an invalid parameter.\nPlease try again.");
 
         setMaxRecordConfiguration();
       }
   }
 
-  protected void setDateConfiguration()
-  {
+  protected void setDateConfiguration() {
     RvSnooperInputDialog inputDialog = new RvSnooperInputDialog(getBaseFrame(), "Set DateFormat", "", 10);
 
     inputDialog.addKeyListener(new KeyAdapter() {
@@ -1245,14 +1192,14 @@ public class RvSnooperGUI
       try {
         setDateFormat(temp);
       } catch (NumberFormatException e) {
-        RvSnooperErrorDialog error = new RvSnooperErrorDialog(getBaseFrame(), "'" + temp + "' is an invalid parameter.\nPlease try again.");
+        RvSnooperErrorDialog error = new RvSnooperErrorDialog(getBaseFrame(), "'" + temp
+            + "' is an invalid parameter.\nPlease try again.");
 
         setMaxRecordConfiguration();
       }
   }
 
-  protected JMenu createHelpMenu()
-  {
+  protected JMenu createHelpMenu() {
     JMenu helpMenu = new JMenu("Help");
     helpMenu.setMnemonic('h');
     helpMenu.add(createHelpAbout());
@@ -1266,8 +1213,7 @@ public class RvSnooperGUI
     return helpMenu;
   }
 
-  protected JMenuItem createHelpProperties()
-  {
+  protected JMenuItem createHelpProperties() {
     String title = "Show Properties";
     JMenuItem result = new JMenuItem("Show Properties");
     result.addActionListener(new ActionListener() {
@@ -1285,18 +1231,18 @@ public class RvSnooperGUI
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { BrowserLauncher.openURL("http://www.apache.org/licenses/LICENSE");
-        } catch (Exception ex)
-        {
-          error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), "Could not open browser : " + ex.getMessage());
+        try {
+          BrowserLauncher.openURL("http://www.apache.org/licenses/LICENSE");
+        } catch (Exception ex) {
+          error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), "Could not open browser : "
+              + ex.getMessage());
         }
       }
     });
     return result;
   }
 
-  protected JMenuItem createHelpGotoHomepage()
-  {
+  protected JMenuItem createHelpGotoHomepage() {
     String title = "Help topics";
     JMenuItem result = new JMenuItem("Help topics");
     result.setMnemonic('t');
@@ -1304,18 +1250,18 @@ public class RvSnooperGUI
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperErrorDialog error;
-        try { BrowserLauncher.openURL("http://rvsn00p.sf.net");
-        } catch (Exception ex)
-        {
-          error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), "Could not open browser : " + ex.getMessage());
+        try {
+          BrowserLauncher.openURL("http://rvsn00p.sf.net");
+        } catch (Exception ex) {
+          error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), "Could not open browser : "
+              + ex.getMessage());
         }
       }
     });
     return result;
   }
 
-  protected JMenuItem createHelpAbout()
-  {
+  protected JMenuItem createHelpAbout() {
     String title = "About EMSSn00per";
     JMenuItem result = new JMenuItem("About EMSSn00per");
     result.setMnemonic('a');
@@ -1327,18 +1273,23 @@ public class RvSnooperGUI
     return result;
   }
 
-  protected void showPropertiesDialog(String title)
-  {
+  protected void showPropertiesDialog(String title) {
     JOptionPane.showMessageDialog(this._logMonitorFrame, this._displayedLogBrokerProperties.toArray(), title, -1);
   }
 
-  protected void showAboutDialog(String title)
-  {
-    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { VERSION, " ", "Constructed by Orjan Lundberg <lundberg@home.se>", " ", "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ", "Thanks goes to (in no special order):", " ", "Julian Lo, Dan McLean ", " ", "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ", "Copyright (C) The Apache Software Foundation. All rights reserved.", " ", "This software is published under the terms of the Apache Software", "License version 1.1, a copy of which has been included with this", "distribution in the LICENSE.txt file. ", " " }, title, -1);
+  protected void showAboutDialog(String title) {
+    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { VERSION, " ",
+        "Constructed by Orjan Lundberg <lundberg@home.se>", " ",
+        "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ",
+        "Thanks goes to (in no special order):", " ", "Julian Lo, Dan McLean ", " ",
+        "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ",
+        "Copyright (C) The Apache Software Foundation. All rights reserved.", " ",
+        "This software is published under the terms of the Apache Software",
+        "License version 1.1, a copy of which has been included with this", "distribution in the LICENSE.txt file. ",
+        " " }, title, -1);
   }
 
-  protected JMenu createEditMenu()
-  {
+  protected JMenu createEditMenu() {
     JMenu editMenu = new JMenu("Edit");
     editMenu.setMnemonic('e');
     editMenu.add(createEditFindMI());
@@ -1370,10 +1321,10 @@ public class RvSnooperGUI
     editFindMI.setMnemonic('f');
     editFindMI.setAccelerator(KeyStroke.getKeyStroke("control F"));
 
-    editFindMI.addActionListener(new ActionListener()
-    {
+    editFindMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String inputValue = JOptionPane.showInputDialog(RvSnooperGUI.this._logMonitorFrame, "Find text: ", "Search Record Messages", 3);
+        String inputValue = JOptionPane.showInputDialog(RvSnooperGUI.this._logMonitorFrame, "Find text: ",
+            "Search Record Messages", 3);
 
         RvSnooperGUI.this.setSearchText(inputValue);
         RvSnooperGUI.this.findSearchText();
@@ -1386,10 +1337,10 @@ public class RvSnooperGUI
     JMenuItem editFilterNDCMI = new JMenuItem("Filter by JMSCorrelationID");
     editFilterNDCMI.setMnemonic('t');
     editFilterNDCMI.setAccelerator(KeyStroke.getKeyStroke("control shift T"));
-    editFilterNDCMI.addActionListener(new ActionListener()
-    {
+    editFilterNDCMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String inputValue = JOptionPane.showInputDialog(RvSnooperGUI.this._logMonitorFrame, "Filter by this JMSCorrelationID: ", "Filter Log Records by tracking id", 3);
+        String inputValue = JOptionPane.showInputDialog(RvSnooperGUI.this._logMonitorFrame,
+            "Filter by this JMSCorrelationID: ", "Filter Log Records by tracking id", 3);
 
         RvSnooperGUI.this.setTIDTextFilter(inputValue);
         RvSnooperGUI.this.filterByTID();
@@ -1400,24 +1351,21 @@ public class RvSnooperGUI
     return editFilterNDCMI;
   }
 
-  protected JMenuItem createEditFilterBySelectedTIDMI()
-  {
+  protected JMenuItem createEditFilterBySelectedTIDMI() {
     JMenuItem editFilterTIDMI = new JMenuItem("Filter by Selected JMSCorrelationID");
     editFilterTIDMI.setMnemonic('s');
     editFilterTIDMI.setAccelerator(KeyStroke.getKeyStroke("control T"));
-    editFilterTIDMI.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent e)
-      {
+    editFilterTIDMI.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
         ListSelectionModel lsm = RvSnooperGUI.this._table.getSelectionModel();
 
-        if (!lsm.isSelectionEmpty())
-        {
+        if (!lsm.isSelectionEmpty()) {
           int selectedRow = lsm.getMinSelectionIndex();
 
           FilteredLogTableModel ftm = RvSnooperGUI.this._table.getFilteredLogTableModel();
 
-          String sTID = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getTIDColumnID());
+          String sTID = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getTIDColumnID());
           if (sTID != null) {
             RvSnooperGUI.this.setTIDTextFilter(sTID);
             RvSnooperGUI.this.filterByTID();
@@ -1433,18 +1381,17 @@ public class RvSnooperGUI
     JMenuItem editFilterTIDMI = new JMenuItem("Filter by Selected Conn Hostname");
     editFilterTIDMI.setMnemonic('H');
     editFilterTIDMI.setAccelerator(KeyStroke.getKeyStroke("control H"));
-    editFilterTIDMI.addActionListener(new ActionListener()
-    {
+    editFilterTIDMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         ListSelectionModel lsm = RvSnooperGUI.this._table.getSelectionModel();
 
-        if (!lsm.isSelectionEmpty())
-        {
+        if (!lsm.isSelectionEmpty()) {
           int selectedRow = lsm.getMinSelectionIndex();
 
           FilteredLogTableModel ftm = RvSnooperGUI.this._table.getFilteredLogTableModel();
 
-          String sHNF = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getConnHostnameColumnID());
+          String sHNF = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getConnHostnameColumnID());
 
           if (sHNF != null) {
             RvSnooperGUI.this.setConnHostnameTextFilter(sHNF);
@@ -1460,18 +1407,17 @@ public class RvSnooperGUI
   protected JMenuItem createEditFilterBySelectedRevConnHN() {
     JMenuItem editFilterTIDMI = new JMenuItem("Remove Selected Conn Hostname");
 
-    editFilterTIDMI.addActionListener(new ActionListener()
-    {
+    editFilterTIDMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         ListSelectionModel lsm = RvSnooperGUI.this._table.getSelectionModel();
 
-        if (!lsm.isSelectionEmpty())
-        {
+        if (!lsm.isSelectionEmpty()) {
           int selectedRow = lsm.getMinSelectionIndex();
 
           FilteredLogTableModel ftm = RvSnooperGUI.this._table.getFilteredLogTableModel();
 
-          String sHNF = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getConnHostnameColumnID());
+          String sHNF = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getConnHostnameColumnID());
 
           if (sHNF != null) {
             RvSnooperGUI.this.setConnHostnameTextFilter(sHNF);
@@ -1484,23 +1430,21 @@ public class RvSnooperGUI
     return editFilterTIDMI;
   }
 
-  protected JMenuItem createEditFilterBySelectedSubjectMI()
-  {
+  protected JMenuItem createEditFilterBySelectedSubjectMI() {
     JMenuItem editFilterSubjectMI = new JMenuItem("Filter by Selected Destination");
     editFilterSubjectMI.setMnemonic('y');
     editFilterSubjectMI.setAccelerator(KeyStroke.getKeyStroke("control Y"));
-    editFilterSubjectMI.addActionListener(new ActionListener()
-    {
+    editFilterSubjectMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         ListSelectionModel lsm = RvSnooperGUI.this._table.getSelectionModel();
 
-        if (!lsm.isSelectionEmpty())
-        {
+        if (!lsm.isSelectionEmpty()) {
           int selectedRow = lsm.getMinSelectionIndex();
 
           FilteredLogTableModel ftm = RvSnooperGUI.this._table.getFilteredLogTableModel();
 
-          String s = (String)RvSnooperGUI.this._table.getModel().getValueAt(selectedRow, RvSnooperGUI.this._table.getSubjectColumnID());
+          String s = (String) RvSnooperGUI.this._table.getModel().getValueAt(selectedRow,
+              RvSnooperGUI.this._table.getSubjectColumnID());
           if (s != null) {
             RvSnooperGUI.this.setSubjectTextFilter(s);
             RvSnooperGUI.this.filterBySubject();
@@ -1512,32 +1456,28 @@ public class RvSnooperGUI
     return editFilterSubjectMI;
   }
 
-  protected void setTIDTextFilter(String text)
-  {
+  protected void setTIDTextFilter(String text) {
     if (text == null)
       _JMSCorrelationIDTextFilter = "";
     else
       _JMSCorrelationIDTextFilter = text;
   }
 
-  protected void setConnHostnameTextFilter(String text)
-  {
+  protected void setConnHostnameTextFilter(String text) {
     if (text == null)
       this._ConnHostnameTextFilter = "";
     else
       this._ConnHostnameTextFilter = text;
   }
 
-  protected void setSubjectTextFilter(String text)
-  {
+  protected void setSubjectTextFilter(String text) {
     if (text == null)
       _subjectTextFilter = "";
     else
       _subjectTextFilter = text;
   }
 
-  protected void filterByTID()
-  {
+  protected void filterByTID() {
     String text = _JMSCorrelationIDTextFilter;
     if ((text == null) || (text.length() == 0)) {
       return;
@@ -1559,8 +1499,7 @@ public class RvSnooperGUI
     this._statusLabel.setText("Filtered by Connnection Hostname " + text);
   }
 
-  protected void filterRemoveConnHostname()
-  {
+  protected void filterRemoveConnHostname() {
     String text = this._ConnHostnameTextFilter;
     if ((text == null) || (text.length() == 0)) {
       return;
@@ -1571,8 +1510,7 @@ public class RvSnooperGUI
     this._statusLabel.setText("Filter Removed Connnection Hostname " + text);
   }
 
-  protected void filterBySubject()
-  {
+  protected void filterBySubject() {
     String text = _subjectTextFilter;
     if ((text == null) || (text.length() == 0)) {
       return;
@@ -1595,7 +1533,8 @@ public class RvSnooperGUI
           return false;
         }
         CategoryPath path = new CategoryPath(record.getJMSDestination());
-        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected()) && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
+        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected())
+            && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
       }
     };
     return result;
@@ -1612,7 +1551,8 @@ public class RvSnooperGUI
           return false;
         }
         CategoryPath path = new CategoryPath(subject);
-        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected()) && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
+        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected())
+            && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
       }
     };
     return result;
@@ -1620,8 +1560,7 @@ public class RvSnooperGUI
 
   protected LogRecordFilter createConnHostNameRecordFilter(String text) {
     this._ConnHostnameTextFilter = text;
-    LogRecordFilter result = new LogRecordFilter()
-    {
+    LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
         String hostName = record.getConnHostName();
         if ((hostName == null) || (RvSnooperGUI.this._ConnHostnameTextFilter == null))
@@ -1631,7 +1570,8 @@ public class RvSnooperGUI
         }
         String subject = record.getJMSDestination();
         CategoryPath path = new CategoryPath(subject);
-        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected()) && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
+        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected())
+            && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
       }
     };
     return result;
@@ -1639,8 +1579,7 @@ public class RvSnooperGUI
 
   protected LogRecordFilter createConnHostNameReverseRecordFilter(String text) {
     this._ConnHostnameTextFilter = text;
-    LogRecordFilter result = new LogRecordFilter()
-    {
+    LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
         String hostName = record.getConnHostName();
         if ((hostName == null) || (RvSnooperGUI.this._ConnHostnameTextFilter == null))
@@ -1650,7 +1589,8 @@ public class RvSnooperGUI
         }
         String subject = record.getJMSDestination();
         CategoryPath path = new CategoryPath(subject);
-        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected()) && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
+        return (RvSnooperGUI.this.getMenuItem(record.getType()).isSelected())
+            && (RvSnooperGUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
       }
     };
     return result;
@@ -1660,10 +1600,10 @@ public class RvSnooperGUI
     JMenuItem editRestoreAllNDCMI = new JMenuItem("Remove all filters");
     editRestoreAllNDCMI.setMnemonic('r');
     editRestoreAllNDCMI.setAccelerator(KeyStroke.getKeyStroke("control R"));
-    editRestoreAllNDCMI.addActionListener(new ActionListener()
-    {
+    editRestoreAllNDCMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        RvSnooperGUI.this._table.getFilteredLogTableModel().setLogRecordFilter(RvSnooperGUI.this.createLogRecordFilter());
+        RvSnooperGUI.this._table.getFilteredLogTableModel().setLogRecordFilter(
+            RvSnooperGUI.this.createLogRecordFilter());
 
         RvSnooperGUI.this.setTIDTextFilter("");
         RvSnooperGUI.this._table.getFilteredLogTableModel().refresh();
@@ -1673,8 +1613,7 @@ public class RvSnooperGUI
     return editRestoreAllNDCMI;
   }
 
-  protected JToolBar createToolBar()
-  {
+  protected JToolBar createToolBar() {
     JToolBar tb = new JToolBar();
     tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
     JComboBox fontCombo = new JComboBox();
@@ -1704,8 +1643,7 @@ public class RvSnooperGUI
 
     listenerButton.setToolTipText("Create new Rv Listener.");
 
-    listenerButton.addActionListener(new ActionListener()
-    {
+    listenerButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperGUI.this.requestNewRvListener(null);
       }
@@ -1773,35 +1711,29 @@ public class RvSnooperGUI
     return tb;
   }
 
-  private void addRenderersToRendererCombo(JComboBox rendererCombo)
-  {
+  private void addRenderersToRendererCombo(JComboBox rendererCombo) {
     rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl");
     rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringJMSStreamImpl");
 
     String env = System.getenv("EMSSNOOP_RENDERERS");
-    try
-    {
+    try {
       if (env != null) {
         String[] result = env.split(";");
         for (int x = 0; x < result.length; x++)
           rendererCombo.addItem(result[x]);
       }
-    }
-    catch (RuntimeException e)
-    {
+    } catch (RuntimeException e) {
     }
   }
 
-  String getLastUsedRenderer()
-  {
+  String getLastUsedRenderer() {
     if (this._lastUsedRenderer == null) {
       return "uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl";
     }
     return this._lastUsedRenderer;
   }
 
-  private void addFontsToFontCombo(JComboBox fontCombo)
-  {
+  private void addFontsToFontCombo(JComboBox fontCombo) {
     Toolkit tk = Toolkit.getDefaultToolkit();
 
     String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
@@ -1810,8 +1742,7 @@ public class RvSnooperGUI
       fontCombo.addItem(fonts[j]);
   }
 
-  private ActionListener getNewButtonActionListener()
-  {
+  private ActionListener getNewButtonActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         RvSnooperGUI.this._table.clearLogRecords();
@@ -1823,8 +1754,7 @@ public class RvSnooperGUI
     };
   }
 
-  private ActionListener getPauseButonActionListener()
-  {
+  private ActionListener getPauseButonActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (RvSnooperGUI.this.isPaused())
@@ -1835,20 +1765,18 @@ public class RvSnooperGUI
     };
   }
 
-  private ActionListener getFontComboActionListener()
-  {
+  private ActionListener getFontComboActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JComboBox box = (JComboBox)e.getSource();
-        String font = (String)box.getSelectedItem();
+        JComboBox box = (JComboBox) e.getSource();
+        String font = (String) box.getSelectedItem();
 
         RvSnooperGUI.this.setFontName(font);
       }
     };
   }
 
-  private void addFontSizesToCombo(JComboBox fontSizeCombo)
-  {
+  private void addFontSizesToCombo(JComboBox fontSizeCombo) {
     fontSizeCombo.addItem("8");
     fontSizeCombo.addItem("9");
     fontSizeCombo.addItem("10");
@@ -1859,12 +1787,11 @@ public class RvSnooperGUI
     fontSizeCombo.addItem("24");
   }
 
-  private ActionListener getFontSizeComboActionListener()
-  {
+  private ActionListener getFontSizeComboActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JComboBox box = (JComboBox)e.getSource();
-        String size = (String)box.getSelectedItem();
+        JComboBox box = (JComboBox) e.getSource();
+        String size = (String) box.getSelectedItem();
         int s = Integer.valueOf(size).intValue();
 
         RvSnooperGUI.this.setFontSizeSilently(s);
@@ -1874,20 +1801,18 @@ public class RvSnooperGUI
     };
   }
 
-  private ActionListener getRendererActionListeener()
-  {
+  private ActionListener getRendererActionListeener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JComboBox box = (JComboBox)e.getSource();
-        String rendererClass = (String)box.getSelectedItem();
-        try
-        {
+        JComboBox box = (JComboBox) e.getSource();
+        String rendererClass = (String) box.getSelectedItem();
+        try {
           RvSnooperGUI.this.updateRenderClass(rendererClass);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
           RvSnooperGUI.this._statusLabel.setText("Renderer exception " + ex.getMessage());
           String str1 = ex.getLocalizedMessage();
-          RvSnooperErrorDialog error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(), "Error creating renderer : " + ex.getMessage());
+          RvSnooperErrorDialog error = new RvSnooperErrorDialog(RvSnooperGUI.this.getBaseFrame(),
+              "Error creating renderer : " + ex.getMessage());
 
           return;
         }
@@ -1899,8 +1824,7 @@ public class RvSnooperGUI
     };
   }
 
-  private void setButtonAlignment(JButton newButton)
-  {
+  private void setButtonAlignment(JButton newButton) {
     newButton.setAlignmentY(0.5F);
     newButton.setAlignmentX(0.5F);
   }
@@ -1925,8 +1849,8 @@ public class RvSnooperGUI
 
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JComboBox box = (JComboBox)e.getSource();
-        EventActionType level = (EventActionType)box.getSelectedItem();
+        JComboBox box = (JComboBox) e.getSource();
+        EventActionType level = (EventActionType) box.getSelectedItem();
         RvSnooperGUI.this.setLeastSevereDisplayedLogLevel(level);
       }
     });
@@ -1943,54 +1867,45 @@ public class RvSnooperGUI
     updateStatusLabel();
   }
 
-  protected static void centerFrame(JFrame frame)
-  {
+  protected static void centerFrame(JFrame frame) {
     Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
     Dimension comp = frame.getSize();
 
     frame.setLocation((screen.width - comp.width) / 2, (screen.height - comp.height) / 2);
   }
 
-  Rectangle getWindowBounds()
-  {
+  Rectangle getWindowBounds() {
     return getBaseFrame().getBounds();
   }
 
-  void setWindowBounds(Rectangle r)
-  {
+  void setWindowBounds(Rectangle r) {
     getBaseFrame().setBounds(r);
   }
 
-  protected void requestNewRvListener(EMSParameters p)
-  {
+  protected void requestNewRvListener(EMSParameters p) {
     RvSnooperErrorDialog error;
-    try
-    {
+    try {
       RvSnooperRvTransportInputDialog inputDialog = null;
       if (p != null) {
         inputDialog = new RvSnooperRvTransportInputDialog(getBaseFrame(), "Add  Listener", p);
-      }
-      else {
+      } else {
         inputDialog = new RvSnooperRvTransportInputDialog(getBaseFrame(), "Add  Listener", this._lastUsedRvParameters);
       }
 
       if (inputDialog.isOK()) {
         this._lastUsedRvParameters = inputDialog.getRvParameters();
 
-        this._lastUsedRvParameters.setDescription("<a href=\""+URL+"\">"+VERSION+"</a> ");
+        this._lastUsedRvParameters.setDescription("<a href=\"" + URL + "\">" + VERSION + "</a> ");
         EMSController.startListener(this._lastUsedRvParameters, this);
         updateBanner();
       }
 
-    }
-    catch (JMSException ex)
-    {
+    } catch (JMSException ex) {
       error = new RvSnooperErrorDialog(getBaseFrame(), "Error creating listener : " + ex.getMessage());
     }
   }
 
-  protected void updateMRUList()
-  {
+  protected void updateMRUList() {
     JMenu menu = this._logMonitorFrame.getJMenuBar().getMenu(0);
     menu.removeAll();
     menu.add(createOpenMI());
@@ -2012,8 +1927,7 @@ public class RvSnooperGUI
     closeAfterConfirm();
   }
 
-  protected void requestOpenMRU(ActionEvent e)
-  {
+  protected void requestOpenMRU(ActionEvent e) {
     String file = e.getActionCommand();
     StringTokenizer st = new StringTokenizer(file);
     String num = st.nextToken().trim();
@@ -2026,14 +1940,12 @@ public class RvSnooperGUI
 
       this._mruListnerManager.moveToTop(index);
       updateMRUList();
-    }
-    catch (Exception me) {
+    } catch (Exception me) {
       error = new RvSnooperErrorDialog(getBaseFrame(), "Unable to load file " + file);
     }
   }
 
-  protected void requestExit()
-  {
+  protected void requestExit() {
     setCallSystemExitOnClose(true);
     closeAfterConfirm();
   }
@@ -2045,14 +1957,14 @@ public class RvSnooperGUI
 
     String title = "Are you sure you want to exit?";
 
-    int value = JOptionPane.showConfirmDialog(this._logMonitorFrame, message.toString(), "Are you sure you want to exit?", 2, 3, null);
+    int value = JOptionPane.showConfirmDialog(this._logMonitorFrame, message.toString(),
+        "Are you sure you want to exit?", 2, 3, null);
 
     if (value == 0)
       dispose();
   }
 
-  protected Iterator getMsgTypes()
-  {
+  protected Iterator getMsgTypes() {
     return this._levels.iterator();
   }
 
@@ -2064,15 +1976,13 @@ public class RvSnooperGUI
     return EMSController.getTransports().iterator();
   }
 
-  protected static boolean loadLogFile(File file)
-  {
+  protected static boolean loadLogFile(File file) {
     boolean ok = true;
 
     return ok;
   }
 
-  protected static boolean loadLogFile(URL url)
-  {
+  protected static boolean loadLogFile(URL url) {
     boolean ok = true;
 
     return ok;
@@ -2092,8 +2002,7 @@ public class RvSnooperGUI
     changeStringCombo(this._fontNameCombo, fontName);
   }
 
-  protected void setSplitPaneVertical(JSplitPane _splitPaneVertical)
-  {
+  protected void setSplitPaneVertical(JSplitPane _splitPaneVertical) {
     this._splitPaneVertical = _splitPaneVertical;
   }
 
@@ -2109,18 +2018,15 @@ public class RvSnooperGUI
     return this._splitPaneTableViewer.getDividerLocation();
   }
 
-  void setSplitPaneTableViewer(JSplitPane _splitPaneTableViewer)
-  {
+  void setSplitPaneTableViewer(JSplitPane _splitPaneTableViewer) {
     this._splitPaneTableViewer = _splitPaneTableViewer;
   }
 
-  void setSplitPaneTableViewerPos(int location)
-  {
+  void setSplitPaneTableViewerPos(int location) {
     this._splitPaneTableViewer.setDividerLocation(location);
   }
 
-  public void onMessage(Message msg)
-  {
+  public void onMessage(Message msg) {
     if (isPaused()) {
       return;
     }
@@ -2130,30 +2036,25 @@ public class RvSnooperGUI
     addMessage(r);
   }
 
-  void setLastUsedRenderer(String rendererClass)
-  {
+  void setLastUsedRenderer(String rendererClass) {
     if (rendererClass != null)
       this._lastUsedRenderer = rendererClass;
   }
 
-  private void updateRenderClass(String rendererClass)
-    throws ClassNotFoundException, InstantiationException, IllegalAccessException
-  {
+  private void updateRenderClass(String rendererClass) throws ClassNotFoundException, InstantiationException,
+      IllegalAccessException {
     Class c = Class.forName(rendererClass);
     Object o = c.newInstance();
     if ((o instanceof IMarshalJMSToString))
-      _marshalImpl.setImpl((IMarshalJMSToString)o);
+      _marshalImpl.setImpl((IMarshalJMSToString) o);
     else
       this._statusLabel.setText("Class " + rendererClass + " does not implement IMarshalJMSToString");
   }
 
-  private class AddLogRecordRunnable
-    implements Runnable
-  {
+  private class AddLogRecordRunnable implements Runnable {
     private final LogRecord lr;
 
-    public AddLogRecordRunnable(LogRecord lr)
-    {
+    public AddLogRecordRunnable(LogRecord lr) {
       this.lr = lr;
     }
 
@@ -2164,12 +2065,10 @@ public class RvSnooperGUI
     }
   }
 
-  class LogBrokerMonitorWindowAdaptor extends WindowAdapter
-  {
+  class LogBrokerMonitorWindowAdaptor extends WindowAdapter {
     protected RvSnooperGUI _monitor;
 
-    public LogBrokerMonitorWindowAdaptor(RvSnooperGUI monitor)
-    {
+    public LogBrokerMonitorWindowAdaptor(RvSnooperGUI monitor) {
       this._monitor = monitor;
     }
 

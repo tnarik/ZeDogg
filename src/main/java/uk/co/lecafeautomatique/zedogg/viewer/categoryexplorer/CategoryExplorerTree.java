@@ -5,22 +5,19 @@ import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreePath;
 
-public class CategoryExplorerTree extends JTree
-{
+public class CategoryExplorerTree extends JTree {
   private static final long serialVersionUID = 3834871377667961138L;
   protected CategoryExplorerModel _model;
   protected boolean _rootAlreadyExpanded = false;
 
-  public CategoryExplorerTree(CategoryExplorerModel model)
-  {
+  public CategoryExplorerTree(CategoryExplorerModel model) {
     super(model);
 
     this._model = model;
     init();
   }
 
-  public CategoryExplorerTree()
-  {
+  public CategoryExplorerTree() {
     CategoryNode rootNode = new CategoryNode("Topics");
 
     this._model = new CategoryExplorerModel(rootNode);
@@ -30,13 +27,11 @@ public class CategoryExplorerTree extends JTree
     init();
   }
 
-  public CategoryExplorerModel getExplorerModel()
-  {
+  public CategoryExplorerModel getExplorerModel() {
     return this._model;
   }
 
-  public String getToolTipText(MouseEvent e)
-  {
+  public String getToolTipText(MouseEvent e) {
     try {
       return super.getToolTipText(e);
     } catch (Exception ex) {
@@ -44,8 +39,7 @@ public class CategoryExplorerTree extends JTree
     return "";
   }
 
-  protected void init()
-  {
+  protected void init() {
     putClientProperty("JTree.lineStyle", "Angled");
 
     CategoryNodeRenderer renderer = new CategoryNodeRenderer();
@@ -65,8 +59,7 @@ public class CategoryExplorerTree extends JTree
     this._model.updateAllNodes();
   }
 
-  protected void expandRootNode()
-  {
+  protected void expandRootNode() {
     if (this._rootAlreadyExpanded) {
       return;
     }
@@ -75,8 +68,7 @@ public class CategoryExplorerTree extends JTree
     expandPath(path);
   }
 
-  protected void ensureRootExpansion()
-  {
+  protected void ensureRootExpansion() {
     this._model.addTreeModelListener(new TreeModelAdapter() {
       public void treeNodesInserted(TreeModelEvent e) {
         CategoryExplorerTree.this.expandRootNode();

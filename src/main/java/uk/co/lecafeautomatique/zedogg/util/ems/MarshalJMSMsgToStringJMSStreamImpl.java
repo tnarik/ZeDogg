@@ -14,14 +14,10 @@ import javax.jms.Queue;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
-public class MarshalJMSMsgToStringJMSStreamImpl
-  implements IMarshalJMSToString
-{
+public class MarshalJMSMsgToStringJMSStreamImpl implements IMarshalJMSToString {
   protected SimpleDateFormat _dfXML = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-  public String JMSMsgToString(Message message, String name)
-    throws JMSException
-  {
+  public String JMSMsgToString(Message message, String name) throws JMSException {
     String strTextBuffer = "";
     StringBuffer strXmlBuffer = new StringBuffer();
     StringBuffer strHeader = new StringBuffer();
@@ -30,19 +26,17 @@ public class MarshalJMSMsgToStringJMSStreamImpl
     Destination destReplyTo = message.getJMSReplyTo();
     String strJMSReplyTo;
     if (Topic.class.isInstance(destReplyTo)) {
-      strJMSReplyTo = ((Topic)destReplyTo).getTopicName();
-    }
-    else
-    {
+      strJMSReplyTo = ((Topic) destReplyTo).getTopicName();
+    } else {
       if (Queue.class.isInstance(destReplyTo)) {
-        strJMSReplyTo = ((Queue)destReplyTo).getQueueName();
-      }
-      else {
+        strJMSReplyTo = ((Queue) destReplyTo).getQueueName();
+      } else {
         strJMSReplyTo = null;
       }
     }
     String strJMSMessageID = message.getJMSMessageID();
-    String strJMSDestination = message.getJMSDestination().toString().substring(6, message.getJMSDestination().toString().length() - 1);
+    String strJMSDestination = message.getJMSDestination().toString()
+        .substring(6, message.getJMSDestination().toString().length() - 1);
     String strJMSCorrelationID = message.getJMSCorrelationID();
     String strJMSDeliveryMode = String.valueOf(message.getJMSDeliveryMode());
     String strJMSPriority = String.valueOf(message.getJMSPriority());
@@ -138,7 +132,7 @@ public class MarshalJMSMsgToStringJMSStreamImpl
     strXmlBuffer.append("<body>");
 
     if (MapMessage.class.isInstance(message)) {
-      MapMessage msg = (MapMessage)message;
+      MapMessage msg = (MapMessage) message;
       map = msg.getMapNames();
       while (map.hasMoreElements()) {
         String mname = map.nextElement().toString();
@@ -159,18 +153,16 @@ public class MarshalJMSMsgToStringJMSStreamImpl
         }
       }
 
-    }
-    else if (TextMessage.class.isInstance(message)) {
-      TextMessage msg = (TextMessage)message;
+    } else if (TextMessage.class.isInstance(message)) {
+      TextMessage msg = (TextMessage) message;
 
       strXmlBuffer.append("\n\t<node name=\"Text\" type=\"string\">");
       strXmlBuffer.append(HTMLEncoder.encodeString(msg.getText()));
       strXmlBuffer.append("</node>");
-    }
-    else if (BytesMessage.class.isInstance(message)) {
-      BytesMessage msg = (BytesMessage)message;
+    } else if (BytesMessage.class.isInstance(message)) {
+      BytesMessage msg = (BytesMessage) message;
       Base64 base64encoder = new Base64();
-      byte[] byteBuffer = new byte[(int)msg.getBodyLength()];
+      byte[] byteBuffer = new byte[(int) msg.getBodyLength()];
       msg.readBytes(byteBuffer);
       strXmlBuffer.append("\n\t<node name=\"base64\" type=\"String\">");
       strXmlBuffer.append(HTMLEncoder.encodeString(base64encoder.encode(byteBuffer)));

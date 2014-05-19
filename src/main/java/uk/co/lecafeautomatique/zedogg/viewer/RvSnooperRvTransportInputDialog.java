@@ -14,8 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class RvSnooperRvTransportInputDialog extends RvSnooperDialog
-{
+public class RvSnooperRvTransportInputDialog extends RvSnooperDialog {
   private static final long serialVersionUID = 3906081235372421427L;
   private JTextField _tServerURL = new JTextField();
   private JTextField _tPassword = new JTextField();
@@ -23,8 +22,7 @@ public class RvSnooperRvTransportInputDialog extends RvSnooperDialog
   private JTextField _tTopic = new JTextField();
   private boolean isOK;
 
-  public RvSnooperRvTransportInputDialog(JFrame jframe, String title, EMSParameters defaultParameters)
-  {
+  public RvSnooperRvTransportInputDialog(JFrame jframe, String title, EMSParameters defaultParameters) {
     super(jframe, title, true);
 
     JPanel bottom = new JPanel();
@@ -71,8 +69,7 @@ public class RvSnooperRvTransportInputDialog extends RvSnooperDialog
     setVisible(true);
   }
 
-  public EMSParameters getRvParameters()
-  {
+  public EMSParameters getRvParameters() {
     EMSParameters p = new EMSParameters();
 
     p.setUserName(this._tUserName.getText());
@@ -87,8 +84,7 @@ public class RvSnooperRvTransportInputDialog extends RvSnooperDialog
     return this.isOK;
   }
 
-  protected void createInputField(String name, String defaultText, JTextField tf, JPanel addTo)
-  {
+  protected void createInputField(String name, String defaultText, JTextField tf, JPanel addTo) {
     JLabel jl = new JLabel(name);
 
     addTo.add(jl);
@@ -97,8 +93,7 @@ public class RvSnooperRvTransportInputDialog extends RvSnooperDialog
     jl.setLabelFor(tf);
   }
 
-  protected void setOK(boolean OK)
-  {
+  protected void setOK(boolean OK) {
     this.isOK = OK;
   }
 }

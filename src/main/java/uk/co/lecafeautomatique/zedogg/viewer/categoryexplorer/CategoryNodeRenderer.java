@@ -10,14 +10,12 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class CategoryNodeRenderer extends DefaultTreeCellRenderer
-{
+public class CategoryNodeRenderer extends DefaultTreeCellRenderer {
   private static final long serialVersionUID = 3256438114422371125L;
   protected JCheckBox _checkBox = new JCheckBox();
   protected JPanel _panel = new JPanel();
 
-  public CategoryNodeRenderer()
-  {
+  public CategoryNodeRenderer() {
     this._panel.setBackground(UIManager.getColor("Tree.textBackground"));
 
     this._checkBox.setOpaque(false);
@@ -31,18 +29,15 @@ public class CategoryNodeRenderer extends DefaultTreeCellRenderer
     setLeafIcon(null);
   }
 
-  public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus)
-  {
-    CategoryNode node = (CategoryNode)value;
+  public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+      boolean leaf, int row, boolean hasFocus) {
+    CategoryNode node = (CategoryNode) value;
 
     super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-    if (row == 0)
-    {
+    if (row == 0) {
       this._checkBox.setVisible(false);
-    }
-    else
-    {
+    } else {
       this._checkBox.setVisible(true);
       this._checkBox.setSelected(node.isSelected());
     }
@@ -58,8 +53,7 @@ public class CategoryNodeRenderer extends DefaultTreeCellRenderer
     return new Dimension(0, 0);
   }
 
-  protected String buildToolTip(CategoryNode node)
-  {
+  protected String buildToolTip(CategoryNode node) {
     StringBuffer result = new StringBuffer();
     result.append(node.getTotalNumberOfRecords());
     result.append(" ");
@@ -68,4 +62,3 @@ public class CategoryNodeRenderer extends DefaultTreeCellRenderer
     return result.toString();
   }
 }
-

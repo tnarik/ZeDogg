@@ -7,9 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class EMSParameters
-  implements Cloneable, Serializable
-{
+public class EMSParameters implements Cloneable, Serializable {
   private static final long serialVersionUID = 3257001077244114230L;
   protected int _hashCode = 0;
   protected String _serverURL;
@@ -20,8 +18,7 @@ public class EMSParameters
   protected Set<String> _topics;
   protected String _clientId;
 
-  public EMSParameters()
-  {
+  public EMSParameters() {
     this._serverURL = "tcp://localhost:7222";
     this._userName = "";
     this._password = "";
@@ -32,8 +29,8 @@ public class EMSParameters
     calcHashCode();
   }
 
-  public EMSParameters(String serverurl, String name, String password, Hashtable SSLparameters, boolean displayEMSParameters, Set<String> topics, String clientid)
-  {
+  public EMSParameters(String serverurl, String name, String password, Hashtable SSLparameters,
+      boolean displayEMSParameters, Set<String> topics, String clientid) {
     this._serverURL = serverurl;
     this._userName = name;
     this._password = password;
@@ -43,8 +40,8 @@ public class EMSParameters
     this._clientId = clientid;
   }
 
-  public EMSParameters(Set<String> topics, String serverurl, String name, boolean displayRvParameters, String password, String description)
-  {
+  public EMSParameters(Set<String> topics, String serverurl, String name, boolean displayRvParameters, String password,
+      String description) {
     this._topics = new HashSet();
     this._topics.addAll(topics);
 
@@ -59,8 +56,7 @@ public class EMSParameters
     calcHashCode();
   }
 
-  public String getDescription()
-  {
+  public String getDescription() {
     return this._clientId;
   }
 
@@ -68,8 +64,7 @@ public class EMSParameters
     this._clientId = description;
   }
 
-  protected void calcHashCode()
-  {
+  protected void calcHashCode() {
     String hcstr = new String();
 
     if (this._serverURL != null) {
@@ -87,49 +82,62 @@ public class EMSParameters
     this._hashCode = hcstr.hashCode();
   }
 
-  public String getClientId()
-  {
+  public String getClientId() {
     return this._clientId;
   }
+
   public void setClientId(String id) {
     this._clientId = id;
   }
+
   public boolean isDisplayEMSParameters() {
     return this._displayEMSParameters;
   }
+
   public void setDisplayEMSParameters(boolean parameters) {
     this._displayEMSParameters = parameters;
   }
+
   public String getPassword() {
     return this._password;
   }
+
   public void setPassword(String _password) {
     this._password = _password;
   }
+
   public String getServerURL() {
     return this._serverURL;
   }
+
   public void setServerURL(String _serverurl) {
     this._serverURL = _serverurl;
   }
+
   public Hashtable getSSLParameters() {
     return this._sslParameters;
   }
+
   public void setSSLParameters(Hashtable parameters) {
     this._sslParameters = parameters;
   }
+
   public Set<String> getTopics() {
     return this._topics;
   }
+
   public void setTopics(Set<String> _topics) {
     this._topics = _topics;
   }
+
   public String getUserName() {
     return this._userName;
   }
+
   public void setUserName(String name) {
     this._userName = name;
   }
+
   public int getHashCode() {
     return this._hashCode;
   }
@@ -149,8 +157,7 @@ public class EMSParameters
           throw new IllegalArgumentException("Input line " + lineString + " has too many fields");
         }
 
-      }
-      else if (s != null)
+      } else if (s != null)
         results[i] = s;
       else {
         results[i] = " ";
@@ -167,8 +174,7 @@ public class EMSParameters
 
     while (subjectTokenizer.hasMoreTokens()) {
       String sto = subjectTokenizer.nextToken();
-      if (!",".equals(sto))
-      {
+      if (!",".equals(sto)) {
         this._topics.add(sto);
       }
     }
@@ -193,7 +199,7 @@ public class EMSParameters
         if (!first) {
           sRetval = sRetval + ",";
         }
-        sRetval = sRetval + (String)i.next();
+        sRetval = sRetval + (String) i.next();
         first = false;
       }
     }
@@ -218,14 +224,13 @@ public class EMSParameters
       if (!first) {
         sRetVal = sRetVal + ",";
       }
-      sRetVal = sRetVal + (String)i.next();
+      sRetVal = sRetVal + (String) i.next();
       first = false;
     }
     return sRetVal;
   }
 
-  public void setTopics(String subjects)
-  {
+  public void setTopics(String subjects) {
     if (this._topics == null) {
       throw new IllegalArgumentException("Topics may not be null");
     }
@@ -234,35 +239,30 @@ public class EMSParameters
 
     while (subjectTokenizer.hasMoreTokens()) {
       String sto = subjectTokenizer.nextToken();
-      if (!",".equals(sto))
-      {
+      if (!",".equals(sto)) {
         this._topics.add(sto);
       }
     }
   }
 
-  public Object clone() throws CloneNotSupportedException
-  {
-    return new EMSParameters(this._serverURL, this._userName, this._password, this._sslParameters, this._displayEMSParameters, this._topics, this._clientId);
+  public Object clone() throws CloneNotSupportedException {
+    return new EMSParameters(this._serverURL, this._userName, this._password, this._sslParameters,
+        this._displayEMSParameters, this._topics, this._clientId);
   }
 
-  public void addTopic(String _subject)
-  {
+  public void addTopic(String _subject) {
     this._topics.add(_subject);
     calcHashCode();
   }
 
-  public int hashCode()
-  {
+  public int hashCode() {
     return this._hashCode;
   }
 
-  public boolean equals(Object o)
-  {
+  public boolean equals(Object o) {
     boolean equals = false;
 
-    if (((o instanceof EMSParameters)) && 
-      (hashCode() == o.hashCode())) {
+    if (((o instanceof EMSParameters)) && (hashCode() == o.hashCode())) {
       equals = true;
     }
 

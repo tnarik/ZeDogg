@@ -13,25 +13,21 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-public abstract class RvSnooperDialog extends JDialog
-{
+public abstract class RvSnooperDialog extends JDialog {
   protected static final Font DISPLAY_FONT = new Font("Arial", 1, 12);
 
-  protected RvSnooperDialog(JFrame jframe, String message, boolean modal)
-  {
+  protected RvSnooperDialog(JFrame jframe, String message, boolean modal) {
     super(jframe, message, modal);
   }
 
-  public void setVisible(boolean b)
-  {
+  public void setVisible(boolean b) {
     pack();
     minimumSizeDialog(this, 200, 100);
     centerWindow(this);
     super.setVisible(b);
   }
 
-  protected void centerWindow(Window win)
-  {
+  protected void centerWindow(Window win) {
     Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 
     if (screenDim.width < win.getSize().width) {
@@ -47,13 +43,12 @@ public abstract class RvSnooperDialog extends JDialog
     win.setLocation(x, y);
   }
 
-  protected void wrapStringOnPanel(String message, Container container)
-  {
+  protected void wrapStringOnPanel(String message, Container container) {
     GridBagConstraints c = getDefaultConstraints();
     c.gridwidth = 0;
 
     c.insets = new Insets(0, 0, 0, 0);
-    GridBagLayout gbLayout = (GridBagLayout)container.getLayout();
+    GridBagLayout gbLayout = (GridBagLayout) container.getLayout();
 
     if (message != null) {
       while (message.length() > 0) {
@@ -78,8 +73,7 @@ public abstract class RvSnooperDialog extends JDialog
     container.add(label);
   }
 
-  protected GridBagConstraints getDefaultConstraints()
-  {
+  protected GridBagConstraints getDefaultConstraints() {
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.weightx = 1.0D;
     constraints.weighty = 1.0D;
@@ -94,8 +88,7 @@ public abstract class RvSnooperDialog extends JDialog
     return constraints;
   }
 
-  protected void minimumSizeDialog(Component component, int minWidth, int minHeight)
-  {
+  protected void minimumSizeDialog(Component component, int minWidth, int minHeight) {
     if (component.getSize().width < minWidth) {
       component.setSize(minWidth, component.getSize().height);
     }

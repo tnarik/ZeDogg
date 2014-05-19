@@ -14,23 +14,22 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-public class CategoryNodeEditor extends CategoryAbstractCellEditor
-{
+public class CategoryNodeEditor extends CategoryAbstractCellEditor {
   protected CategoryNodeEditorRenderer _renderer;
   protected CategoryNode _lastEditedNode;
   protected JCheckBox _checkBox;
   protected CategoryExplorerModel _categoryModel;
   protected JTree _tree;
 
-  public CategoryNodeEditor(CategoryExplorerModel model)
-  {
+  public CategoryNodeEditor(CategoryExplorerModel model) {
     this._renderer = new CategoryNodeEditorRenderer();
     this._checkBox = this._renderer.getCheckBox();
     this._categoryModel = model;
 
     this._checkBox.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        CategoryNodeEditor.this._categoryModel.update(CategoryNodeEditor.this._lastEditedNode, CategoryNodeEditor.this._checkBox.isSelected());
+        CategoryNodeEditor.this._categoryModel.update(CategoryNodeEditor.this._lastEditedNode,
+            CategoryNodeEditor.this._checkBox.isSelected());
         CategoryNodeEditor.this.stopCellEditing();
       }
     });
@@ -44,21 +43,19 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
     });
   }
 
-  public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row)
-  {
-    this._lastEditedNode = ((CategoryNode)value);
+  public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded,
+      boolean leaf, int row) {
+    this._lastEditedNode = ((CategoryNode) value);
     this._tree = tree;
 
     return this._renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, true);
   }
 
-  public Object getCellEditorValue()
-  {
+  public Object getCellEditorValue() {
     return this._lastEditedNode.getUserObject();
   }
 
-  protected JMenuItem createPropertiesMenuItem(final CategoryNode node)
-  {
+  protected JMenuItem createPropertiesMenuItem(final CategoryNode node) {
     JMenuItem result = new JMenuItem("Properties");
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -72,8 +69,7 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
     JOptionPane.showMessageDialog(this._tree, getDisplayedProperties(node), "Topic Properties: " + node.getTitle(), -1);
   }
 
-  protected Object getDisplayedProperties(CategoryNode node)
-  {
+  protected Object getDisplayedProperties(CategoryNode node) {
     ArrayList result = new ArrayList();
     result.add("Topic: " + node.getTitle());
 
@@ -107,8 +103,7 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
   protected JMenuItem createSelectDescendantsMenuItem(final CategoryNode node) {
     JMenuItem selectDescendants = new JMenuItem("Select All Descendant Topics");
 
-    selectDescendants.addActionListener(new ActionListener()
-    {
+    selectDescendants.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         CategoryNodeEditor.this._categoryModel.setDescendantSelection(node, true);
       }
@@ -119,10 +114,8 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
   protected JMenuItem createUnselectDescendantsMenuItem(final CategoryNode node) {
     JMenuItem unselectDescendants = new JMenuItem("Deselect All Descendant Topics");
 
-    unselectDescendants.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent e)
-      {
+    unselectDescendants.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
         CategoryNodeEditor.this._categoryModel.setDescendantSelection(node, false);
       }
     });
@@ -149,12 +142,12 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
     return result;
   }
 
-  protected JMenuItem createRemoveMenuItem()
-  {
+  protected JMenuItem createRemoveMenuItem() {
     JMenuItem result = new JMenuItem("Remove All Empty Subjects");
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        while (CategoryNodeEditor.this.removeUnusedNodes() > 0);
+        while (CategoryNodeEditor.this.removeUnusedNodes() > 0)
+          ;
       }
     });
     return result;
@@ -164,30 +157,27 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
     Enumeration descendants = node.depthFirstEnumeration();
 
     while (descendants.hasMoreElements()) {
-      CategoryNode current = (CategoryNode)descendants.nextElement();
+      CategoryNode current = (CategoryNode) descendants.nextElement();
       expand(current);
     }
   }
 
-  protected void collapseDescendants(CategoryNode node)
-  {
+  protected void collapseDescendants(CategoryNode node) {
     Enumeration descendants = node.depthFirstEnumeration();
 
     while (descendants.hasMoreElements()) {
-      CategoryNode current = (CategoryNode)descendants.nextElement();
+      CategoryNode current = (CategoryNode) descendants.nextElement();
       collapse(current);
     }
   }
 
-  protected int removeUnusedNodes()
-  {
+  protected int removeUnusedNodes() {
     int count = 0;
     CategoryNode root = this._categoryModel.getRootCategoryNode();
     Enumeration enumNodes = root.depthFirstEnumeration();
     while (enumNodes.hasMoreElements()) {
-      CategoryNode node = (CategoryNode)enumNodes.nextElement();
-      if ((node.isLeaf()) && (node.getNumberOfContainedRecords() == 0) && (node.getParent() != null))
-      {
+      CategoryNode node = (CategoryNode) enumNodes.nextElement();
+      if ((node.isLeaf()) && (node.getNumberOfContainedRecords() == 0) && (node.getParent() != null)) {
         this._categoryModel.removeNodeFromParent(node);
         count++;
       }
@@ -200,8 +190,7 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor
     this._tree.expandPath(getTreePath(node));
   }
 
-  protected TreePath getTreePath(CategoryNode node)
-  {
+  protected TreePath getTreePath(CategoryNode node) {
     return new TreePath(node.getPath());
   }
 

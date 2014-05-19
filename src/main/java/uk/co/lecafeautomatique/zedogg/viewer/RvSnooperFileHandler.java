@@ -10,10 +10,8 @@ import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class RvSnooperFileHandler
-{
-  static void saveMsgAsTextFile(String sSubject, String sMsg, String infostr, JFrame jdBase, JLabel statusLabel)
-  {
+public class RvSnooperFileHandler {
+  static void saveMsgAsTextFile(String sSubject, String sMsg, String infostr, JFrame jdBase, JLabel statusLabel) {
     File f = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
@@ -38,31 +36,24 @@ public class RvSnooperFileHandler
       }
     } catch (Exception ex) {
       RvSnooperErrorDialog error = new RvSnooperErrorDialog(jdBase, "File save error " + ex.getMessage());
-    }
-    finally
-    {
+    } finally {
       RvSnooperErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       if (writer != null)
         try {
           writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       if (f != null)
         f = null;
     }
   }
 
-  static void saveTableToTextFile(String infostr, JFrame jdBase, JLabel statusLabel, LogTable table)
-  {
+  static void saveTableToTextFile(String infostr, JFrame jdBase, JLabel statusLabel, LogTable table) {
     File f = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
@@ -73,8 +64,7 @@ public class RvSnooperFileHandler
       fd.setVisible(true);
       String filename = fd.getDirectory() + fd.getFile();
 
-      if (fd.getFile() != null)
-      {
+      if (fd.getFile() != null) {
         f = new File(filename);
 
         f.createNewFile();
@@ -85,26 +75,19 @@ public class RvSnooperFileHandler
         buf_writer.write(table.getFilteredLogTableModel().createFilteredTextFromMsg().toString());
         statusLabel.setText("Saved text file " + f.toString());
       }
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       RvSnooperErrorDialog error = new RvSnooperErrorDialog(jdBase, "File save error " + ex.getMessage());
-    }
-    finally
-    {
+    } finally {
       RvSnooperErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       if (writer != null) {
         try {
           writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       }
       if (f != null)
@@ -112,8 +95,7 @@ public class RvSnooperFileHandler
     }
   }
 
-  static void saveTableToHtml(String sVersion, String sURL, JFrame jfBase, JLabel statusLabel, LogTable table)
-  {
+  static void saveTableToHtml(String sVersion, String sURL, JFrame jfBase, JLabel statusLabel, LogTable table) {
     File f = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
@@ -124,8 +106,7 @@ public class RvSnooperFileHandler
       fd.setVisible(true);
       String filename = fd.getDirectory() + fd.getFile();
 
-      if (fd.getFile() != null)
-      {
+      if (fd.getFile() != null) {
         f = new File(filename);
 
         f.createNewFile();
@@ -135,7 +116,8 @@ public class RvSnooperFileHandler
         DateFormatManager dfm = new DateFormatManager("yyyy-MM-dd HH:mm:ss.S");
         buf_writer.write("<html><head>\n");
         buf_writer.write("<title>EMSSn00p HTML Output Page </title>\n");
-        buf_writer.write("<META http-equiv=\"content-type\" content=\"text/html;\" charset=" + System.getProperty("file.encoding") + "\">");
+        buf_writer.write("<META http-equiv=\"content-type\" content=\"text/html;\" charset="
+            + System.getProperty("file.encoding") + "\">");
         buf_writer.write("\n<META NAME=\"description\" CONTENT=\"rvsn00p html output file.\">");
         buf_writer.write("\n<META NAME=\"keywords\" CONTENT=\"rvsn00p,tibco,rendezvous\">");
         buf_writer.write("\n<META NAME=\"Author\" CONTENT=\"" + System.getProperty("user.name", "unknown") + "\">");
@@ -150,23 +132,17 @@ public class RvSnooperFileHandler
       }
     } catch (Exception ex) {
       RvSnooperErrorDialog error = new RvSnooperErrorDialog(jfBase, "File save error " + ex.getMessage());
-    }
-    finally
-    {
+    } finally {
       RvSnooperErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       if (writer != null) {
         try {
           writer.close();
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
         }
       }
       if (f != null)

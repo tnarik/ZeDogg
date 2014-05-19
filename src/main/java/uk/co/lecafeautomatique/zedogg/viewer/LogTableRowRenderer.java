@@ -8,21 +8,20 @@ import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class LogTableRowRenderer extends DefaultTableCellRenderer
-{
+public class LogTableRowRenderer extends DefaultTableCellRenderer {
   private static final long serialVersionUID = 3978420330240750641L;
   protected boolean _highlightFatal = true;
   protected Color _color = new Color(230, 230, 230);
 
-  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col)
-  {
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+      int row, int col) {
     if (row % 2 == 0)
       setBackground(this._color);
     else {
       setBackground(Color.white);
     }
 
-    FilteredLogTableModel model = (FilteredLogTableModel)table.getModel();
+    FilteredLogTableModel model = (FilteredLogTableModel) table.getModel();
     LogRecord record = model.getFilteredRecord(row);
 
     setForeground(getLogLevelColor(record.getType()));
@@ -30,8 +29,7 @@ public class LogTableRowRenderer extends DefaultTableCellRenderer
     return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
   }
 
-  protected Color getLogLevelColor(EventActionType level)
-  {
-    return (Color)EventActionType.getLogLevelColorMap().get(level);
+  protected Color getLogLevelColor(EventActionType level) {
+    return (Color) EventActionType.getLogLevelColorMap().get(level);
   }
 }

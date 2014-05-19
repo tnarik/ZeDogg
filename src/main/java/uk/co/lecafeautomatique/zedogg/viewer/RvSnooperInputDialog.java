@@ -12,19 +12,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class RvSnooperInputDialog extends RvSnooperDialog
-{
+public class RvSnooperInputDialog extends RvSnooperDialog {
   private static final long serialVersionUID = 3978142132274149429L;
   public static final int SIZE = 30;
   private JTextField _textField;
 
-  public RvSnooperInputDialog(JFrame jframe, String title, String label)
-  {
+  public RvSnooperInputDialog(JFrame jframe, String title, String label) {
     this(jframe, title, label, 30);
   }
 
-  public RvSnooperInputDialog(JFrame jframe, String title, String label, int size)
-  {
+  public RvSnooperInputDialog(JFrame jframe, String title, String label, int size) {
     super(jframe, title, true);
 
     JPanel bottom = new JPanel();
@@ -65,8 +62,7 @@ public class RvSnooperInputDialog extends RvSnooperDialog
     setVisible(true);
   }
 
-  public String getText()
-  {
+  public String getText() {
     String s = this._textField.getText();
 
     if ((s != null) && (s.trim().length() == 0)) {
@@ -76,8 +72,7 @@ public class RvSnooperInputDialog extends RvSnooperDialog
     return s;
   }
 
-  public String setText(String text)
-  {
+  public String setText(String text) {
     this._textField.setText(text);
     return text;
   }

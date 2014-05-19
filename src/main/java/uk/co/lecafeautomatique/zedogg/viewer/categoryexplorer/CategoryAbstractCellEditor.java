@@ -11,16 +11,13 @@ import javax.swing.event.EventListenerList;
 import javax.swing.table.TableCellEditor;
 import javax.swing.tree.TreeCellEditor;
 
-public class CategoryAbstractCellEditor
-  implements TableCellEditor, TreeCellEditor
-{
+public class CategoryAbstractCellEditor implements TableCellEditor, TreeCellEditor {
   protected EventListenerList _listenerList = new EventListenerList();
   protected Object _value;
   protected ChangeEvent _changeEvent = null;
   protected int _clickCountToStart = 1;
 
-  public Object getCellEditorValue()
-  {
+  public Object getCellEditorValue() {
     return this._value;
   }
 
@@ -37,8 +34,7 @@ public class CategoryAbstractCellEditor
   }
 
   public boolean isCellEditable(EventObject anEvent) {
-    if (((anEvent instanceof MouseEvent)) && 
-      (((MouseEvent)anEvent).getClickCount() < this._clickCountToStart)) {
+    if (((anEvent instanceof MouseEvent)) && (((MouseEvent) anEvent).getClickCount() < this._clickCountToStart)) {
       return false;
     }
 
@@ -46,9 +42,8 @@ public class CategoryAbstractCellEditor
   }
 
   public boolean shouldSelectCell(EventObject anEvent) {
-    if ((isCellEditable(anEvent)) && (
-      (anEvent == null) || (((MouseEvent)anEvent).getClickCount() >= this._clickCountToStart)))
-    {
+    if ((isCellEditable(anEvent))
+        && ((anEvent == null) || (((MouseEvent) anEvent).getClickCount() >= this._clickCountToStart))) {
       return true;
     }
 
@@ -72,18 +67,16 @@ public class CategoryAbstractCellEditor
     this._listenerList.remove(CellEditorListener.class, l);
   }
 
-  public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row)
-  {
+  public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
+      boolean leaf, int row) {
     return null;
   }
 
-  public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
-  {
+  public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     return null;
   }
 
-  protected void fireEditingStopped()
-  {
+  protected void fireEditingStopped() {
     Object[] listeners = this._listenerList.getListenerList();
 
     for (int i = listeners.length - 2; i >= 0; i -= 2)
@@ -92,12 +85,11 @@ public class CategoryAbstractCellEditor
           this._changeEvent = new ChangeEvent(this);
         }
 
-        ((CellEditorListener)listeners[(i + 1)]).editingStopped(this._changeEvent);
+        ((CellEditorListener) listeners[(i + 1)]).editingStopped(this._changeEvent);
       }
   }
 
-  protected void fireEditingCanceled()
-  {
+  protected void fireEditingCanceled() {
     Object[] listeners = this._listenerList.getListenerList();
 
     for (int i = listeners.length - 2; i >= 0; i -= 2)
@@ -106,7 +98,7 @@ public class CategoryAbstractCellEditor
           this._changeEvent = new ChangeEvent(this);
         }
 
-        ((CellEditorListener)listeners[(i + 1)]).editingCanceled(this._changeEvent);
+        ((CellEditorListener) listeners[(i + 1)]).editingCanceled(this._changeEvent);
       }
   }
 }

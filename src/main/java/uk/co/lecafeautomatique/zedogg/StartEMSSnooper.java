@@ -9,10 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class StartEMSSnooper
-{
-  public static final void main(String[] args)
-  {
+public class StartEMSSnooper {
+  public static final void main(String[] args) {
     int startAt = 0;
 
     String title = null;
@@ -22,7 +20,8 @@ public class StartEMSSnooper
         System.err.print("EMSSn00p v2.0.3");
         System.err.println(" " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
         System.err.println("Usage: emssn00p.StartEMSSnooper [-title t] [ServerURL|User|Password|Topic1,Topic2] ...  ");
-        System.err.println("Example: emssn00p.StartEMSSnooper \"tcp://localhost:7222|admin||a.>,c.x\" \"tcp:7500|7501||b.>,q.b\"  ");
+        System.err
+            .println("Example: emssn00p.StartEMSSnooper \"tcp://localhost:7222|admin||a.>,c.x\" \"tcp:7500|7501||b.>,q.b\"  ");
         System.exit(-1);
       } else if (args[0].compareToIgnoreCase("-title") == 0) {
         title = args[1];
@@ -54,8 +53,7 @@ public class StartEMSSnooper
     gui.show();
   }
 
-  protected static int getDefaultMonitorWidth()
-  {
+  protected static int getDefaultMonitorWidth() {
     return 3 * getScreenWidth() / 4;
   }
 
@@ -63,26 +61,23 @@ public class StartEMSSnooper
     return 3 * getScreenHeight() / 4;
   }
 
-  protected static int getScreenWidth()
-  {
-    try
-    {
-      return Toolkit.getDefaultToolkit().getScreenSize().width; } catch (Throwable t) {
+  protected static int getScreenWidth() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize().width;
+    } catch (Throwable t) {
     }
     return 800;
   }
 
-  protected static int getScreenHeight()
-  {
-    try
-    {
-      return Toolkit.getDefaultToolkit().getScreenSize().height; } catch (Throwable t) {
+  protected static int getScreenHeight() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize().height;
+    } catch (Throwable t) {
     }
     return 600;
   }
 
-  protected static boolean checkJavaVersion()
-  {
+  protected static boolean checkJavaVersion() {
     String ver = System.getProperty("java.version");
     boolean retVal = false;
     try {
@@ -95,20 +90,16 @@ public class StartEMSSnooper
 
       retVal = (a >= 1) && (b >= 4);
       if ((a == 1) && (b == 4))
-        if (st.hasMoreTokens() == true)
-        {
+        if (st.hasMoreTokens() == true) {
           int c = Integer.parseInt(st.nextToken());
           if (Integer.parseInt(st.nextToken()) >= 1)
             retVal = true;
           else
             retVal = false;
-        }
-        else {
+        } else {
           retVal = false;
         }
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       retVal = true;
     }
 

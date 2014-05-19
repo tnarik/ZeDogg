@@ -2,16 +2,13 @@ package uk.co.lecafeautomatique.zedogg.viewer.categoryexplorer;
 
 import java.util.LinkedList;
 
-public class CategoryPath
-{
+public class CategoryPath {
   protected LinkedList<CategoryElement> _categoryElements = new LinkedList();
 
-  public CategoryPath()
-  {
+  public CategoryPath() {
   }
 
-  public CategoryPath(String category)
-  {
+  public CategoryPath(String category) {
     String processedCategory = category;
 
     if (processedCategory == null) {
@@ -26,8 +23,7 @@ public class CategoryPath
       addCategoryElement(new CategoryElement(result[x]));
   }
 
-  public int size()
-  {
+  public int size() {
     int count = this._categoryElements.size();
 
     return count;
@@ -43,23 +39,19 @@ public class CategoryPath
     return empty;
   }
 
-  public void removeAllCategoryElements()
-  {
+  public void removeAllCategoryElements() {
     this._categoryElements.clear();
   }
 
-  public void addCategoryElement(CategoryElement categoryElement)
-  {
+  public void addCategoryElement(CategoryElement categoryElement) {
     this._categoryElements.addLast(categoryElement);
   }
 
-  public CategoryElement categoryElementAt(int index)
-  {
-    return (CategoryElement)this._categoryElements.get(index);
+  public CategoryElement categoryElementAt(int index) {
+    return (CategoryElement) this._categoryElements.get(index);
   }
 
-  public String toString()
-  {
+  public String toString() {
     StringBuffer out = new StringBuffer(100);
 
     out.append("\n");

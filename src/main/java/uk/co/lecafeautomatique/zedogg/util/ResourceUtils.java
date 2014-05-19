@@ -3,10 +3,8 @@ package uk.co.lecafeautomatique.zedogg.util;
 import java.io.InputStream;
 import java.net.URL;
 
-public class ResourceUtils
-{
-  public static InputStream getResourceAsStream(Object object, Resource resource)
-  {
+public class ResourceUtils {
+  public static InputStream getResourceAsStream(Object object, Resource resource) {
     ClassLoader loader = object.getClass().getClassLoader();
 
     InputStream in = null;
@@ -20,8 +18,7 @@ public class ResourceUtils
     return in;
   }
 
-  public static URL getResourceAsURL(Object object, Resource resource)
-  {
+  public static URL getResourceAsURL(Object object, Resource resource) {
     ClassLoader loader = object.getClass().getClassLoader();
 
     URL url = null;

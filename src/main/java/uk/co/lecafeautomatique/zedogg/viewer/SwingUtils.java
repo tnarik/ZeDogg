@@ -8,10 +8,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
-public class SwingUtils
-{
-  public static void selectRow(int row, JTable table, JScrollPane pane)
-  {
+public class SwingUtils {
+  public static void selectRow(int row, JTable table, JScrollPane pane) {
     if ((table == null) || (pane == null)) {
       return;
     }
@@ -24,24 +22,21 @@ public class SwingUtils
     repaintLater(table);
   }
 
-  public static void makeScrollBarTrack(Adjustable scrollBar)
-  {
+  public static void makeScrollBarTrack(Adjustable scrollBar) {
     if (scrollBar == null) {
       return;
     }
     scrollBar.addAdjustmentListener(new TrackingAdjustmentListener());
   }
 
-  public static void makeVerticalScrollBarTrack(JScrollPane pane)
-  {
+  public static void makeVerticalScrollBarTrack(JScrollPane pane) {
     if (pane == null) {
       return;
     }
     makeScrollBarTrack(pane.getVerticalScrollBar());
   }
 
-  protected static boolean contains(int row, TableModel model)
-  {
+  protected static boolean contains(int row, TableModel model) {
     if (model == null) {
       return false;
     }
@@ -68,8 +63,7 @@ public class SwingUtils
     scrollBar.setValue(location);
   }
 
-  protected static void repaintLater(final JComponent component)
-  {
+  protected static void repaintLater(final JComponent component) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         component.repaint();
@@ -77,4 +71,3 @@ public class SwingUtils
     });
   }
 }
-

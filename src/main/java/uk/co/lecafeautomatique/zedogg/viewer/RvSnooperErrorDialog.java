@@ -9,12 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class RvSnooperErrorDialog extends RvSnooperDialog
-{
+public class RvSnooperErrorDialog extends RvSnooperDialog {
   private static final long serialVersionUID = 3258407326829851443L;
 
-  public RvSnooperErrorDialog(JFrame jframe, String message)
-  {
+  public RvSnooperErrorDialog(JFrame jframe, String message) {
     super(jframe, "Error", true);
 
     JButton ok = new JButton("Ok");

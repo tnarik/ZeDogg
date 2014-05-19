@@ -5,9 +5,7 @@ import java.io.Serializable;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-public class LogRecord
-  implements Serializable
-{
+public class LogRecord implements Serializable {
   private static final long serialVersionUID = 3257003254792337720L;
   protected static long _seqCount = 0L;
   protected EventActionType _type;
@@ -42,180 +40,144 @@ public class LogRecord
   private static int _countFree = 0;
   private static long lastAllocationTime = System.currentTimeMillis() - 3000L;
 
-  public long getConnConnID()
-  {
+  public long getConnConnID() {
     return this._connConnID;
   }
 
-  public void setConnConnID(long connID)
-  {
+  public void setConnConnID(long connID) {
     this._connConnID = connID;
   }
 
-  public String getConnHostName()
-  {
+  public String getConnHostName() {
     return this._connHostName;
   }
 
-  public void setConnHostName(String hostName)
-  {
+  public void setConnHostName(String hostName) {
     this._connHostName = hostName;
   }
 
-  public String getConnType()
-  {
+  public String getConnType() {
     return this._connType;
   }
 
-  public void setConnType(String type)
-  {
+  public void setConnType(String type) {
     this._connType = type;
   }
 
-  public String getConnUserName()
-  {
+  public String getConnUserName() {
     return this._connUserName;
   }
 
-  public void setConnUserName(String userName)
-  {
+  public void setConnUserName(String userName) {
     this._connUserName = userName;
   }
 
-  public String getEventClass()
-  {
+  public String getEventClass() {
     return this._eventClass;
   }
 
-  public void setEventClass(String class1)
-  {
+  public void setEventClass(String class1) {
     this._eventClass = class1;
   }
 
-  public String getEventReason()
-  {
+  public String getEventReason() {
     return this._eventReason;
   }
 
-  public void setEventReason(String reason)
-  {
+  public void setEventReason(String reason) {
     this._eventReason = reason;
   }
 
-  public String getJMSCorrelationID()
-  {
+  public String getJMSCorrelationID() {
     return this._JMSCorrelationID;
   }
 
-  public void setJMSCorrelationID(String correlationID)
-  {
+  public void setJMSCorrelationID(String correlationID) {
     this._JMSCorrelationID = correlationID;
   }
 
-  public String getJMSDeliveryMode()
-  {
+  public String getJMSDeliveryMode() {
     return this._JMSDeliveryMode;
   }
 
-  public void setJMSDeliveryMode(String deliveryMode)
-  {
+  public void setJMSDeliveryMode(String deliveryMode) {
     this._JMSDeliveryMode = deliveryMode;
   }
 
-  public long getJMSExpiration()
-  {
+  public long getJMSExpiration() {
     return this._JMSExpiration;
   }
 
-  public void setJMSExpiration(long expiration)
-  {
+  public void setJMSExpiration(long expiration) {
     this._JMSExpiration = expiration;
   }
 
-  public String getJMSMessageID()
-  {
+  public String getJMSMessageID() {
     return this._JMSMessageID;
   }
 
-  public void setJMSMessageID(String messageID)
-  {
+  public void setJMSMessageID(String messageID) {
     this._JMSMessageID = messageID;
   }
 
-  public String getJMSPriority()
-  {
+  public String getJMSPriority() {
     return this._JMSPriority;
   }
 
-  public void setJMSPriority(String priority)
-  {
+  public void setJMSPriority(String priority) {
     this._JMSPriority = priority;
   }
 
-  public long getJMSTimeStamp()
-  {
+  public long getJMSTimeStamp() {
     return this._JMSTimeStamp;
   }
 
-  public void setJMSTimeStamp(long timeStamp)
-  {
+  public void setJMSTimeStamp(long timeStamp) {
     this._JMSTimeStamp = timeStamp;
   }
 
-  public long getMsgTimeStamp()
-  {
+  public long getMsgTimeStamp() {
     return this._msgTimeStamp;
   }
 
-  public void setMsgTimeStamp(long timeStamp)
-  {
+  public void setMsgTimeStamp(long timeStamp) {
     this._msgTimeStamp = timeStamp;
   }
 
-  public String getServer()
-  {
+  public String getServer() {
     return this._server;
   }
 
-  public void setServer(String _server)
-  {
+  public void setServer(String _server) {
     this._server = _server;
   }
 
-  public String getTargetDestType()
-  {
+  public String getTargetDestType() {
     return this._targetDestType;
   }
 
-  public void setTargetDestType(String destType)
-  {
+  public void setTargetDestType(String destType) {
     this._targetDestType = destType;
   }
 
-  public String getTargetName()
-  {
+  public String getTargetName() {
     return this._targetName;
   }
 
-  public void setTargetName(String name)
-  {
+  public void setTargetName(String name) {
     this._targetName = name;
   }
 
-  public String getTargetObject()
-  {
+  public String getTargetObject() {
     return this._targetObject;
   }
 
-  public void setTargetObject(String object)
-  {
+  public void setTargetObject(String object) {
     this._targetObject = object;
   }
 
-  public static synchronized LogRecord getInstance()
-  {
-    if (_countFree == 0)
-    {
+  public static synchronized LogRecord getInstance() {
+    if (_countFree == 0) {
       long timeSinceLastAlloc = System.currentTimeMillis() - lastAllocationTime;
 
       int noToAlloc = 0;
@@ -244,41 +206,34 @@ public class LogRecord
     return result;
   }
 
-  public static synchronized void freeInstance(LogRecord lr)
-  {
+  public static synchronized void freeInstance(LogRecord lr) {
     if (_countFree < 2000)
       _freeStack[(_countFree++)] = lr;
   }
 
-  public EventActionType getType()
-  {
+  public EventActionType getType() {
     return this._type;
   }
 
-  public void setType(EventActionType type)
-  {
+  public void setType(EventActionType type) {
     this._type = type;
   }
 
-  public boolean isSevereType()
-  {
+  public boolean isSevereType() {
     boolean isSevere = false;
 
-    if ((EventActionType.RECEIVE.equals(getType())) || (EventActionType.RECEIVE.equals(getType())))
-    {
+    if ((EventActionType.RECEIVE.equals(getType())) || (EventActionType.RECEIVE.equals(getType()))) {
       isSevere = true;
     }
 
     return isSevere;
   }
 
-  public boolean isFatal()
-  {
+  public boolean isFatal() {
     return isSevereType();
   }
 
-  public String getJMSDestination()
-  {
+  public String getJMSDestination() {
     return this._sJMSDestination.toString();
   }
 
@@ -286,14 +241,12 @@ public class LogRecord
     return this._sJMSDestination;
   }
 
-  public void setJMSDestination(String subject)
-  {
+  public void setJMSDestination(String subject) {
     this._sJMSDestination.setLength(0);
     this._sJMSDestination.append(subject);
   }
 
-  public Message getMessage()
-  {
+  public Message getMessage() {
     return this._message;
   }
 
@@ -301,59 +254,49 @@ public class LogRecord
     return new StringBuffer(this._message.toString());
   }
 
-  public void setMessage(Message message)
-  {
+  public void setMessage(Message message) {
     this._message = message;
   }
 
-  public long getSequenceNumber()
-  {
+  public long getSequenceNumber() {
     return this._sequenceNumber;
   }
 
-  public void setSequenceNumber(long number)
-  {
+  public void setSequenceNumber(long number) {
     this._sequenceNumber = number;
   }
 
-  public long getMillis()
-  {
+  public long getMillis() {
     return this._millis;
   }
 
-  public void setMillis(long millis)
-  {
+  public void setMillis(long millis) {
     this._millis = millis;
   }
 
-  public String toString(IMarshalJMSToString marshaller)
-  {
+  public String toString(IMarshalJMSToString marshaller) {
     StringBuffer buf = new StringBuffer();
     buf.append("LogRecord: [");
     buf.append(this._type);
     buf.append(",");
     try {
       buf.append(marshaller.JMSMsgToString(this._message, ""));
-    }
-    catch (JMSException e) {
+    } catch (JMSException e) {
       buf.append(e.getMessage());
     }
     buf.append("]");
     return buf.toString();
   }
 
-  public void setJMSReplyTo(String replysub)
-  {
+  public void setJMSReplyTo(String replysub) {
     this._JMSReplyTo = replysub;
   }
 
-  public static synchronized void resetSequenceNumber()
-  {
+  public static synchronized void resetSequenceNumber() {
     _seqCount = 0L;
   }
 
-  protected static synchronized long getNextId()
-  {
+  protected static synchronized long getNextId() {
     _seqCount += 1L;
     return _seqCount;
   }

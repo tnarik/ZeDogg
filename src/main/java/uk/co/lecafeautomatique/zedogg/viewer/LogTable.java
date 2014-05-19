@@ -20,8 +20,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-public class LogTable extends JTable
-{
+public class LogTable extends JTable {
   private static final long serialVersionUID = 3544669594364227894L;
   protected int _rowHeight = 30;
   protected JTextArea _detailTextArea;
@@ -46,8 +45,7 @@ public class LogTable extends JTable
 
   protected StringBuffer _buf = new StringBuffer();
 
-  public LogTable(JTextArea detailTextArea, IMarshalJMSToString impl)
-  {
+  public LogTable(JTextArea detailTextArea, IMarshalJMSToString impl) {
     init();
 
     this._detailTextArea = detailTextArea;
@@ -57,7 +55,7 @@ public class LogTable extends JTable
     Enumeration columns = getColumnModel().getColumns();
     int i = 0;
     while (columns.hasMoreElements()) {
-      TableColumn col = (TableColumn)columns.nextElement();
+      TableColumn col = (TableColumn) columns.nextElement();
       col.setCellRenderer(new LogTableRowRenderer());
       col.setPreferredWidth(this._colWidths[i]);
 
@@ -69,13 +67,11 @@ public class LogTable extends JTable
     rowSM.addListSelectionListener(new LogTableListSelectionListener(this, impl));
   }
 
-  public DateFormatManager getDateFormatManager()
-  {
+  public DateFormatManager getDateFormatManager() {
     return getFilteredLogTableModel().getDateFormatManager();
   }
 
-  public void setDateFormatManager(DateFormatManager dfm)
-  {
+  public void setDateFormatManager(DateFormatManager dfm) {
     getFilteredLogTableModel().setDateFormatManager(dfm);
   }
 
@@ -95,17 +91,15 @@ public class LogTable extends JTable
     return this._colConnHostname;
   }
 
-  public synchronized void clearLogRecords()
-  {
+  public synchronized void clearLogRecords() {
     getFilteredLogTableModel().clear();
   }
 
   public FilteredLogTableModel getFilteredLogTableModel() {
-    return (FilteredLogTableModel)getModel();
+    return (FilteredLogTableModel) getModel();
   }
 
-  public void setDetailedView()
-  {
+  public void setDetailedView() {
     TableColumnModel model = getColumnModel();
 
     for (int f = 0; f < this._numCols; f++) {
@@ -127,8 +121,7 @@ public class LogTable extends JTable
     }
     Iterator selectedColumns = columns.iterator();
     Vector columnNameAndNumber = getColumnNameAndNumber();
-    while (selectedColumns.hasNext())
-    {
+    while (selectedColumns.hasNext()) {
       model.addColumn(this._tableColumns[columnNameAndNumber.indexOf(selectedColumns.next())]);
     }
 
@@ -146,14 +139,12 @@ public class LogTable extends JTable
     }
   }
 
-  protected void init()
-  {
+  protected void init() {
     setRowHeight(this._rowHeight);
     setSelectionMode(0);
   }
 
-  protected Vector getColumnNameAndNumber()
-  {
+  protected Vector getColumnNameAndNumber() {
     Vector columnNameAndNumber = new Vector();
     for (int i = 0; i < this._colNames.length; i++) {
       columnNameAndNumber.add(i, this._colNames[i]);
@@ -168,8 +159,7 @@ public class LogTable extends JTable
           TableColumnModel model = getColumnModel();
           return model.getColumn(i).getPreferredWidth();
         }
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       return 0;
     }
 
@@ -183,49 +173,40 @@ public class LogTable extends JTable
           TableColumnModel model = getColumnModel();
           model.getColumn(i).setPreferredWidth(width);
         }
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
     }
   }
 
-  public int getMsgColumnID()
-  {
+  public int getMsgColumnID() {
     return 999;
   }
 
-  class LogTableListSelectionListener
-    implements ListSelectionListener
-  {
+  class LogTableListSelectionListener implements ListSelectionListener {
     protected JTable _table;
     IMarshalJMSToString _impl;
 
-    public LogTableListSelectionListener(JTable table, IMarshalJMSToString impl)
-    {
+    public LogTableListSelectionListener(JTable table, IMarshalJMSToString impl) {
       this._table = table;
       this._impl = impl;
     }
 
-    public void valueChanged(ListSelectionEvent e)
-    {
+    public void valueChanged(ListSelectionEvent e) {
       if (e.getValueIsAdjusting()) {
         return;
       }
 
-      ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-      if (!lsm.isSelectionEmpty())
-      {
+      ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+      if (!lsm.isSelectionEmpty()) {
         synchronized (LogTable.this._buf) {
           LogTable.this._buf.setLength(0);
           int selectedRow = lsm.getMinSelectionIndex();
 
-          Object obj = this._table.getModel().getValueAt(selectedRow, ((LogTable)this._table).getMsgColumnID());
+          Object obj = this._table.getModel().getValueAt(selectedRow, ((LogTable) this._table).getMsgColumnID());
 
           if (obj != null) {
             try {
-              LogTable.this._buf.append(this._impl.JMSMsgToString((Message)obj, ""));
-            }
-            catch (JMSException e1) {
+              LogTable.this._buf.append(this._impl.JMSMsgToString((Message) obj, ""));
+            } catch (JMSException e1) {
               LogTable.this._buf.append(e1.getMessage());
             }
           }

@@ -6,12 +6,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class RvSnooperLoadingDialog extends RvSnooperDialog
-{
+public class RvSnooperLoadingDialog extends RvSnooperDialog {
   private static final long serialVersionUID = 3690471424787952436L;
 
-  public RvSnooperLoadingDialog(JFrame jframe, String message)
-  {
+  public RvSnooperLoadingDialog(JFrame jframe, String message) {
     super(jframe, "EMSSn00p", false);
 
     JPanel bottom = new JPanel();
