@@ -141,9 +141,7 @@ public class EMSParameters implements Cloneable, Serializable {
     return this._hashCode;
   }
 
-  public void configureByLineString(String lineString) {
-    int where = 0;
-
+  public void configure(String lineString) {
     String[] results = new String[4];
 
     StringTokenizer st = new StringTokenizer(lineString, "|", true);
@@ -155,13 +153,9 @@ public class EMSParameters implements Cloneable, Serializable {
         if (i++ >= 4) {
           throw new IllegalArgumentException("Input line " + lineString + " has too many fields");
         }
-
-      } else if (s != null)
-        results[i] = s;
-      else {
-        results[i] = " ";
+      } else {
+        results[i] = (s != null) ? s : " ";
       }
-
     }
 
     this._serverURL = results[0];

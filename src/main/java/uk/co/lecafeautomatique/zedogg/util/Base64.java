@@ -1,7 +1,5 @@
 package uk.co.lecafeautomatique.zedogg.util;
 
-import java.io.PrintStream;
-
 public class Base64 {
   private String lineSeparator = System.getProperty("line.separator");
 

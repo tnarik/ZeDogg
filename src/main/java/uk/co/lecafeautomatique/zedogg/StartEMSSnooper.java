@@ -3,9 +3,7 @@ package uk.co.lecafeautomatique.zedogg;
 import uk.co.lecafeautomatique.zedogg.gui.GUI;
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
 
-import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -20,38 +18,40 @@ public class StartEMSSnooper {
       if (args[0].compareToIgnoreCase("-h") == 0) {
         System.err.println(" " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
         System.err.println("Usage: StartEMSSnooper [-title t] [ServerURL|User|Password|Topic1,Topic2] ...  ");
-        System.err
-            .println("Example: emssn00p.StartEMSSnooper \"tcp://localhost:7222|admin||a.>,c.x\" \"tcp:7500|7501||b.>,q.b\"  ");
+        System.err.println("Example: emssn00p.StartEMSSnooper \"tcp://localhost:7222|admin||a.>,c.x\" \"tcp:7500|7501||b.>,q.b\"  ");
         System.exit(-1);
       } else if (args[0].compareToIgnoreCase("-title") == 0) {
         title = args[1];
         startAt = 2;
       }
-
     }
 
-    Set setRvListenersParam = new HashSet();
+    Set setListenersParam = new HashSet();
     if (args.length > 0) {
-      for (int iarg = startAt; args.length > iarg; iarg++) {
+      for (int i = startAt; i < args.length; i++) {
         EMSParameters p = new EMSParameters();
-        p.configureByLineString(args[iarg]);
-        setRvListenersParam.add(p);
+        p.configure(args[i]);
+        setListenersParam.add(p);
       }
 
-      System.out.print(" on " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
-      System.out.print(" " + System.getProperty("os.name") + " " + System.getProperty("os.arch"));
-      System.out.println(" " + System.getProperty("os.version"));
+      printBanner();
     }
 
     if (!checkJavaVersion()) {
       System.err.println("Warning: Java JRE Version 1.4.1 or higher is required");
     }
 
-    GUI gui = new GUI(EventActionType.getAllDefaultLevels(), setRvListenersParam, title);
+    GUI gui = new GUI(EventActionType.getAllDefaultLevels(), setListenersParam, title);
 
     gui.show();
   }
 
+  protected static void printBanner() {
+    System.out.print(" on " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
+    System.out.print(" " + System.getProperty("os.name") + " " + System.getProperty("os.arch"));
+    System.out.println(" " + System.getProperty("os.version"));
+  }
+  
   protected static int getDefaultMonitorWidth() {
     return 3 * getScreenWidth() / 4;
   }
