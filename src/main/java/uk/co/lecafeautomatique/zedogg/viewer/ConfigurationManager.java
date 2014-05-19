@@ -36,7 +36,7 @@ import org.w3c.dom.NodeList;
 public class ConfigurationManager
 {
   private static final String CONFIG_FILE_NAME = "conf.xml";
-  public static final String CONFIG_DIR_NAME = ".emssnoop";
+  public static final String CONFIG_DIR_NAME = ".zedogg";
   private static final String NAME = "name";
   private static final String PATH = "path";
   private static final String SELECTED = "selected";
@@ -652,7 +652,7 @@ public class ConfigurationManager
 
   public static void createConfigurationDirectory() {
     String home = System.getProperty("user.home");
-    File f = new File(home + SEP + ".emssnoop");
+    File f = new File(home + SEP + CONFIG_DIR_NAME);
     if (!f.exists())
       try {
         f.mkdirs();
@@ -706,7 +706,7 @@ public class ConfigurationManager
   protected String getDefaultFilename()
   {
     String home = System.getProperty("user.home");
-    return home + SEP + ".emssnoop" + SEP + "conf.xml";
+    return home + SEP + CONFIG_DIR_NAME + SEP + CONFIG_FILE_NAME;
   }
 
   public String getFilename() {

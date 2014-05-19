@@ -1,6 +1,8 @@
 package uk.co.lecafeautomatique.zedogg.viewer.configure;
 
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
+import uk.co.lecafeautomatique.zedogg.viewer.ConfigurationManager;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -113,7 +115,7 @@ public class MRUListnerManager
   {
     String home = System.getProperty("user.home");
     String sep = System.getProperty("file.separator");
-    File f = new File(home + sep + ".emssnoop");
+    File f = new File(home + sep + ConfigurationManager.CONFIG_DIR_NAME);
     if (!f.exists())
       try {
         f.mkdir();
@@ -188,7 +190,7 @@ public class MRUListnerManager
     String home = System.getProperty("user.home");
     String sep = System.getProperty("file.separator");
 
-    return home + sep + ".emssnoop" + sep + "mru_listner_manager";
+    return home + sep + ConfigurationManager.CONFIG_DIR_NAME + sep + "mru_listner_manager";
   }
 
   protected void setMaxSize(int maxSize)

@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 public class LogRecordFactory
 {
 	protected static Class<?> tibjmsClass;
-	public LogRecordFactory () {
+	static {
 	     try {
 		   tibjmsClass = Class.forName("com.tibco.tibjms.Tibjms");
 		} catch (ClassNotFoundException e) {
@@ -117,7 +117,7 @@ public class LogRecordFactory
     	  }
     	  
     	  try {
-    		  realMsg = (Message) createFromBytesMethod.invoke(mapMsg.getBytes("message_bytes"));
+    		  realMsg = (Message) createFromBytesMethod.invoke(null, mapMsg.getBytes("message_bytes"));
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
