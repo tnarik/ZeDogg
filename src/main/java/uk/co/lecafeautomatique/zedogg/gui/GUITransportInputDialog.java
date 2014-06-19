@@ -68,7 +68,7 @@ public class GUITransportInputDialog extends GUIDialog {
     setVisible(true);
   }
 
-  public EMSParameters getRvParameters() {
+  public EMSParameters getParameters() {
     EMSParameters p = new EMSParameters();
 
     p.setUserName(this._tUserName.getText());

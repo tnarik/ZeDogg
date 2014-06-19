@@ -329,7 +329,7 @@ public class ConfigurationManager {
       }
 
       NodeList ln = tiblisternodes.item(0).getChildNodes();
-      Set setRvParameters = new HashSet();
+      Set setParameters = new HashSet();
       int len = ln.getLength();
       for (int i = 0; i < len; i++) {
         EMSParameters p = new EMSParameters();
@@ -349,7 +349,7 @@ public class ConfigurationManager {
 
           NodeList subs = listener.getChildNodes();
           int leni = subs.getLength();
-          Set setRvListeners = new HashSet();
+          Set setListeners = new HashSet();
           for (int iSubscription = 0; iSubscription < leni; iSubscription++) {
             Node subscription = subs.item(iSubscription);
 
@@ -360,16 +360,16 @@ public class ConfigurationManager {
                 String Ttopic = id.getNodeValue();
                 Ttopic = Ttopic.replaceAll("&gt;", ">");
 
-                setRvListeners.add(id.getNodeValue());
+                setListeners.add(id.getNodeValue());
               }
-              p.setTopics(setRvListeners);
+              p.setTopics(setListeners);
             }
           }
-          setRvParameters.add(p);
+          setParameters.add(p);
         }
       }
 
-      this._gui.startListeners(setRvParameters);
+      this._gui.startListeners(setParameters);
     } catch (DOMException e) {
       System.err.println(e.getLocalizedMessage());
     }

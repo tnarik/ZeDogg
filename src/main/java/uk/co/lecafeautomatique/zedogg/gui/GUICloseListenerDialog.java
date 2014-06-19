@@ -78,7 +78,7 @@ public class GUICloseListenerDialog extends GUIDialog {
     setVisible(true);
   }
 
-  public EMSParameters getRvParameters() {
+  public EMSParameters getParameters() {
     EMSParameters p = new EMSParameters();
 
     p.setServerURL(this._tServer.getText());

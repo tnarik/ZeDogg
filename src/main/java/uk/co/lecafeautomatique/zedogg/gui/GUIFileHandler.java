@@ -115,11 +115,11 @@ public class GUIFileHandler {
         buf_writer = new BufferedWriter(writer);
         DateFormatManager dfm = new DateFormatManager("yyyy-MM-dd HH:mm:ss.S");
         buf_writer.write("<html><head>\n");
-        buf_writer.write("<title>EMSSn00p HTML Output Page </title>\n");
+        buf_writer.write("<title>ZeDogg HTML Output Page </title>\n");
         buf_writer.write("<META http-equiv=\"content-type\" content=\"text/html;\" charset="
             + System.getProperty("file.encoding") + "\">");
-        buf_writer.write("\n<META NAME=\"description\" CONTENT=\"rvsn00p html output file.\">");
-        buf_writer.write("\n<META NAME=\"keywords\" CONTENT=\"rvsn00p,tibco,rendezvous\">");
+        buf_writer.write("\n<META NAME=\"description\" CONTENT=\"ems html output file.\">");
+        buf_writer.write("\n<META NAME=\"keywords\" CONTENT=\"ems,tibco,zedogg\">");
         buf_writer.write("\n<META NAME=\"Author\" CONTENT=\"" + System.getProperty("user.name", "unknown") + "\">");
         buf_writer.write("\n<META NAME=\"Creation_Date\" CONTENT=\"" + new Date() + "\">");
         buf_writer.write("</head>\n<body>\n");

@@ -7,7 +7,6 @@ import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerModel
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerTree;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryPath;
 import uk.co.lecafeautomatique.zedogg.gui.configure.MRUListnerManager;
-import uk.co.lecafeautomatique.zedogg.util.BrowserLauncher;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSController;
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
@@ -74,7 +73,8 @@ import javax.swing.table.TableModel;
 
 public class GUI implements MessageListener {
   public static final String DETAILED_VIEW = "Detailed";
-  public static final String VERSION = "EMSSn00p v2.0.3";
+  public static final String NAME = "ZeDogg";
+  public static final String VERSION = "v0.1.0";
   public static final String URL = "http://emsn00p.sf.net";
   public static final MarshalJMSMsgToStringProxyImpl _marshalImpl = new MarshalJMSMsgToStringProxyImpl();
 
@@ -114,7 +114,7 @@ public class GUI implements MessageListener {
 
   protected boolean _displaySystemMsgs = true;
   protected boolean _displayIMMsgs = true;
-  protected EMSParameters _lastUsedRvParameters = new EMSParameters();
+  protected EMSParameters _lastUsedParameters = new EMSParameters();
   protected boolean _isPaused = false;
   protected ClassLoader _cl = null;
 
@@ -145,11 +145,11 @@ public class GUI implements MessageListener {
       try {
         EMSParameters p = (EMSParameters) itrl.next();
 
-        p.setDescription(" <a href=\"" + URL + "\">" + VERSION + "</a> ");
+        p.setDescription(" <a href=\"" + URL + "\">" + NAME + " " + VERSION + "</a> ");
 
         EMSController.startListener(p, this);
 
-        this._lastUsedRvParameters = p;
+        this._lastUsedParameters = p;
       } catch (ClassCastException ex) {
         error = new GUIErrorDialog(getBaseFrame(), ex.getMessage());
       } catch (JMSException ex) {
@@ -196,7 +196,7 @@ public class GUI implements MessageListener {
       sBanner = EMSController.getTransports().toString();
     }
 
-    sBanner = sBanner + " " + VERSION;
+    sBanner = sBanner + " " + NAME + " " + VERSION;
 
     setTitle(sBanner);
   }
@@ -692,7 +692,7 @@ public class GUI implements MessageListener {
 
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg, VERSION + " " + URL,
+              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg, NAME + " " + VERSION + " " + URL,
                   GUI.this.getBaseFrame(), GUI.this._statusLabel);
             }
           });
@@ -936,7 +936,7 @@ public class GUI implements MessageListener {
     result.setMnemonic('h');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUIFileHandler.saveTableToHtml(VERSION, URL, GUI.this.getBaseFrame(),
+        GUIFileHandler.saveTableToHtml(NAME + " " + VERSION, URL, GUI.this.getBaseFrame(),
             GUI.this._statusLabel, GUI.this._table);
       }
     });
@@ -997,7 +997,7 @@ public class GUI implements MessageListener {
       public void actionPerformed(ActionEvent e) {
         GUIErrorDialog error;
         try {
-          GUIFileHandler.saveTableToTextFile(VERSION + " " + URL, GUI.this.getBaseFrame(),
+          GUIFileHandler.saveTableToTextFile(NAME+" "+VERSION + " " + URL, GUI.this.getBaseFrame(),
               GUI.this._statusLabel, GUI.this._table);
         } catch (Exception ex) {
           error = new GUIErrorDialog(GUI.this.getBaseFrame(), ex.getMessage());
@@ -1013,7 +1013,7 @@ public class GUI implements MessageListener {
     result.setAccelerator(KeyStroke.getKeyStroke("control N"));
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this.requestNewRvListener(null);
+        GUI.this.requestNewListener(null);
       }
     });
     return result;
@@ -1024,7 +1024,7 @@ public class GUI implements MessageListener {
     result.setMnemonic('s');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this.requestNewRvListener(null);
+        GUI.this.requestNewListener(null);
       }
     });
     return result;
@@ -1035,7 +1035,7 @@ public class GUI implements MessageListener {
     result.setMnemonic('o');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this.requestNewRvListener(null);
+        GUI.this.requestNewListener(null);
       }
     });
     return result;
@@ -1205,11 +1205,7 @@ public class GUI implements MessageListener {
     JMenu helpMenu = new JMenu("Help");
     helpMenu.setMnemonic('h');
     helpMenu.add(createHelpAbout());
-
-    helpMenu.add(createHelpGotoHomepage());
-
     helpMenu.add(createHelpProperties());
-    helpMenu.add(createHelpLICENSE());
     StringBuffer a = new StringBuffer();
     a.toString();
     return helpMenu;
@@ -1226,50 +1222,12 @@ public class GUI implements MessageListener {
     return result;
   }
 
-  protected JMenuItem createHelpLICENSE() {
-    String title = "License information";
-    JMenuItem result = new JMenuItem("License information");
-    result.setMnemonic('l');
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUIErrorDialog error;
-        try {
-          BrowserLauncher.openURL("http://www.apache.org/licenses/LICENSE");
-        } catch (Exception ex) {
-          error = new GUIErrorDialog(GUI.this.getBaseFrame(), "Could not open browser : "
-              + ex.getMessage());
-        }
-      }
-    });
-    return result;
-  }
-
-  protected JMenuItem createHelpGotoHomepage() {
-    String title = "Help topics";
-    JMenuItem result = new JMenuItem("Help topics");
-    result.setMnemonic('t');
-    result.setAccelerator(KeyStroke.getKeyStroke("F1"));
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUIErrorDialog error;
-        try {
-          BrowserLauncher.openURL("http://rvsn00p.sf.net");
-        } catch (Exception ex) {
-          error = new GUIErrorDialog(GUI.this.getBaseFrame(), "Could not open browser : "
-              + ex.getMessage());
-        }
-      }
-    });
-    return result;
-  }
-
   protected JMenuItem createHelpAbout() {
-    String title = "About EMSSn00per";
-    JMenuItem result = new JMenuItem("About EMSSn00per");
+    JMenuItem result = new JMenuItem("About "+NAME);
     result.setMnemonic('a');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this.showAboutDialog("About EMSSn00per");
+        GUI.this.showAboutDialog("About "+NAME);
       }
     });
     return result;
@@ -1280,10 +1238,9 @@ public class GUI implements MessageListener {
   }
 
   protected void showAboutDialog(String title) {
-    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { VERSION, " ",
+    JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { NAME, " ", VERSION, " ",
         "Constructed by Orjan Lundberg <lundberg@home.se>", " ",
         "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ",
-        "Thanks goes to (in no special order):", " ", "Julian Lo, Dan McLean ", " ",
         "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ",
         "Copyright (C) The Apache Software Foundation. All rights reserved.", " ",
         "This software is published under the terms of the Apache Software",
@@ -1643,11 +1600,11 @@ public class GUI implements MessageListener {
       listenerButton.setIcon(newIcon);
     }
 
-    listenerButton.setToolTipText("Create new Rv Listener.");
+    listenerButton.setToolTipText("Create new Listener.");
 
     listenerButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this.requestNewRvListener(null);
+        GUI.this.requestNewListener(null);
       }
     });
     JButton newButton = new JButton("Clear Log Table");
@@ -1884,21 +1841,21 @@ public class GUI implements MessageListener {
     getBaseFrame().setBounds(r);
   }
 
-  protected void requestNewRvListener(EMSParameters p) {
+  protected void requestNewListener(EMSParameters p) {
     GUIErrorDialog error;
     try {
       GUITransportInputDialog inputDialog = null;
       if (p != null) {
         inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", p);
       } else {
-        inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", this._lastUsedRvParameters);
+        inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", this._lastUsedParameters);
       }
 
       if (inputDialog.isOK()) {
-        this._lastUsedRvParameters = inputDialog.getRvParameters();
+        this._lastUsedParameters = inputDialog.getParameters();
 
-        this._lastUsedRvParameters.setDescription("<a href=\"" + URL + "\">" + VERSION + "</a> ");
-        EMSController.startListener(this._lastUsedRvParameters, this);
+        this._lastUsedParameters.setDescription("<a href=\"" + URL + "\">" + NAME + " " + VERSION + "</a> ");
+        EMSController.startListener(this._lastUsedParameters, this);
         updateBanner();
       }
 

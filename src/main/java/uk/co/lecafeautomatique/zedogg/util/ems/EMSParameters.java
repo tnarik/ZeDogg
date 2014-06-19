@@ -39,7 +39,7 @@ public class EMSParameters implements Cloneable, Serializable {
     this._clientId = clientid;
   }
 
-  public EMSParameters(Set<String> topics, String serverurl, String name, boolean displayRvParameters, String password,
+  public EMSParameters(Set<String> topics, String serverurl, String name, boolean displayParameters, String password,
       String description) {
     this._topics = new HashSet();
     this._topics.addAll(topics);
@@ -48,7 +48,7 @@ public class EMSParameters implements Cloneable, Serializable {
     this._userName = name;
     this._password = password;
 
-    this._displayEMSParameters = displayRvParameters;
+    this._displayEMSParameters = displayParameters;
 
     this._clientId = description;
 
@@ -200,12 +200,12 @@ public class EMSParameters implements Cloneable, Serializable {
     return sRetval;
   }
 
-  public boolean isDisplayRvParameters() {
+  public boolean isDisplayParameters() {
     return this._displayEMSParameters;
   }
 
-  public void setDisplayRvParameters(boolean displayRvParameters) {
-    this._displayEMSParameters = displayRvParameters;
+  public void setDisplayParameters(boolean displayParameters) {
+    this._displayEMSParameters = displayParameters;
   }
 
   public String getTopic() {

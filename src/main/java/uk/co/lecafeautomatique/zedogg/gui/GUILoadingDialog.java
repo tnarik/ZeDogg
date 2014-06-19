@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 public class GUILoadingDialog extends GUIDialog {
 
   public GUILoadingDialog(JFrame jframe, String message) {
-    super(jframe, "EMSSn00p", false);
+    super(jframe, GUI.NAME, false);
 
     JPanel bottom = new JPanel();
     bottom.setLayout(new FlowLayout());
