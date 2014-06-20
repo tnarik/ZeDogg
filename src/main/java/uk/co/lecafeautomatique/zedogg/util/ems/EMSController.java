@@ -1,8 +1,8 @@
 package uk.co.lecafeautomatique.zedogg.util.ems;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Type;
-import java.util.Collection;
+
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class EMSController {
   public static synchronized TopicConnection getTopicConnection(EMSParameters p) throws JMSException {
     try {
       if (_mapEMSConnections.containsKey(p)) {
-        return (TopicConnection) _mapEMSConnections.get(p);
+        return _mapEMSConnections.get(p);
       }
 
       TopicConnectionFactory factory = null;
@@ -92,42 +92,35 @@ public class EMSController {
       TopicSubscriber lsnr = (TopicSubscriber) _mapEMSConnections.get(p);
       lsnr.close();
 
-      _mapEMSConnections.remove(p.getTopic());
+      _mapEMSConnections.remove(p);
     }
   }
 
   public static synchronized void shutdownAll() throws JMSException {
-    Iterator i = _mapEMSConnections.values().iterator();
-
-    while (i.hasNext()) {
-      if (i != null) {
-        TopicConnection tc = (TopicConnection) i.next();
-
+    Iterator<TopicConnection> i = _mapEMSConnections.values().iterator();
+    while ((i!=null) && i.hasNext()) {
+        TopicConnection tc = i.next();
         tc.stop();
         tc.close();
-      }
-
     }
 
     _mapEMSConnections.clear();
   }
 
   public static synchronized void pauseAll() throws JMSException {
-    Iterator i = _mapEMSConnections.values().iterator();
+    Iterator<TopicConnection> i = _mapEMSConnections.values().iterator();
 
-    while (i.hasNext())
-      if (i != null) {
-        TopicConnection tc = (TopicConnection) i.next();
-
+    while ((i!=null) && i.hasNext()) {
+        TopicConnection tc = i.next();
         tc.stop();
-      }
+    }
   }
 
   public static synchronized void resumeAll() throws JMSException {
-    Iterator i = _mapEMSConnections.values().iterator();
+    Iterator<TopicConnection> i = _mapEMSConnections.values().iterator();
 
-    while (i.hasNext())
-      if (i != null)
-        ((TopicConnection) i.next()).start();
+    while ((i!=null) && i.hasNext()) {
+      (i.next()).start();
+    }
   }
 }

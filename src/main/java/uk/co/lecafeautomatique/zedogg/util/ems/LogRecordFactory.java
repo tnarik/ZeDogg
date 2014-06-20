@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.util.ems;
 
-import java.lang.reflect.InvocationTargetException;
+
 import java.lang.reflect.Method;
 
 import uk.co.lecafeautomatique.zedogg.EventActionType;
@@ -101,14 +101,7 @@ public class LogRecordFactory {
 
         try {
           realMsg = (Message) createFromBytesMethod.invoke(null, mapMsg.getBytes("message_bytes"));
-        } catch (IllegalAccessException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          // TODO Auto-generated catch block
+        } catch (Exception e) {
           e.printStackTrace();
         }
       } else {

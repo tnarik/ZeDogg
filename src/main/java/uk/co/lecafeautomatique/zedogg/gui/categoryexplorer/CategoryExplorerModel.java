@@ -143,7 +143,7 @@ public class CategoryExplorerModel extends DefaultTreeModel {
 
     }
 
-    if (addedCategory == true) {
+    if (addedCategory) {
       for (int i = 0; i < path.size(); i++) {
         CategoryElement element = path.categoryElementAt(i);
         Enumeration children = parent.children();

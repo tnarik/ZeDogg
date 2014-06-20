@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.gui.categoryexplorer;
 
-import java.awt.event.MouseEvent;
+
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreePath;
@@ -29,7 +29,7 @@ public class CategoryExplorerTree extends JTree {
   public CategoryExplorerModel getExplorerModel() {
     return this._model;
   }
-
+/* REMOVE
   public String getToolTipText(MouseEvent e) {
     try {
       return super.getToolTipText(e);
@@ -37,6 +37,8 @@ public class CategoryExplorerTree extends JTree {
     }
     return "";
   }
+  
+  */
 
   protected void init() {
     putClientProperty("JTree.lineStyle", "Angled");

@@ -3,7 +3,7 @@ package uk.co.lecafeautomatique.zedogg.gui;
 import uk.co.lecafeautomatique.zedogg.EventActionType;
 import uk.co.lecafeautomatique.zedogg.LogRecord;
 import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
-import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerModel;
+
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerTree;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryPath;
 import uk.co.lecafeautomatique.zedogg.gui.configure.MRUListnerManager;
@@ -16,7 +16,7 @@ import uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringProxyImpl;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
+
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
@@ -32,7 +32,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
-import java.io.PrintStream;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,8 +60,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JScrollBar;
+
+
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -69,7 +69,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableModel;
+
 
 public class GUI implements MessageListener {
   public static final String DETAILED_VIEW = "Detailed";
@@ -163,7 +163,7 @@ public class GUI implements MessageListener {
   }
 
   public void onError(Object tibrvObject, int errorCode, String message, Throwable throwable) {
-    GUIErrorDialog error = new GUIErrorDialog(getBaseFrame(), "A System error occured " + message);
+    new GUIErrorDialog(getBaseFrame(), "A System error occured " + message);
   }
 
   public void show(final int delay) {
@@ -210,7 +210,7 @@ public class GUI implements MessageListener {
       System.err.println(ex.getMessage());
     }
 
-    if (this._callSystemExitOnClose == true)
+    if (this._callSystemExitOnClose)
       System.exit(0);
   }
 
@@ -246,7 +246,7 @@ public class GUI implements MessageListener {
   }
 
   public void addMessage(LogRecord lr) {
-    if (this._isDisposed == true) {
+    if (this._isDisposed) {
       return;
     }
 
@@ -779,7 +779,7 @@ public class GUI implements MessageListener {
   }
 
   protected JCheckBoxMenuItem getMenuItem(EventActionType level) {
-    JCheckBoxMenuItem result = (JCheckBoxMenuItem) this._logLevelMenuItems.get(level);
+    JCheckBoxMenuItem result = this._logLevelMenuItems.get(level);
     if (result == null) {
       result = createMenuItem(level);
       this._logLevelMenuItems.put(level, result);
@@ -839,7 +839,7 @@ public class GUI implements MessageListener {
   }
 
   protected JCheckBoxMenuItem getLogTableColumnMenuItem(LogTableColumn column) {
-    JCheckBoxMenuItem result = (JCheckBoxMenuItem) this._logTableColumnMenuItems.get(column);
+    JCheckBoxMenuItem result = this._logTableColumnMenuItems.get(column);
     if (result == null) {
       result = createLogTableColumnMenuItem(column);
       this._logTableColumnMenuItems.put(column, result);
@@ -1064,7 +1064,7 @@ public class GUI implements MessageListener {
     if (parameters != null) {
       menu.addSeparator();
       for (int i = 0; i < parameters.length; i++) {
-        JMenuItem result = new JMenuItem(i + 1 + " " + parameters[i]);
+        JMenuItem result = new JMenuItem((i + 1) + " " + parameters[i]);
         result.setMnemonic(i + 1);
         result.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
@@ -1172,7 +1172,7 @@ public class GUI implements MessageListener {
       try {
         setMaxNumberOfLogRecords(Integer.parseInt(temp));
       } catch (NumberFormatException e) {
-        GUIErrorDialog error = new GUIErrorDialog(getBaseFrame(), "'" + temp
+        new GUIErrorDialog(getBaseFrame(), "'" + temp
             + "' is an invalid parameter.\nPlease try again.");
 
         setMaxRecordConfiguration();
@@ -1194,7 +1194,7 @@ public class GUI implements MessageListener {
       try {
         setDateFormat(temp);
       } catch (NumberFormatException e) {
-        GUIErrorDialog error = new GUIErrorDialog(getBaseFrame(), "'" + temp
+        new GUIErrorDialog(getBaseFrame(), "'" + temp
             + "' is an invalid parameter.\nPlease try again.");
 
         setMaxRecordConfiguration();
@@ -1769,9 +1769,7 @@ public class GUI implements MessageListener {
           GUI.this.updateRenderClass(rendererClass);
         } catch (Exception ex) {
           GUI.this._statusLabel.setText("Renderer exception " + ex.getMessage());
-          String str1 = ex.getLocalizedMessage();
-          GUIErrorDialog error = new GUIErrorDialog(GUI.this.getBaseFrame(),
-              "Error creating renderer : " + ex.getMessage());
+          new GUIErrorDialog(GUI.this.getBaseFrame(), "Error creating renderer : " + ex.getLocalizedMessage());
 
           return;
         }

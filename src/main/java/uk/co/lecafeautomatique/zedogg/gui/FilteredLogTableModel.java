@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.EventActionType;
+
 import uk.co.lecafeautomatique.zedogg.LogRecord;
 import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
 import uk.co.lecafeautomatique.zedogg.PassingLogRecordFilter;
@@ -142,10 +142,10 @@ public class FilteredLogTableModel extends AbstractTableModel {
 
     while (records.hasNext()) {
       LogRecord current = (LogRecord) records.next();
-      strbuf.append("\n");
+      strbuf.append('\n');
       strbuf.append(current.getMessage());
     }
-    strbuf.append("\n");
+    strbuf.append('\n');
 
     return strbuf;
   }
@@ -159,7 +159,6 @@ public class FilteredLogTableModel extends AbstractTableModel {
         buf.append("</td>");
       }
 
-      StringBuffer sb = new StringBuffer();
       buf.append("<td><code>");
       Tbuffer.setLength(0);
       addColumnToStringBuffer(Tbuffer, 999, lr, dfMgr);
@@ -183,7 +182,7 @@ public class FilteredLogTableModel extends AbstractTableModel {
       if (i == 0) {
         buf.append("<br>(");
         buf.append(dfMgr.getPattern());
-        buf.append(")");
+        buf.append(')');
       }
       buf.append("</th>\n");
     }

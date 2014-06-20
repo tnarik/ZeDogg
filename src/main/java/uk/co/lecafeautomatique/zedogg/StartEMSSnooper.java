@@ -89,7 +89,7 @@ public class StartEMSSnooper {
 
       retVal = (a >= 1) && (b >= 4);
       if ((a == 1) && (b == 4))
-        if (st.hasMoreTokens() == true) {
+        if (st.hasMoreTokens()) {
           int c = Integer.parseInt(st.nextToken());
           if (Integer.parseInt(st.nextToken()) >= 1)
             retVal = true;

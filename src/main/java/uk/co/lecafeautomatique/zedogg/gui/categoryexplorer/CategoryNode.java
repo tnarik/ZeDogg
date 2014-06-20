@@ -51,6 +51,7 @@ public class CategoryNode extends DefaultMutableTreeNode {
   }
 
   public boolean equals(Object obj) {
+    if (this == obj) return true;
     if ((obj instanceof CategoryNode)) {
       CategoryNode node = (CategoryNode) obj;
       String tit1 = getTitle().toLowerCase();

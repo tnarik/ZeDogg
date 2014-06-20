@@ -15,7 +15,7 @@ public class CategoryPath {
       processedCategory = "NullDebug";
     }
 
-    processedCategory.replace('/', '.');
+    processedCategory = processedCategory.replace('/', '.');
     processedCategory = processedCategory.replace('\\', '.');
 
     String[] result = processedCategory.split("\\.");
@@ -48,14 +48,13 @@ public class CategoryPath {
   }
 
   public CategoryElement categoryElementAt(int index) {
-    return (CategoryElement) this._categoryElements.get(index);
+    return this._categoryElements.get(index);
   }
 
   public String toString() {
     StringBuffer out = new StringBuffer(100);
 
-    out.append("\n");
-    out.append("===========================\n");
+    out.append("\n===========================\n");
     out.append("TopicPath:                   \n");
     out.append("---------------------------\n");
 
@@ -70,8 +69,7 @@ public class CategoryPath {
       out.append("<<NONE>>");
     }
 
-    out.append("\n");
-    out.append("===========================\n");
+    out.append("\n===========================\n");
 
     return out.toString();
   }

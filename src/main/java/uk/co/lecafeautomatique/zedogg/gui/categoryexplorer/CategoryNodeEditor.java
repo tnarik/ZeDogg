@@ -146,8 +146,7 @@ public class CategoryNodeEditor extends CategoryAbstractCellEditor {
     JMenuItem result = new JMenuItem("Remove All Empty Subjects");
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        while (CategoryNodeEditor.this.removeUnusedNodes() > 0)
-          ;
+        while (CategoryNodeEditor.this.removeUnusedNodes() > 0) {}
       }
     });
     return result;

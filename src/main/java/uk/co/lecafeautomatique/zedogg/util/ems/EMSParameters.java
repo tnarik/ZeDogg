@@ -253,12 +253,10 @@ public class EMSParameters implements Cloneable, Serializable {
   }
 
   public boolean equals(Object o) {
-    boolean equals = false;
-
-    if (((o instanceof EMSParameters)) && (hashCode() == o.hashCode())) {
-      equals = true;
+    if ( this == o) return true;
+    if (((o instanceof EMSParameters)) && (hashCode() == ((EMSParameters)o).hashCode())) {
+      return true;
     }
-
-    return equals;
+    return false;
   }
 }

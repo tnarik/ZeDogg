@@ -44,17 +44,17 @@ public class CategoryImmediateEditor extends DefaultTreeCellEditor {
     if (path == null) {
       return false;
     }
-    CategoryNode node = (CategoryNode) path.getLastPathComponent();
-    boolean rv = false;
+    //REMOVE CategoryNode node = (CategoryNode) path.getLastPathComponent();
+    //REMOVE boolean rv = false;
 
     Rectangle bounds = this.tree.getRowBounds(this.lastRow);
     Dimension checkBoxOffset = this.renderer.getCheckBoxOffset();
 
     bounds.translate(this.offset + checkBoxOffset.width, checkBoxOffset.height);
 
-    rv = bounds.contains(e.getPoint());
+    return bounds.contains(e.getPoint());
 
-    return true;
+    //REMOVE return true;
   }
 
   protected boolean canEditImmediately(EventObject e) {

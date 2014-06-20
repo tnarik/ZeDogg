@@ -57,11 +57,11 @@ public class EventActionType implements Serializable {
     EventActionType logLevel = null;
     if (level != null) {
       level = level.trim().toUpperCase();
-      logLevel = (EventActionType) _eventActionTypeMap.get(level);
+      logLevel = _eventActionTypeMap.get(level);
     }
 
     if ((logLevel == null) && (_registeredEventActionTypeMap.size() > 0)) {
-      logLevel = (EventActionType) _registeredEventActionTypeMap.get(level);
+      logLevel = _registeredEventActionTypeMap.get(level);
     }
 
     if (logLevel == null) {
@@ -78,7 +78,7 @@ public class EventActionType implements Serializable {
       return null;
 
     if (_eventActionTypeMap.get(logLevel.getLabel()) == null) {
-      return (EventActionType) _registeredEventActionTypeMap.put(logLevel.getLabel(), logLevel);
+      return _registeredEventActionTypeMap.put(logLevel.getLabel(), logLevel);
     }
 
     return null;
@@ -99,6 +99,7 @@ public class EventActionType implements Serializable {
   }
 
   public boolean equals(Object o) {
+    if ( this == o ) return true;
     boolean equals = false;
 
     if (((o instanceof EventActionType)) && (getPrecedence() == ((EventActionType) o).getPrecedence())) {

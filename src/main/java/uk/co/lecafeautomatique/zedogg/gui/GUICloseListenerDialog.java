@@ -1,7 +1,7 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
-import java.awt.Container;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

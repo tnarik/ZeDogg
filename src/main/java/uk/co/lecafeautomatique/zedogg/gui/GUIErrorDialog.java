@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import java.awt.Container;
+
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;

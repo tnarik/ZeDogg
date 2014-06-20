@@ -48,7 +48,7 @@ public class LogTableColumn implements Serializable {
     LogTableColumn tableColumn = null;
     if (column != null) {
       column = column.trim();
-      tableColumn = (LogTableColumn) _logTableColumnMap.get(column);
+      tableColumn = _logTableColumnMap.get(column);
     }
 
     if (tableColumn == null) {
@@ -61,13 +61,11 @@ public class LogTableColumn implements Serializable {
   }
 
   public boolean equals(Object o) {
-    boolean equals = false;
-
-    if (((o instanceof LogTableColumn)) && (getLabel() == ((LogTableColumn) o).getLabel())) {
-      equals = true;
+    if (this == o) return true;
+    if ((o instanceof LogTableColumn) && getLabel().equals(((LogTableColumn) o).getLabel())) {
+      return true;
     }
-
-    return equals;
+    return false;
   }
 
   public int hashCode() {

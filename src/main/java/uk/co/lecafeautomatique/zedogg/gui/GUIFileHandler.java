@@ -18,8 +18,6 @@ public class GUIFileHandler {
     try {
       FileDialog fd = new FileDialog(jdBase, "Save text File", 1);
 
-      sSubject.lastIndexOf(".");
-
       String sFileName = sSubject.substring(sSubject.lastIndexOf(".") + 1);
       fd.setFile(sFileName + ".txt");
       fd.setVisible(true);
@@ -35,9 +33,8 @@ public class GUIFileHandler {
         statusLabel.setText("Saved text file " + f.toString());
       }
     } catch (Exception ex) {
-      GUIErrorDialog error = new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
+      new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
     } finally {
-      GUIErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();
@@ -76,9 +73,8 @@ public class GUIFileHandler {
         statusLabel.setText("Saved text file " + f.toString());
       }
     } catch (Exception ex) {
-      GUIErrorDialog error = new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
+      new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
     } finally {
-      GUIErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();
@@ -131,9 +127,8 @@ public class GUIFileHandler {
         statusLabel.setText("Saved HTML file " + f.toString());
       }
     } catch (Exception ex) {
-      GUIErrorDialog error = new GUIErrorDialog(jfBase, "File save error " + ex.getMessage());
+      new GUIErrorDialog(jfBase, "File save error " + ex.getMessage());
     } finally {
-      GUIErrorDialog error;
       if (buf_writer != null)
         try {
           buf_writer.close();

@@ -277,13 +277,13 @@ public class LogRecord implements Serializable {
     StringBuffer buf = new StringBuffer();
     buf.append("LogRecord: [");
     buf.append(this._type);
-    buf.append(",");
+    buf.append(',');
     try {
       buf.append(marshaller.JMSMsgToString(this._message, ""));
     } catch (JMSException e) {
       buf.append(e.getMessage());
     }
-    buf.append("]");
+    buf.append(']');
     return buf.toString();
   }
 

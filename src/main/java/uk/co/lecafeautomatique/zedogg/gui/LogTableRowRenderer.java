@@ -4,7 +4,7 @@ import uk.co.lecafeautomatique.zedogg.EventActionType;
 import uk.co.lecafeautomatique.zedogg.LogRecord;
 import java.awt.Color;
 import java.awt.Component;
-import java.util.Map;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 

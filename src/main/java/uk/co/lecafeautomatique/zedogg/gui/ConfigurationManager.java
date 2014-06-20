@@ -15,7 +15,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -128,42 +128,42 @@ public class ConfigurationManager {
     if (lastUsedRenderer == null) {
       return;
     }
-    xml.append("\t<").append("RENDERER").append(">").append(lastUsedRenderer);
-    xml.append("</").append("RENDERER").append(">\n");
+    xml.append("\t<RENDERER>").append(lastUsedRenderer);
+    xml.append("</RENDERER>\n");
   }
 
   private void processListeners(Iterator it, StringBuffer xml) {
     if (it == null) {
       return;
     }
-    xml.append("\t<").append("SUBSCRIPTIONS").append(">\n");
+    xml.append("\t<SUBSCRIPTIONS>\n");
 
     while (it.hasNext()) {
       exportListener((EMSParameters) it.next(), xml);
     }
 
-    xml.append("\t</").append("SUBSCRIPTIONS").append(">\n");
+    xml.append("\t</SUBSCRIPTIONS>\n");
   }
 
   private void exportListener(EMSParameters rvParam, StringBuffer xml) {
-    xml.append("\t\t<").append("TIBLISTENER").append(" ");
-    xml.append("SERVERURL").append("=\"").append(rvParam.getServerURL() == null ? "" : rvParam.getServerURL())
+    xml.append("\t\t<TIBLISTENER ");
+    xml.append("SERVERURL=\"").append(rvParam.getServerURL() == null ? "" : rvParam.getServerURL())
         .append("\" ");
-    xml.append("USER").append("=\"").append(rvParam.getUserName() == null ? "" : rvParam.getUserName()).append("\" ");
-    xml.append("PASSWORD").append("=\"").append(rvParam.getPassword() == null ? "" : rvParam.getPassword())
+    xml.append("USER=\"").append(rvParam.getUserName() == null ? "" : rvParam.getUserName()).append("\" ");
+    xml.append("PASSWORD=\"").append(rvParam.getPassword() == null ? "" : rvParam.getPassword())
         .append("\" >\n");
 
     Set s = rvParam.getTopics();
     if (s != null) {
       Iterator it = s.iterator();
       while (it.hasNext()) {
-        xml.append("\t\t\t<").append("TOPIC").append(" ");
+        xml.append("\t\t\t<TOPIC ");
         String Ttopic = (String) it.next();
         Ttopic = Ttopic.replaceAll(">", "&gt;");
-        xml.append("ID").append("=\"").append(Ttopic).append("\" />\n");
+        xml.append("ID=\"").append(Ttopic).append("\" />\n");
       }
     }
-    xml.append("\t\t</").append("TIBLISTENER").append(">\n");
+    xml.append("\t\t</TIBLISTENER>\n");
   }
 
   private void processWindowPosition(GUI gui, StringBuffer xml) {
@@ -171,11 +171,11 @@ public class ConfigurationManager {
   }
 
   private void exportWindowPosition(Rectangle r, StringBuffer xml) {
-    xml.append("\t<").append("windowpos").append(" ");
-    xml.append("windowsx").append("=\"").append(String.valueOf((int) r.getX())).append("\"").append(" ");
-    xml.append("windowy").append("=\"").append(String.valueOf((int) r.getY())).append("\"").append(" ");
-    xml.append("windowwidth").append("=\"").append(String.valueOf((int) r.getWidth())).append("\"").append(" ");
-    xml.append("windowheight").append("=\"").append(String.valueOf((int) r.getHeight())).append("\"").append(" ");
+    xml.append("\t<windowpos ");
+    xml.append("windowsx=\"").append(String.valueOf((int) r.getX())).append("\" ");
+    xml.append("windowy=\"").append(String.valueOf((int) r.getY())).append("\" ");
+    xml.append("windowwidth=\"").append(String.valueOf((int) r.getWidth())).append("\" ");
+    xml.append("windowheight=\"").append(String.valueOf((int) r.getHeight())).append("\" ");
     xml.append("/>\n\r");
   }
 
@@ -184,9 +184,9 @@ public class ConfigurationManager {
   }
 
   private void exportSplitPanes(int horizontal, int vertical, StringBuffer xml) {
-    xml.append("\t<").append("splitpanepos").append(" ");
-    xml.append("horizontal").append("=\"").append(String.valueOf(horizontal)).append("\"").append(" ");
-    xml.append("vertical").append("=\"").append(String.valueOf(vertical)).append("\"").append(" ");
+    xml.append("\t<splitpanepos ");
+    xml.append("horizontal=\"").append(String.valueOf(horizontal)).append("\" ");
+    xml.append("vertical=\"").append(String.valueOf(vertical)).append("\" ");
     xml.append("/>\n\r");
   }
 
@@ -195,8 +195,8 @@ public class ConfigurationManager {
   }
 
   private void exportDateFormatPattern(String pattern, StringBuffer xml) {
-    xml.append("\t<").append("dateformat").append(" ");
-    xml.append("pattern").append("=\"").append(pattern).append("\"").append(" ");
+    xml.append("\t<dateformat ");
+    xml.append("pattern=\"").append(pattern).append("\" ");
     xml.append("/>\n\r");
   }
 
@@ -229,7 +229,7 @@ public class ConfigurationManager {
     for (int i = 1; i < objects.length; i++) {
       n = (CategoryNode) objects[i];
       if (i > 1) {
-        sb.append(".");
+        sb.append('.');
       }
       sb.append(n.getTitle());
     }
@@ -410,7 +410,7 @@ public class ConfigurationManager {
       String sizeHorizontal = getValue(map, "horizontal");
       String sizeVertical = getValue(map, "vertical");
 
-      if ((sizeHorizontal != null) && (sizeHorizontal != null)) {
+      if (sizeHorizontal != null) {
         this._gui.setSplitPaneTableViewerPos(Integer.parseInt(sizeHorizontal));
         this._gui.setSplitPaneVerticalPos(Integer.parseInt(sizeVertical));
       } else {
@@ -435,8 +435,10 @@ public class ConfigurationManager {
       map = n.getAttributes();
       CategoryNode chnode = model.addCategory(new CategoryPath(getValue(map, "path")));
       chnode.setSelected(getValue(map, "selected").equalsIgnoreCase("true"));
+      /* REMOVE
       if (getValue(map, "expanded").equalsIgnoreCase("true"))
         ;
+      */
       tree.expandPath(model.getTreePathToRoot(chnode));
     }
   }
@@ -511,10 +513,10 @@ public class ConfigurationManager {
   }
 
   private void exportFont(String fontName, int style, int size, StringBuffer xml) {
-    xml.append("\t<").append("fontinfo").append(" ");
-    xml.append("name").append("=\"").append(fontName).append("\"").append(" ");
-    xml.append("style").append("=\"").append(style).append("\"").append(" ");
-    xml.append("size").append("=\"").append(size).append("\"").append(" ");
+    xml.append("\t<fontinfo ");
+    xml.append("name=\"").append(fontName).append("\" ");
+    xml.append("style=\"").append(style).append("\" ");
+    xml.append("size=\"").append(size).append("\" ");
     xml.append("/>\n\r");
   }
 
@@ -723,34 +725,34 @@ public class ConfigurationManager {
   private void exportXMLElement(CategoryNode node, TreePath path, StringBuffer xml) {
     CategoryExplorerTree tree = this._gui.getCategoryExplorerTree();
 
-    xml.append("\t<").append("subject").append(" ");
-    xml.append("name").append("=\"").append(node.getTitle()).append("\" ");
-    xml.append("path").append("=\"").append(treePathToString(path)).append("\" ");
-    xml.append("expanded").append("=\"").append(tree.isExpanded(path)).append("\" ");
-    xml.append("selected").append("=\"").append(node.isSelected()).append("\"/>\r\n");
+    xml.append("\t<subject ");
+    xml.append("name=\"").append(node.getTitle()).append("\" ");
+    xml.append("path=\"").append(treePathToString(path)).append("\" ");
+    xml.append("expanded=\"").append(tree.isExpanded(path)).append("\" ");
+    xml.append("selected=\"").append(node.isSelected()).append("\"/>\r\n");
   }
 
   private void exportLogLevelXMLElement(String label, boolean selected, StringBuffer xml) {
-    xml.append("\t\t<").append("type").append(" ").append("name");
+    xml.append("\t\t<type name");
     xml.append("=\"").append(label).append("\" ");
-    xml.append("selected").append("=\"").append(selected);
+    xml.append("selected=\"").append(selected);
     xml.append("\"/>\r\n");
   }
 
   private void exportLogLevelColorXMLElement(String label, Color color, StringBuffer xml) {
-    xml.append("\t\t<").append("colorlevel").append(" ").append("name");
+    xml.append("\t\t<colorlevel name");
     xml.append("=\"").append(label).append("\" ");
-    xml.append("red").append("=\"").append(color.getRed()).append("\" ");
-    xml.append("green").append("=\"").append(color.getGreen()).append("\" ");
-    xml.append("blue").append("=\"").append(color.getBlue());
+    xml.append("red=\"").append(color.getRed()).append("\" ");
+    xml.append("green=\"").append(color.getGreen()).append("\" ");
+    xml.append("blue=\"").append(color.getBlue());
     xml.append("\"/>\r\n");
   }
 
   private void exportLogTableColumnXMLElement(String label, boolean selected, int size, StringBuffer xml) {
-    xml.append("\t\t<").append("column").append(" ").append("name");
+    xml.append("\t\t<column name");
     xml.append("=\"").append(label).append("\" ");
-    xml.append("selected").append("=\"").append(selected).append("\" ");
-    xml.append("columnsize").append("=\"").append(String.valueOf(size));
+    xml.append("selected=\"").append(selected).append("\" ");
+    xml.append("columnsize=\"").append(String.valueOf(size));
     xml.append("\"/>\r\n");
   }
 }

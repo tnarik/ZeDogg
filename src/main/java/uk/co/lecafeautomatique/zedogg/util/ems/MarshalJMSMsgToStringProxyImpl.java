@@ -4,10 +4,10 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 public class MarshalJMSMsgToStringProxyImpl implements IMarshalJMSToString {
-  private static IMarshalJMSToString _impl = null;
+  private IMarshalJMSToString _impl = null;
 
-  public void setImpl(IMarshalJMSToString _impl) {
-    _impl = _impl;
+  public void setImpl(IMarshalJMSToString impl) {
+    _impl = impl;
   }
 
   public String JMSMsgToString(Message message, String name) throws JMSException {

@@ -86,7 +86,7 @@ public class Base64 {
 
       sb.append(encode(new byte[] { b[len], b[(len + 1)], 0 }).substring(0, 3));
 
-      sb.append("=");
+      sb.append('=');
     }
 
     if (outputLength != sb.length()) {
