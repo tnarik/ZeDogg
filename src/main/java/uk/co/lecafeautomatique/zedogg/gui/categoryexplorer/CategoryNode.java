@@ -26,17 +26,15 @@ public class CategoryNode extends DefaultMutableTreeNode {
     return this._selected;
   }
 
-  /** @deprecated */
   public void setAllDescendantsSelected() {
     Enumeration children = children();
     while (children.hasMoreElements()) {
       CategoryNode node = (CategoryNode) children.nextElement();
       node.setSelected(true);
-      node.setAllDescendantsSelected();
+      node.setAllDescendantsDeSelected();
     }
   }
 
-  /** @deprecated */
   public void setAllDescendantsDeSelected() {
     Enumeration children = children();
     while (children.hasMoreElements()) {
