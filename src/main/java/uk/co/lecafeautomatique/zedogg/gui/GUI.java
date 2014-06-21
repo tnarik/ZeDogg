@@ -96,7 +96,6 @@ public class GUI implements MessageListener {
   private String _fontName = "Dialog";
   protected String _currentView = "Detailed";
 
-  protected boolean _loadSystemFonts = false;
   protected boolean _trackTableScrollPane = true;
   protected boolean _callSystemExitOnClose = true;
   protected List<Object> _displayedLogBrokerProperties = new Vector();
@@ -109,11 +108,8 @@ public class GUI implements MessageListener {
   protected List _columns = null;
   protected boolean _isDisposed = false;
 
-  protected ConfigurationManager _configurationManager = null;
   protected MRUListnerManager _mruListnerManager = null;
 
-  protected boolean _displaySystemMsgs = true;
-  protected boolean _displayIMMsgs = true;
   protected EMSParameters _lastUsedParameters = new EMSParameters();
   protected boolean _isPaused = false;
   protected ClassLoader _cl = null;
@@ -125,7 +121,11 @@ public class GUI implements MessageListener {
   private JComboBox _rendererCombo;
   protected String _lastUsedRenderer;
 
-  public GUI(List MsgTypes, Set listeners, String name) {
+  public GUI(String name) {
+    this(EventActionType.getAllDefaultLevels(), name);
+  }
+
+  public GUI(List MsgTypes, String name) {
     this._levels = MsgTypes;
     this._columns = LogTableColumn.getLogTableColumns();
     this._columns = LogTableColumn.getLogTableColumns();
@@ -134,31 +134,6 @@ public class GUI implements MessageListener {
     initComponents();
 
     this._logMonitorFrame.addWindowListener(new LogBrokerMonitorWindowAdaptor(this));
-
-    startListeners(listeners);
-  }
-
-  protected void startListeners(Set listeners) {
-    Iterator itrl = listeners.iterator();
-    GUIErrorDialog error;
-    while (itrl.hasNext()) {
-      try {
-        EMSParameters p = (EMSParameters) itrl.next();
-
-        p.setDescription(" <a href=\"" + URL + "\">" + NAME + " " + VERSION + "</a> ");
-
-        EMSController.startListener(p, this);
-
-        this._lastUsedParameters = p;
-      } catch (ClassCastException ex) {
-        error = new GUIErrorDialog(getBaseFrame(), ex.getMessage());
-      } catch (JMSException ex) {
-        GUIErrorDialog error1;
-        error1 = new GUIErrorDialog(getBaseFrame(), "EMS Exception" + ex.getMessage());
-      }
-
-    }
-
     updateBanner();
   }
 
@@ -327,7 +302,7 @@ public class GUI implements MessageListener {
       this._pauseButton.setIcon(pbIcon);
   }
 
-  protected void unPauseListeners() {
+  protected void resumeListeners() {
     try {
       EMSController.resumeAll();
     } catch (JMSException e) {
@@ -554,8 +529,9 @@ public class GUI implements MessageListener {
     final GUI gui = this;
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        GUI.this._configurationManager = new ConfigurationManager(gui, GUI.this._table);
-        GUI.this.unPauseListeners();
+        GUI.this.setDateFormat("HH:mm:ss.S");
+
+        GUI.this.resumeListeners();
         String ex = "";
         try {
           GUI.this.updateRenderClass(GUI.this.getLastUsedRenderer());
@@ -923,8 +899,6 @@ public class GUI implements MessageListener {
     fileMenu.addSeparator();
     fileMenu.add(createCloseListener());
     fileMenu.addSeparator();
-    fileMenu.add(createFileSaveConfigMI());
-    fileMenu.add(createFileLoadConfigMI());
 
     fileMenu.addSeparator();
     fileMenu.add(createExitMI());
@@ -938,54 +912,6 @@ public class GUI implements MessageListener {
       public void actionPerformed(ActionEvent e) {
         GUIFileHandler.saveTableToHtml(NAME + " " + VERSION, URL, GUI.this.getBaseFrame(),
             GUI.this._statusLabel, GUI.this._table);
-      }
-    });
-    return result;
-  }
-
-  protected JMenuItem createFileSaveConfigMI() {
-    JMenuItem result = new JMenuItem("Save configuration to file");
-    result.setMnemonic('c');
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUIErrorDialog error;
-        try {
-          FileDialog fd = new FileDialog(GUI.this.getBaseFrame(), "Save config File", 1);
-          fd.setDirectory(GUI.this._configurationManager.getFilename());
-          fd.setFile("*.rs0");
-          fd.setVisible(true);
-
-          String fileName = fd.getDirectory() + fd.getFile();
-          GUI.this._configurationManager.setFilename(fileName);
-          GUI.this._configurationManager.save();
-          GUI.this._statusLabel.setText("Saved configuration in " + fileName);
-        } catch (Exception ex) {
-          error = new GUIErrorDialog(GUI.this.getBaseFrame(), ex.getMessage());
-        }
-      }
-    });
-    return result;
-  }
-
-  protected JMenuItem createFileLoadConfigMI() {
-    JMenuItem result = new JMenuItem("Load configuration from file");
-    result.setMnemonic('c');
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUIErrorDialog error;
-        try {
-          FileDialog fd = new FileDialog(GUI.this.getBaseFrame(), "Open config File", 0);
-          fd.setDirectory(GUI.this._configurationManager.getFilename());
-          fd.setFile("*.rs0");
-          fd.setVisible(true);
-
-          String fileName = fd.getDirectory() + fd.getFile();
-          GUI.this._configurationManager.setFilename(fileName);
-          GUI.this._configurationManager.load();
-          GUI.this._statusLabel.setText("Loaded configuration from " + fileName);
-        } catch (Exception ex) {
-          error = new GUIErrorDialog(GUI.this.getBaseFrame(), ex.getMessage());
-        }
       }
     });
     return result;
@@ -1090,34 +1016,10 @@ public class GUI implements MessageListener {
   protected JMenu createConfigureMenu() {
     JMenu configureMenu = new JMenu("Configure");
     configureMenu.setMnemonic('c');
-    configureMenu.add(createConfigureSave());
-    configureMenu.add(createConfigureReset());
     configureMenu.add(createConfigureMaxRecords());
     configureMenu.add(createConfigureDateFormat());
 
     return configureMenu;
-  }
-
-  protected JMenuItem createConfigureSave() {
-    JMenuItem result = new JMenuItem("Save");
-    result.setMnemonic('s');
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUI.this.saveConfiguration();
-      }
-    });
-    return result;
-  }
-
-  protected JMenuItem createConfigureReset() {
-    JMenuItem result = new JMenuItem("Reset");
-    result.setMnemonic('r');
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUI.this.resetConfiguration();
-      }
-    });
-    return result;
   }
 
   protected JMenuItem createConfigureMaxRecords() {
@@ -1147,20 +1049,6 @@ public class GUI implements MessageListener {
       }
     });
     return result;
-  }
-
-  protected void saveConfiguration() {
-    GUIErrorDialog error;
-    try {
-      this._configurationManager.save();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      error = new GUIErrorDialog(getBaseFrame(), ex.getMessage());
-    }
-  }
-
-  protected void resetConfiguration() {
-    this._configurationManager.reset();
   }
 
   protected void setMaxRecordConfiguration() {
@@ -1626,7 +1514,6 @@ public class GUI implements MessageListener {
     newButton.addActionListener(getNewButtonActionListener());
 
     this._pauseButton = new JButton("Pause all listeners");
-
     this._pauseButton.addActionListener(getPauseButonActionListener());
 
     addFontsToFontCombo(fontCombo);
@@ -1717,7 +1604,7 @@ public class GUI implements MessageListener {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (GUI.this.isPaused())
-          GUI.this.unPauseListeners();
+          GUI.this.resumeListeners();
         else
           GUI.this.pauseListeners();
       }

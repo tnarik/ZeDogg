@@ -1,6 +1,5 @@
 package uk.co.lecafeautomatique.zedogg.gui.configure;
 
-import uk.co.lecafeautomatique.zedogg.gui.ConfigurationManager;
 import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
 
 import java.io.BufferedInputStream;
@@ -30,19 +29,6 @@ public class MRUListnerManager {
   public MRUListnerManager(int maxSize) {
     load();
     setMaxSize(maxSize);
-  }
-
-  public void save() {
-    File file = new File(getFilename());
-    try {
-      ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-
-      oos.writeObject(this._mruListnerList);
-      oos.flush();
-      oos.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   public int size() {
@@ -97,16 +83,6 @@ public class MRUListnerManager {
     this._mruListnerList.add(0, this._mruListnerList.remove(index));
   }
 
-  public static void createConfigurationDirectory() {
-    String sep = System.getProperty("file.separator");
-    File f = new File(System.getProperty("user.home") + sep + ConfigurationManager.CONFIG_DIR_NAME);
-    if (!f.exists())
-      try {
-        f.mkdir();
-      } catch (SecurityException e) {
-        e.printStackTrace();
-      }
-  }
 
   protected InputStream getInputStream(File file) throws IOException, FileNotFoundException {
     BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
@@ -130,40 +106,9 @@ public class MRUListnerManager {
   }
 
   protected void load() {
-    createConfigurationDirectory();
-    File file = new File(getFilename());
-    ObjectInputStream ois = null;
-    if (file.exists())
-      try {
-        ois = new ObjectInputStream(new FileInputStream(file));
-
-        Object oList = ois.readObject();
-        Collection coll = (Collection) oList;
-
-        Iterator it = coll.iterator();
-        while (it.hasNext()) {
-          Object oItem = it.next();
-          if ((oItem instanceof EMSParameters))
-            this._mruListnerList.add((EMSParameters) oItem);
-        }
-      } catch (Exception e) {
-        this._mruListnerList = new LinkedList();
-      } finally {
-        if (ois != null)
-          try {
-            ois.close();
-          } catch (IOException e1) {
-          }
-      }
-    else
-      this._mruListnerList = new LinkedList();
+    this._mruListnerList = new LinkedList();
   }
 
-  protected String getFilename() {
-    String sep = System.getProperty("file.separator");
-
-    return System.getProperty("user.home") + sep + ConfigurationManager.CONFIG_DIR_NAME + sep + CONFIG_FILE_NAME;
-  }
 
   protected void setMaxSize(int maxSize) {
     if (maxSize < this._mruListnerList.size()) {

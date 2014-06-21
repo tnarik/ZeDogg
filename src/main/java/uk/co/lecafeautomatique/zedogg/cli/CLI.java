@@ -1,9 +1,5 @@
 package uk.co.lecafeautomatique.zedogg.cli;
 
-import uk.co.lecafeautomatique.zedogg.EventActionType;
-import uk.co.lecafeautomatique.zedogg.gui.GUI;
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
@@ -13,6 +9,12 @@ import java.util.StringTokenizer;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+
+import uk.co.lecafeautomatique.zedogg.gui.GUI;
+import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
+import uk.co.lecafeautomatique.zedogg.util.ems.EMSController;
+import javax.jms.JMSException;
+
 
 public class CLI {
 
@@ -69,8 +71,14 @@ public class CLI {
       printBanner();
     }
     
+
     if ( gui ) {
-      GUI gui = new GUI(EventActionType.getAllDefaultLevels(), setListenersParam, title);
+      GUI gui = new GUI(title);
+      try {
+        EMSController.startListeners(setListenersParam, gui);
+      } catch (JMSException e) {
+        e.printStackTrace();
+      }
       gui.show();
     } else {
       System.out.println("Starting in command line mode");

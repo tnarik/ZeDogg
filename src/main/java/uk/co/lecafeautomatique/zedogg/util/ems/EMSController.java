@@ -2,7 +2,6 @@ package uk.co.lecafeautomatique.zedogg.util.ems;
 
 import java.lang.reflect.Constructor;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -123,4 +122,24 @@ public class EMSController {
       (i.next()).start();
     }
   }
+
+  public static void startListeners(Set listeners, MessageListener callback) throws JMSException {
+    Iterator itrl = listeners.iterator();
+    while (itrl.hasNext()) {
+      try {
+        EMSParameters p = (EMSParameters) itrl.next();
+
+        p.setDescription(" <a href=\"" + uk.co.lecafeautomatique.zedogg.gui.GUI.URL + "\">" + 
+            uk.co.lecafeautomatique.zedogg.gui.GUI.NAME + " " + uk.co.lecafeautomatique.zedogg.gui.GUI.VERSION + "</a> ");
+
+        EMSController.startListener(p, callback);
+      } catch (ClassCastException ex) {
+        throw ex;
+      } catch (JMSException ex) {
+        throw ex;
+      }
+
+    }
+  }
+
 }
