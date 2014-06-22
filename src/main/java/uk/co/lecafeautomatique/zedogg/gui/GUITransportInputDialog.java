@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,7 +22,7 @@ public class GUITransportInputDialog extends GUIDialog {
   private JTextField _tTopic = new JTextField();
   private boolean isOK;
 
-  public GUITransportInputDialog(JFrame jframe, String title, EMSParameters defaultParameters) {
+  public GUITransportInputDialog(JFrame jframe, String title, JMSParameters defaultParameters) {
     super(jframe, title, true);
 
     JPanel bottom = new JPanel();
@@ -68,8 +69,8 @@ public class GUITransportInputDialog extends GUIDialog {
     setVisible(true);
   }
 
-  public EMSParameters getParameters() {
-    EMSParameters p = new EMSParameters();
+  public JMSParameters getParameters() {
+    JMSParameters p = new JMSParameters();
 
     p.setUserName(this._tUserName.getText());
     p.setPassword(this._tPassword.getText());

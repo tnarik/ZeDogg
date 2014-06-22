@@ -11,8 +11,9 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
 import uk.co.lecafeautomatique.zedogg.gui.GUI;
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSController;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSController;
+
 import javax.jms.JMSException;
 
 
@@ -50,9 +51,9 @@ public class CLI {
       System.exit(1);
     }
 
-    Set<EMSParameters> setListenersParam = new HashSet<EMSParameters>();
+    Set<JMSParameters> setListenersParam = new HashSet<JMSParameters>();
     for (String s : arguments) {
-      EMSParameters p = new EMSParameters();
+      JMSParameters p = new JMSParameters();
       p.configure(s);
       setListenersParam.add(p);
     }
@@ -75,7 +76,7 @@ public class CLI {
     if ( gui ) {
       GUI gui = new GUI(title);
       try {
-        EMSController.startListeners(setListenersParam, gui);
+        JMSController.startListeners(setListenersParam, gui);
       } catch (JMSException e) {
         e.printStackTrace();
       }

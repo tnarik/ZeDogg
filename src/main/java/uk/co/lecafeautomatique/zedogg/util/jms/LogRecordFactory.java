@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.ems;
+package uk.co.lecafeautomatique.zedogg.util.jms;
 
 
 import java.lang.reflect.Method;

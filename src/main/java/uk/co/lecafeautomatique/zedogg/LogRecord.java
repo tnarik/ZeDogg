@@ -1,7 +1,9 @@
 package uk.co.lecafeautomatique.zedogg;
 
-import uk.co.lecafeautomatique.zedogg.util.ems.IMarshalJMSToString;
+import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
+
 import java.io.Serializable;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 
@@ -273,7 +275,7 @@ public class LogRecord implements Serializable {
     this._millis = millis;
   }
 
-  public String toString(IMarshalJMSToString marshaller) {
+  public String toString(MarshalJMSToString marshaller) {
     StringBuffer buf = new StringBuffer();
     buf.append("LogRecord: [");
     buf.append(this._type);

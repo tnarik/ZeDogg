@@ -1,7 +1,8 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
-import uk.co.lecafeautomatique.zedogg.util.ems.IMarshalJMSToString;
+import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -9,6 +10,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.swing.JTable;
@@ -44,7 +46,7 @@ public class LogTable extends JTable {
 
   protected StringBuffer _buf = new StringBuffer();
 
-  public LogTable(JTextArea detailTextArea, IMarshalJMSToString impl) {
+  public LogTable(JTextArea detailTextArea, MarshalJMSToString impl) {
     init();
 
     this._detailTextArea = detailTextArea;
@@ -182,9 +184,9 @@ public class LogTable extends JTable {
 
   class LogTableListSelectionListener implements ListSelectionListener {
     protected JTable _table;
-    IMarshalJMSToString _impl;
+    MarshalJMSToString _impl;
 
-    public LogTableListSelectionListener(JTable table, IMarshalJMSToString impl) {
+    public LogTableListSelectionListener(JTable table, MarshalJMSToString impl) {
       this._table = table;
       this._impl = impl;
     }

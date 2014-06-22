@@ -1,12 +1,12 @@
-package uk.co.lecafeautomatique.zedogg.util.ems;
+package uk.co.lecafeautomatique.zedogg.util.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-public class MarshalJMSMsgToStringProxyImpl implements IMarshalJMSToString {
-  private IMarshalJMSToString _impl = null;
+public class MarshalJMSMsgToStringProxyImpl implements MarshalJMSToString {
+  private MarshalJMSToString _impl = null;
 
-  public void setImpl(IMarshalJMSToString impl) {
+  public void setImpl(MarshalJMSToString impl) {
     _impl = impl;
   }
 

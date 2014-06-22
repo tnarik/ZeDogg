@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.ems;
+package uk.co.lecafeautomatique.zedogg.util.jms;
 
 import java.lang.reflect.Constructor;
 
@@ -14,10 +14,12 @@ import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
 
-public class EMSController {
-  protected static final Map<EMSParameters, TopicConnection> _mapEMSConnections = new HashMap();
+public class JMSController {
+  protected static final Map<JMSParameters, TopicConnection> _mapEMSConnections = new HashMap();
 
-  public static synchronized TopicConnection getTopicConnection(EMSParameters p) throws JMSException {
+  protected static boolean _isPaused = false;
+
+  public static synchronized TopicConnection getTopicConnection(JMSParameters p) throws JMSException {
     try {
       if (_mapEMSConnections.containsKey(p)) {
         return _mapEMSConnections.get(p);
@@ -46,12 +48,12 @@ public class EMSController {
     }
   }
 
-  public static synchronized void startListener(EMSParameters p, MessageListener callback) throws JMSException {
+  public static synchronized void startListener(JMSParameters p, MessageListener callback) throws JMSException {
     if (_mapEMSConnections.containsKey(p)) {
       Iterator i = _mapEMSConnections.keySet().iterator();
 
       while (i.hasNext()) {
-        EMSParameters par = (EMSParameters) i.next();
+        JMSParameters par = (JMSParameters) i.next();
         if (par.equals(p)) {
           par.setTopics(p.getTopics());
         }
@@ -86,7 +88,7 @@ public class EMSController {
     return _mapEMSConnections.keySet();
   }
 
-  public static synchronized void stopListener(EMSParameters p) throws JMSException {
+  public static synchronized void stopListener(JMSParameters p) throws JMSException {
     if (_mapEMSConnections.containsKey(p)) {
       TopicSubscriber lsnr = (TopicSubscriber) _mapEMSConnections.get(p);
       lsnr.close();
@@ -113,6 +115,7 @@ public class EMSController {
         TopicConnection tc = i.next();
         tc.stop();
     }
+    pause();
   }
 
   public static synchronized void resumeAll() throws JMSException {
@@ -121,18 +124,31 @@ public class EMSController {
     while ((i!=null) && i.hasNext()) {
       (i.next()).start();
     }
+    resume();
+  }
+
+  public static void pause() {
+    _isPaused = true;
+  }
+
+  public static void resume() {
+    _isPaused = false;
+  }
+
+  public static boolean isPaused() {
+    return _isPaused;
   }
 
   public static void startListeners(Set listeners, MessageListener callback) throws JMSException {
     Iterator itrl = listeners.iterator();
     while (itrl.hasNext()) {
       try {
-        EMSParameters p = (EMSParameters) itrl.next();
+        JMSParameters p = (JMSParameters) itrl.next();
 
         p.setDescription(" <a href=\"" + uk.co.lecafeautomatique.zedogg.gui.GUI.URL + "\">" + 
             uk.co.lecafeautomatique.zedogg.gui.GUI.NAME + " " + uk.co.lecafeautomatique.zedogg.gui.GUI.VERSION + "</a> ");
 
-        EMSController.startListener(p, callback);
+        JMSController.startListener(p, callback);
       } catch (ClassCastException ex) {
         throw ex;
       } catch (JMSException ex) {

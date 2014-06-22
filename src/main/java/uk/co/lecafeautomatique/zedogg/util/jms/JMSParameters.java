@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.ems;
+package uk.co.lecafeautomatique.zedogg.util.jms;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class EMSParameters implements Cloneable, Serializable {
+public class JMSParameters implements Cloneable, Serializable {
   protected int _hashCode = 0;
   protected String _serverURL;
   protected String _userName;
@@ -17,7 +17,7 @@ public class EMSParameters implements Cloneable, Serializable {
   protected Set<String> _topics;
   protected String _clientId;
 
-  public EMSParameters() {
+  public JMSParameters() {
     this._serverURL = "tcp://localhost:7222";
     this._userName = "";
     this._password = "";
@@ -28,7 +28,7 @@ public class EMSParameters implements Cloneable, Serializable {
     calcHashCode();
   }
 
-  public EMSParameters(String serverurl, String name, String password, Hashtable SSLparameters,
+  public JMSParameters(String serverurl, String name, String password, Hashtable SSLparameters,
       boolean displayEMSParameters, Set<String> topics, String clientid) {
     this._serverURL = serverurl;
     this._userName = name;
@@ -39,7 +39,7 @@ public class EMSParameters implements Cloneable, Serializable {
     this._clientId = clientid;
   }
 
-  public EMSParameters(Set<String> topics, String serverurl, String name, boolean displayParameters, String password,
+  public JMSParameters(Set<String> topics, String serverurl, String name, boolean displayParameters, String password,
       String description) {
     this._topics = new HashSet();
     this._topics.addAll(topics);
@@ -239,7 +239,7 @@ public class EMSParameters implements Cloneable, Serializable {
   }
 
   public Object clone() throws CloneNotSupportedException {
-    return new EMSParameters(this._serverURL, this._userName, this._password, this._sslParameters,
+    return new JMSParameters(this._serverURL, this._userName, this._password, this._sslParameters,
         this._displayEMSParameters, this._topics, this._clientId);
   }
 
@@ -254,7 +254,7 @@ public class EMSParameters implements Cloneable, Serializable {
 
   public boolean equals(Object o) {
     if ( this == o) return true;
-    if (((o instanceof EMSParameters)) && (hashCode() == ((EMSParameters)o).hashCode())) {
+    if (((o instanceof JMSParameters)) && (hashCode() == ((JMSParameters)o).hashCode())) {
       return true;
     }
     return false;

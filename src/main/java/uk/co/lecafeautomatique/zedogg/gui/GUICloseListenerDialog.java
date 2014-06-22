@@ -1,12 +1,13 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,7 +20,7 @@ public class GUICloseListenerDialog extends GUIDialog {
   private JTextField _tServer;
   private JTextField _tTopic;
 
-  public GUICloseListenerDialog(JFrame jframe, String title, EMSParameters defaultParameters) {
+  public GUICloseListenerDialog(JFrame jframe, String title, JMSParameters defaultParameters) {
     super(jframe, title, true);
 
     JPanel bottom = new JPanel();
@@ -78,8 +79,8 @@ public class GUICloseListenerDialog extends GUIDialog {
     setVisible(true);
   }
 
-  public EMSParameters getParameters() {
-    EMSParameters p = new EMSParameters();
+  public JMSParameters getParameters() {
+    JMSParameters p = new JMSParameters();
 
     p.setServerURL(this._tServer.getText());
     p.setUserName(this._tUser.getText());

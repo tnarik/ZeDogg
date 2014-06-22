@@ -3,20 +3,17 @@ package uk.co.lecafeautomatique.zedogg.gui;
 import uk.co.lecafeautomatique.zedogg.EventActionType;
 import uk.co.lecafeautomatique.zedogg.LogRecord;
 import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
-
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerTree;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryPath;
-import uk.co.lecafeautomatique.zedogg.gui.configure.MRUListnerManager;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSController;
-import uk.co.lecafeautomatique.zedogg.util.ems.EMSParameters;
-import uk.co.lecafeautomatique.zedogg.util.ems.IMarshalJMSToString;
-import uk.co.lecafeautomatique.zedogg.util.ems.LogRecordFactory;
-import uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringProxyImpl;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
+import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
+import uk.co.lecafeautomatique.zedogg.util.jms.JMSController;
+import uk.co.lecafeautomatique.zedogg.util.jms.LogRecordFactory;
+import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSMsgToStringProxyImpl;
 
 import java.awt.Color;
 import java.awt.Component;
-
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
@@ -32,7 +29,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,8 +56,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -108,10 +102,7 @@ public class GUI implements MessageListener {
   protected List _columns = null;
   protected boolean _isDisposed = false;
 
-  protected MRUListnerManager _mruListnerManager = null;
-
-  protected EMSParameters _lastUsedParameters = new EMSParameters();
-  protected boolean _isPaused = false;
+  protected JMSParameters _lastUsedParameters = new JMSParameters();
   protected ClassLoader _cl = null;
 
   protected static String _JMSCorrelationIDTextFilter = "";
@@ -166,9 +157,9 @@ public class GUI implements MessageListener {
   public void updateBanner() {
     String sBanner = null;
     if (this._name != null) {
-      sBanner = this._name + " " + EMSController.getTransports().toString();
+      sBanner = this._name + " " + JMSController.getTransports().toString();
     } else {
-      sBanner = EMSController.getTransports().toString();
+      sBanner = JMSController.getTransports().toString();
     }
 
     sBanner = sBanner + " " + NAME + " " + VERSION;
@@ -180,7 +171,7 @@ public class GUI implements MessageListener {
     this._logMonitorFrame.dispose();
     this._isDisposed = true;
     try {
-      EMSController.shutdownAll();
+      JMSController.shutdownAll();
     } catch (Exception ex) {
       System.err.println(ex.getMessage());
     }
@@ -275,18 +266,13 @@ public class GUI implements MessageListener {
     return this._subjectExplorerTree;
   }
 
-  protected boolean isPaused() {
-    return this._isPaused;
-  }
-
   protected void pauseListeners() {
     try {
-      EMSController.pauseAll();
+      JMSController.pauseAll();
     } catch (JMSException e) {
       this._statusLabel.setText("Pause all listeners failed " + e.getMessage());
       return;
     }
-    this._isPaused = true;
     this._pauseButton.setText("Continue all listeners");
     this._pauseButton.setToolTipText("Unpause listeners");
     this._statusLabel.setText("All listeners are now paused");
@@ -304,13 +290,11 @@ public class GUI implements MessageListener {
 
   protected void resumeListeners() {
     try {
-      EMSController.resumeAll();
+      JMSController.resumeAll();
     } catch (JMSException e) {
       this._statusLabel.setText("Resume all listeners failed " + e.getMessage());
       return;
     }
-    this._isPaused = false;
-
     this._pauseButton.setText("Pause all listeners");
     this._pauseButton.setToolTipText("Put listeners on hold");
     this._statusLabel.setText("All listeners are now active");
@@ -974,7 +958,7 @@ public class GUI implements MessageListener {
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
-          EMSController.shutdownAll();
+          JMSController.shutdownAll();
         } catch (JMSException e1) {
           e1.printStackTrace();
         }
@@ -982,24 +966,6 @@ public class GUI implements MessageListener {
       }
     });
     return result;
-  }
-
-  protected void createMRUListnerListMI(JMenu menu) {
-    String[] parameters = this._mruListnerManager.getMRUFileList();
-
-    if (parameters != null) {
-      menu.addSeparator();
-      for (int i = 0; i < parameters.length; i++) {
-        JMenuItem result = new JMenuItem((i + 1) + " " + parameters[i]);
-        result.setMnemonic(i + 1);
-        result.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            GUI.this.requestOpenMRU(e);
-          }
-        });
-        menu.add(result);
-      }
-    }
   }
 
   protected JMenuItem createExitMI() {
@@ -1603,7 +1569,7 @@ public class GUI implements MessageListener {
   private ActionListener getPauseButonActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if (GUI.this.isPaused())
+        if (JMSController.isPaused())
           GUI.this.resumeListeners();
         else
           GUI.this.pauseListeners();
@@ -1726,7 +1692,7 @@ public class GUI implements MessageListener {
     getBaseFrame().setBounds(r);
   }
 
-  protected void requestNewListener(EMSParameters p) {
+  protected void requestNewListener(JMSParameters p) {
     GUIErrorDialog error;
     try {
       GUITransportInputDialog inputDialog = null;
@@ -1740,26 +1706,13 @@ public class GUI implements MessageListener {
         this._lastUsedParameters = inputDialog.getParameters();
 
         this._lastUsedParameters.setDescription("<a href=\"" + URL + "\">" + NAME + " " + VERSION + "</a> ");
-        EMSController.startListener(this._lastUsedParameters, this);
+        JMSController.startListener(this._lastUsedParameters, this);
         updateBanner();
       }
 
     } catch (JMSException ex) {
       error = new GUIErrorDialog(getBaseFrame(), "Error creating listener : " + ex.getMessage());
     }
-  }
-
-  protected void updateMRUList() {
-    JMenu menu = this._logMonitorFrame.getJMenuBar().getMenu(0);
-    menu.removeAll();
-    menu.add(createOpenMI());
-    menu.addSeparator();
-    menu.add(createSaveConfigMI());
-    menu.add(createOpenConfigMI());
-    menu.add(createCloseListener());
-    createMRUListnerListMI(menu);
-    menu.addSeparator();
-    menu.add(createExitMI());
   }
 
   protected void requestCloseListener() {
@@ -1771,23 +1724,6 @@ public class GUI implements MessageListener {
     closeAfterConfirm();
   }
 
-  protected void requestOpenMRU(ActionEvent e) {
-    String file = e.getActionCommand();
-    StringTokenizer st = new StringTokenizer(file);
-    String num = st.nextToken().trim();
-    file = st.nextToken("\n");
-    GUIErrorDialog error;
-    try {
-      int index = Integer.parseInt(num) - 1;
-
-      InputStream in = this._mruListnerManager.getInputStream(index);
-
-      this._mruListnerManager.moveToTop(index);
-      updateMRUList();
-    } catch (Exception me) {
-      error = new GUIErrorDialog(getBaseFrame(), "Unable to load file " + file);
-    }
-  }
 
   protected void requestExit() {
     setCallSystemExitOnClose(true);
@@ -1817,7 +1753,7 @@ public class GUI implements MessageListener {
   }
 
   Iterator getSubscriptions() {
-    return EMSController.getTransports().iterator();
+    return JMSController.getTransports().iterator();
   }
 
   protected static boolean loadLogFile(File file) {
@@ -1871,12 +1807,10 @@ public class GUI implements MessageListener {
   }
 
   public void onMessage(Message msg) {
-    if (isPaused()) {
+    if (JMSController.isPaused()) {
       return;
     }
-
     LogRecord r = LogRecordFactory.createLogRecordFromJMSMessage(this._statusLabel, msg);
-
     addMessage(r);
   }
 
@@ -1889,8 +1823,8 @@ public class GUI implements MessageListener {
       IllegalAccessException {
     Class c = Class.forName(rendererClass);
     Object o = c.newInstance();
-    if ((o instanceof IMarshalJMSToString))
-      _marshalImpl.setImpl((IMarshalJMSToString) o);
+    if ((o instanceof MarshalJMSToString))
+      _marshalImpl.setImpl((MarshalJMSToString) o);
     else
       this._statusLabel.setText("Class " + rendererClass + " does not implement IMarshalJMSToString");
   }

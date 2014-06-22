@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.ems;
+package uk.co.lecafeautomatique.zedogg.util.jms;
 
 import uk.co.lecafeautomatique.zedogg.util.Base64;
 import uk.co.lecafeautomatique.zedogg.util.HTMLEncoder;
@@ -14,7 +14,7 @@ import javax.jms.Queue;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
-public class MarshalJMSMsgToStringJMSStreamImpl implements IMarshalJMSToString {
+public class MarshalJMSMsgToStringJMSStreamImpl implements MarshalJMSToString {
   protected SimpleDateFormat _dfXML = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
   public String JMSMsgToString(Message message, String name) throws JMSException {
