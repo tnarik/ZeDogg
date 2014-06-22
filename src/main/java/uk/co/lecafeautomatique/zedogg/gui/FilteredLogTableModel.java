@@ -1,15 +1,17 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
 
-import uk.co.lecafeautomatique.zedogg.LogRecord;
-import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
-import uk.co.lecafeautomatique.zedogg.PassingLogRecordFilter;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
 import uk.co.lecafeautomatique.zedogg.util.HTMLEncoder;
+import uk.co.lecafeautomatique.zedogg.util.LogRecordFilter;
+import uk.co.lecafeautomatique.zedogg.util.PassingLogRecordFilter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 public class FilteredLogTableModel extends AbstractTableModel {

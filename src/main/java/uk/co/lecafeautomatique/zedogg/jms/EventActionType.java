@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.awt.Color;
 import java.io.Serializable;
@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import uk.co.lecafeautomatique.zedogg.MsgTypeFormatException;
 
 public class EventActionType implements Serializable {
   public static final EventActionType RECEIVE = new EventActionType("RECEIVE", 0);

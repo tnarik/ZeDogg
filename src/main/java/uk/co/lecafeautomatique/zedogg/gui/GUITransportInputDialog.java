@@ -1,6 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
+import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;

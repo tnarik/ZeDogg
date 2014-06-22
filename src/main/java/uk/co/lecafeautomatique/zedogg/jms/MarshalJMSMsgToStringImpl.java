@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.jms;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.text.SimpleDateFormat;
 import javax.jms.JMSException;

@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.jms;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;

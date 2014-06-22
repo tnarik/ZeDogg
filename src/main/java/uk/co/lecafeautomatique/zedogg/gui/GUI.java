@@ -1,16 +1,16 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.EventActionType;
-import uk.co.lecafeautomatique.zedogg.LogRecord;
-import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerTree;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryPath;
+import uk.co.lecafeautomatique.zedogg.jms.EventActionType;
+import uk.co.lecafeautomatique.zedogg.jms.JMSController;
+import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecordFactory;
+import uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringProxyImpl;
+import uk.co.lecafeautomatique.zedogg.jms.MarshalJMSToString;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
-import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
-import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
-import uk.co.lecafeautomatique.zedogg.util.jms.JMSController;
-import uk.co.lecafeautomatique.zedogg.util.jms.LogRecordFactory;
-import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSMsgToStringProxyImpl;
+import uk.co.lecafeautomatique.zedogg.util.LogRecordFilter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -983,8 +983,6 @@ public class GUI implements MessageListener {
     JMenu configureMenu = new JMenu("Configure");
     configureMenu.setMnemonic('c');
     configureMenu.add(createConfigureMaxRecords());
-    configureMenu.add(createConfigureDateFormat());
-
     return configureMenu;
   }
 
@@ -1005,18 +1003,6 @@ public class GUI implements MessageListener {
     return result;
   }
 
-  protected JMenuItem createConfigureDateFormat() {
-    JMenuItem result = new JMenuItem("Configure Date Format");
-    result.setMnemonic('d');
-
-    result.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        GUI.this.setDateConfiguration();
-      }
-    });
-    return result;
-  }
-
   protected void setMaxRecordConfiguration() {
     GUIInputDialog inputDialog = new GUIInputDialog(getBaseFrame(), "Set Max Number of Records", "", 10);
 
@@ -1025,28 +1011,6 @@ public class GUI implements MessageListener {
     if (temp != null)
       try {
         setMaxNumberOfLogRecords(Integer.parseInt(temp));
-      } catch (NumberFormatException e) {
-        new GUIErrorDialog(getBaseFrame(), "'" + temp
-            + "' is an invalid parameter.\nPlease try again.");
-
-        setMaxRecordConfiguration();
-      }
-  }
-
-  protected void setDateConfiguration() {
-    GUIInputDialog inputDialog = new GUIInputDialog(getBaseFrame(), "Set DateFormat", "", 10);
-
-    inputDialog.addKeyListener(new KeyAdapter() {
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == 10)
-          GUI.this.hide();
-      }
-    });
-    String temp = inputDialog.getText();
-
-    if (temp != null)
-      try {
-        setDateFormat(temp);
       } catch (NumberFormatException e) {
         new GUIErrorDialog(getBaseFrame(), "'" + temp
             + "' is an invalid parameter.\nPlease try again.");
@@ -1524,8 +1488,8 @@ public class GUI implements MessageListener {
   }
 
   private void addRenderersToRendererCombo(JComboBox rendererCombo) {
-    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl");
-    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringJMSStreamImpl");
+    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringImpl");
+    rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringJMSStreamImpl");
 
     String env = System.getenv("EMSSNOOP_RENDERERS");
     try {
@@ -1540,7 +1504,7 @@ public class GUI implements MessageListener {
 
   String getLastUsedRenderer() {
     if (this._lastUsedRenderer == null) {
-      return "uk.co.lecafeautomatique.zedogg.util.ems.MarshalJMSMsgToStringImpl";
+      return "uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringImpl";
     }
     return this._lastUsedRenderer;
   }
@@ -1807,6 +1771,7 @@ public class GUI implements MessageListener {
   }
 
   public void onMessage(Message msg) {
+    System.err.println("DEBUG got a message");
     if (JMSController.isPaused()) {
       return;
     }

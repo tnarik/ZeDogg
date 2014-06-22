@@ -1,7 +1,7 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
+import uk.co.lecafeautomatique.zedogg.jms.MarshalJMSToString;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
-import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
 
 import java.awt.Font;
 import java.awt.FontMetrics;

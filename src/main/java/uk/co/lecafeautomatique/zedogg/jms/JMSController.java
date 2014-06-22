@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.jms;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.lang.reflect.Constructor;
 
@@ -27,12 +27,13 @@ public class JMSController {
 
       TopicConnectionFactory factory = null;
 
-      Class topicConnectionFactoryClass = Class.forName("com.tibco.tibjms.TibjmsTopicConnectionFactory");
+      //Class topicConnectionFactoryClass = Class.forName("com.tibco.tibjms.TibjmsTopicConnectionFactory");
+      Class topicConnectionFactoryClass = Class.forName("org.apache.activemq.ActiveMQConnectionFactory");
       Constructor constructors[] = topicConnectionFactoryClass.getDeclaredConstructors();
       for (Constructor ctor : constructors) {
         Class<?>[] pType = ctor.getParameterTypes();
         if ((pType.length == 1) && (pType[0].equals(java.lang.String.class))) {
-          System.out.println(ctor);
+//          System.out.println("DEBUG create factory "+ctor);
           factory = (TopicConnectionFactory) ctor.newInstance(p.getServerURL());
           break;
         }
@@ -42,19 +43,24 @@ public class JMSController {
     } catch (JMSException ex) {
       throw ex;
     } catch (ClassNotFoundException ex) {
+      ex.printStackTrace();
       return null;
     } catch (Exception ex) {
+      ex.printStackTrace();
       return null;
     }
   }
 
   public static synchronized void startListener(JMSParameters p, MessageListener callback) throws JMSException {
+    System.out.println("DEBUG startListener");
+
     if (_mapEMSConnections.containsKey(p)) {
       Iterator i = _mapEMSConnections.keySet().iterator();
 
       while (i.hasNext()) {
         JMSParameters par = (JMSParameters) i.next();
         if (par.equals(p)) {
+          System.out.println("DEBUG startListener : "+p);
           par.setTopics(p.getTopics());
         }
       }
@@ -67,6 +73,9 @@ public class JMSController {
       String id = String.valueOf(getTopicConnection(p).hashCode() + n);
 
       if (!_mapEMSConnections.containsKey(id)) {
+        System.out.println("DEBUG startListener new : "+p);
+        System.out.println("DEBUG startListener callback is : "+callback);
+
         TopicConnection connection = getTopicConnection(p);
 
         TopicSession session = connection.createTopicSession(false, 1);

@@ -1,7 +1,8 @@
 package uk.co.lecafeautomatique.zedogg.gui.categoryexplorer;
 
-import uk.co.lecafeautomatique.zedogg.LogRecord;
-import uk.co.lecafeautomatique.zedogg.LogRecordFilter;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
+import uk.co.lecafeautomatique.zedogg.util.LogRecordFilter;
+
 import java.util.Enumeration;
 
 public class CategoryExplorerLogRecordFilter implements LogRecordFilter {

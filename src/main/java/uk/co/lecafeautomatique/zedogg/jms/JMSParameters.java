@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.jms;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,12 +18,16 @@ public class JMSParameters implements Cloneable, Serializable {
   protected String _clientId;
 
   public JMSParameters() {
-    this._serverURL = "tcp://localhost:7222";
+    // to simplify testing
+    this._serverURL = "tcp://localhost:2222";
     this._userName = "";
     this._password = "";
     this._sslParameters = new Hashtable();
     this._clientId = "";
-    this._topics = new HashSet();
+    // to simplify testing
+    HashSet h = new HashSet();
+    h.add("VirtualTopic.Mirror.>");
+    this._topics = h;
 
     calcHashCode();
   }

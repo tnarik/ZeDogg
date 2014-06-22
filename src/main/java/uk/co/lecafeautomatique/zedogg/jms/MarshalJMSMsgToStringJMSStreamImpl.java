@@ -1,4 +1,4 @@
-package uk.co.lecafeautomatique.zedogg.util.jms;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import uk.co.lecafeautomatique.zedogg.util.Base64;
 import uk.co.lecafeautomatique.zedogg.util.HTMLEncoder;

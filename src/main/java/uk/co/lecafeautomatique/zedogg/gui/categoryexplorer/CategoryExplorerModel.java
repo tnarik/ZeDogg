@@ -1,10 +1,12 @@
 package uk.co.lecafeautomatique.zedogg.gui.categoryexplorer;
 
-import uk.co.lecafeautomatique.zedogg.LogRecord;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
+
 import java.awt.AWTEventMulticaster;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
+
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;

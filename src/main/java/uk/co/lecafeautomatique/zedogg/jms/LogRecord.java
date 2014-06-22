@@ -1,6 +1,4 @@
-package uk.co.lecafeautomatique.zedogg;
-
-import uk.co.lecafeautomatique.zedogg.util.jms.MarshalJMSToString;
+package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.io.Serializable;
 
@@ -14,7 +12,6 @@ public class LogRecord implements Serializable {
   protected long _millis;
   protected StringBuffer _sJMSDestination = new StringBuffer();
   protected Message _message;
-  protected String _JMSReplyTo = new String();
 
   protected long _msgSeq = 0L;
   protected String _targetDestType = new String();
@@ -287,10 +284,6 @@ public class LogRecord implements Serializable {
     }
     buf.append(']');
     return buf.toString();
-  }
-
-  public void setJMSReplyTo(String replysub) {
-    this._JMSReplyTo = replysub;
   }
 
   public static synchronized void resetSequenceNumber() {

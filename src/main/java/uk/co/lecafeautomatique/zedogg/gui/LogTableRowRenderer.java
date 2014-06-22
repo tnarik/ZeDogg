@@ -1,7 +1,8 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
-import uk.co.lecafeautomatique.zedogg.EventActionType;
-import uk.co.lecafeautomatique.zedogg.LogRecord;
+import uk.co.lecafeautomatique.zedogg.jms.EventActionType;
+import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
+
 import java.awt.Color;
 import java.awt.Component;
 

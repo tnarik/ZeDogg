@@ -10,9 +10,10 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
+import uk.co.lecafeautomatique.zedogg.TestServer;
 import uk.co.lecafeautomatique.zedogg.gui.GUI;
-import uk.co.lecafeautomatique.zedogg.util.jms.JMSParameters;
-import uk.co.lecafeautomatique.zedogg.util.jms.JMSController;
+import uk.co.lecafeautomatique.zedogg.jms.JMSController;
+import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
 
 import javax.jms.JMSException;
 
@@ -72,7 +73,9 @@ public class CLI {
       printBanner();
     }
     
-
+    TestServer ts = new TestServer();
+    ts.doProducer();
+    
     if ( gui ) {
       GUI gui = new GUI(title);
       try {
