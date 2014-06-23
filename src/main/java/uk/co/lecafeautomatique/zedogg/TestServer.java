@@ -12,8 +12,13 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.util.ServiceStopper;
 
 public class TestServer {
+
+  private PeriodicProducer threadProducer;
+  private BrokerService broker;
+  private Connection connection;
 
   public class PeriodicProducer extends Thread {
     private MessageProducer producer = null;
@@ -26,14 +31,7 @@ public class TestServer {
 
     @Override
     public void run() {
-      while (true) {
-        try {
-          Thread.sleep(5000);
-        } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-
+      while (session != null) {
         try {
           TextMessage txtMessage = session.createTextMessage();
           txtMessage.setText("MyProtocolMessage");
@@ -46,28 +44,53 @@ public class TestServer {
         } catch (Exception e) {
           e.printStackTrace();
         }
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       }
     }
 
+    public void close() {
+      try {
+        session.close();
+        producer.close();
+        session = null;
+      } catch (JMSException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
 
   public TestServer() {
-    BrokerService broker = new BrokerService();
+    broker = new BrokerService();
 
     try {
       broker.addConnector("tcp://localhost:2222");
       broker.setUseMirroredQueues(true);
       broker.start();
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
 
+  public void close() {
+    try {
+      if (threadProducer != null) threadProducer.close();
+      if (connection != null) connection.close();
+      if (broker != null) {
+        broker.stopAllConnectors(new ServiceStopper());
+        broker.stop();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public void doProducer() {
     ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:2222");
-    Connection connection;
     try {
       connection = connectionFactory.createConnection();
       connection.start();
@@ -77,55 +100,11 @@ public class TestServer {
       MessageProducer producer = session.createProducer(adminQueue);
       producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-      Thread t = new PeriodicProducer(session, producer);
-      t.start();
+      threadProducer = new PeriodicProducer(session, producer);
+      threadProducer.start();
     } catch (JMSException e) {
       e.printStackTrace();
     }
   }
 
-  /*
-   * private EJBTestModule ejbModule; private ServletTestModule servletModule;
-   * private MockQueue queue;
-   * 
-   * protected void setUp() throws Exception { super.setUp(); ejbModule =
-   * createEJBTestModule(); ejbModule.bindToContext("java:ConnectionFactory",
-   * getJMSMockObjectFactory().getMockQueueConnectionFactory()); queue =
-   * getDestinationManager().createQueue("testQueue");
-   * ejbModule.bindToContext("queue/testQueue", queue); servletModule =
-   * createServletTestModule();
-   * servletModule.createServlet(PrintMessageServlet.class); }
-   * 
-   * public void testInitPrintMessageReceiver() throws Exception {
-   * verifyQueueConnectionStarted(); verifyNumberQueueSessions(1);
-   * verifyNumberQueueReceivers(0, "testQueue", 1); QueueReceiver receiver =
-   * getQueueTransmissionManager(0). getQueueReceiver("testQueue");
-   * assertTrue(receiver.getMessageListener() instanceof PrintMessageListener);
-   * }
-   * 
-   * public void testSendAndReceive() throws Exception {
-   * servletModule.addRequestParameter("customerId", "1");
-   * servletModule.doGet(); servletModule.addRequestParameter("customerId",
-   * "2"); servletModule.doGet();
-   * servletModule.addRequestParameter("customerId", "3");
-   * servletModule.doGet(); verifyNumberOfReceivedQueueMessages("testQueue", 3);
-   * verifyAllReceivedQueueMessagesAcknowledged("testQueue");
-   * verifyReceivedQueueMessageEquals("testQueue", 0, new MockTextMessage("1"));
-   * verifyReceivedQueueMessageEquals("testQueue", 1, new MockTextMessage("2"));
-   * verifyReceivedQueueMessageEquals("testQueue", 2, new MockTextMessage("3"));
-   * QueueSender sender = getQueueTransmissionManager(0).
-   * createQueueSender(queue); sender.send(new MockObjectMessage(new
-   * Integer(3))); verifyNumberOfReceivedQueueMessages("testQueue", 4);
-   * verifyReceivedQueueMessageAcknowledged("testQueue", 3);
-   * verifyNumberOfCurrentQueueMessages("testQueue", 0); }
-   * 
-   * public void testServletResponse() throws Exception {
-   * servletModule.setCaseSensitive(false);
-   * servletModule.addRequestParameter("customerId", "1");
-   * servletModule.doGet(); servletModule.verifyOutputContains("successfully");
-   * servletModule.clearOutput();
-   * getJMSMockObjectFactory().getMockQueueConnectionFactory().
-   * setJMSException(new JMSException("TestException")); servletModule.doGet();
-   * servletModule.verifyOutputContains("error"); }
-   */
 }

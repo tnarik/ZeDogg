@@ -1,12 +1,12 @@
 package uk.co.lecafeautomatique.zedogg.gui;
 
+import uk.co.lecafeautomatique.zedogg.Zedogg;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryExplorerTree;
 import uk.co.lecafeautomatique.zedogg.gui.categoryexplorer.CategoryPath;
 import uk.co.lecafeautomatique.zedogg.jms.EventActionType;
-import uk.co.lecafeautomatique.zedogg.jms.JMSController;
+
 import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
 import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
-import uk.co.lecafeautomatique.zedogg.jms.LogRecordFactory;
 import uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringProxyImpl;
 import uk.co.lecafeautomatique.zedogg.jms.MarshalJMSToString;
 import uk.co.lecafeautomatique.zedogg.util.DateFormatManager;
@@ -15,7 +15,7 @@ import uk.co.lecafeautomatique.zedogg.util.LogRecordFilter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FileDialog;
+
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -28,7 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.InputStream;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,8 +36,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+
+
 import java.util.Vector;
 
 import javax.jms.JMSException;
@@ -63,16 +63,14 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 
 public class GUI implements MessageListener {
-  public static final String DETAILED_VIEW = "Detailed";
   public static final String NAME = "ZeDogg";
   public static final String VERSION = "v0.1.0";
-  public static final String URL = "http://emsn00p.sf.net";
   public static final MarshalJMSMsgToStringProxyImpl _marshalImpl = new MarshalJMSMsgToStringProxyImpl();
 
-  protected String _name = null;
   protected JFrame _logMonitorFrame;
   protected int _logMonitorFrameWidth = 550;
   protected int _logMonitorFrameHeight = 500;
@@ -112,20 +110,22 @@ public class GUI implements MessageListener {
   private JComboBox _rendererCombo;
   protected String _lastUsedRenderer;
 
-  public GUI(String name) {
-    this(EventActionType.getAllDefaultLevels(), name);
+  private Zedogg zeDogg;
+  
+  public GUI(Zedogg z) {
+    this(EventActionType.getAllDefaultLevels(), z);
   }
 
-  public GUI(List MsgTypes, String name) {
+  public GUI(List MsgTypes, Zedogg z) {
+    this.zeDogg = z;
     this._levels = MsgTypes;
     this._columns = LogTableColumn.getLogTableColumns();
     this._columns = LogTableColumn.getLogTableColumns();
-    this._name = name;
-
+    
     initComponents();
 
     this._logMonitorFrame.addWindowListener(new LogBrokerMonitorWindowAdaptor(this));
-    updateBanner();
+    updateTitle();
   }
 
   public void onError(Object tibrvObject, int errorCode, String message, Throwable throwable) {
@@ -151,27 +151,19 @@ public class GUI implements MessageListener {
 
   public void show() {
     show(0);
-    updateBanner();
+    updateTitle();
   }
 
-  public void updateBanner() {
-    String sBanner = null;
-    if (this._name != null) {
-      sBanner = this._name + " " + JMSController.getTransports().toString();
-    } else {
-      sBanner = JMSController.getTransports().toString();
-    }
-
-    sBanner = sBanner + " " + NAME + " " + VERSION;
-
-    setTitle(sBanner);
+  public void updateTitle() {
+    String sBanner = zeDogg.getTransports().toString();
+    setTitle(sBanner + " " + NAME + " " + VERSION);
   }
 
   public void dispose() {
     this._logMonitorFrame.dispose();
     this._isDisposed = true;
     try {
-      JMSController.shutdownAll();
+      zeDogg.shutdown();
     } catch (Exception ex) {
       System.err.println(ex.getMessage());
     }
@@ -268,7 +260,7 @@ public class GUI implements MessageListener {
 
   protected void pauseListeners() {
     try {
-      JMSController.pauseAll();
+      zeDogg.pause();
     } catch (JMSException e) {
       this._statusLabel.setText("Pause all listeners failed " + e.getMessage());
       return;
@@ -290,7 +282,7 @@ public class GUI implements MessageListener {
 
   protected void resumeListeners() {
     try {
-      JMSController.resumeAll();
+      zeDogg.resume();
     } catch (JMSException e) {
       this._statusLabel.setText("Resume all listeners failed " + e.getMessage());
       return;
@@ -452,11 +444,8 @@ public class GUI implements MessageListener {
   }
 
   protected void initComponents() {
-    this._logMonitorFrame = new JFrame(this._name);
-
-    this._logMonitorFrame.setDefaultCloseOperation(0);
-
-    String resource = "/eye.gif";
+    this._logMonitorFrame = new JFrame();
+    this._logMonitorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
     URL iconURL = getClass().getResource("/eye.gif");
 
@@ -652,7 +641,7 @@ public class GUI implements MessageListener {
 
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg, NAME + " " + VERSION + " " + URL,
+              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg, NAME + " " + VERSION ,
                   GUI.this.getBaseFrame(), GUI.this._statusLabel);
             }
           });
@@ -894,7 +883,7 @@ public class GUI implements MessageListener {
     result.setMnemonic('h');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUIFileHandler.saveTableToHtml(NAME + " " + VERSION, URL, GUI.this.getBaseFrame(),
+        GUIFileHandler.saveTableToHtml(NAME + " " + VERSION, GUI.this.getBaseFrame(),
             GUI.this._statusLabel, GUI.this._table);
       }
     });
@@ -907,7 +896,7 @@ public class GUI implements MessageListener {
       public void actionPerformed(ActionEvent e) {
         GUIErrorDialog error;
         try {
-          GUIFileHandler.saveTableToTextFile(NAME+" "+VERSION + " " + URL, GUI.this.getBaseFrame(),
+          GUIFileHandler.saveTableToTextFile(NAME+" "+VERSION, GUI.this.getBaseFrame(),
               GUI.this._statusLabel, GUI.this._table);
         } catch (Exception ex) {
           error = new GUIErrorDialog(GUI.this.getBaseFrame(), ex.getMessage());
@@ -958,11 +947,11 @@ public class GUI implements MessageListener {
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
-          JMSController.shutdownAll();
+          zeDogg.shutdown();
         } catch (JMSException e1) {
           e1.printStackTrace();
         }
-        GUI.this.updateBanner();
+        GUI.this.updateTitle();
       }
     });
     return result;
@@ -1052,12 +1041,12 @@ public class GUI implements MessageListener {
   }
 
   protected void showPropertiesDialog(String title) {
-    JOptionPane.showMessageDialog(this._logMonitorFrame, this._displayedLogBrokerProperties.toArray(), title, -1);
+    JOptionPane.showMessageDialog(_logMonitorFrame, _displayedLogBrokerProperties.toArray(), title, -1);
   }
 
   protected void showAboutDialog(String title) {
     JOptionPane.showMessageDialog(this._logMonitorFrame, new String[] { NAME, " ", VERSION, " ",
-        "Constructed by Orjan Lundberg <lundberg@home.se>", " ",
+        "Developed by Tnarik Innael <tnarik@lecafeautomatique.co.uk>", " ",
         "This product includes software developed by the Apache Software Foundation (http://www.apache.org/). ", " ",
         "Based on Jakarta log4J LogFactor5, Contributed by ThoughtWorks Inc.", " ",
         "Copyright (C) The Apache Software Foundation. All rights reserved.", " ",
@@ -1141,8 +1130,7 @@ public class GUI implements MessageListener {
 
           FilteredLogTableModel ftm = GUI.this._table.getFilteredLogTableModel();
 
-          String sTID = (String) GUI.this._table.getModel().getValueAt(selectedRow,
-              GUI.this._table.getTIDColumnID());
+          String sTID = (String) GUI.this._table.getModel().getValueAt(selectedRow, GUI.this._table.getTIDColumnID());
           if (sTID != null) {
             GUI.this.setTIDTextFilter(sTID);
             GUI.this.filterByTID();
@@ -1167,8 +1155,7 @@ public class GUI implements MessageListener {
 
           FilteredLogTableModel ftm = GUI.this._table.getFilteredLogTableModel();
 
-          String sHNF = (String) GUI.this._table.getModel().getValueAt(selectedRow,
-              GUI.this._table.getConnHostnameColumnID());
+          String sHNF = (String) GUI.this._table.getModel().getValueAt(selectedRow, GUI.this._table.getConnHostnameColumnID());
 
           if (sHNF != null) {
             GUI.this.setConnHostnameTextFilter(sHNF);
@@ -1193,8 +1180,7 @@ public class GUI implements MessageListener {
 
           FilteredLogTableModel ftm = GUI.this._table.getFilteredLogTableModel();
 
-          String sHNF = (String) GUI.this._table.getModel().getValueAt(selectedRow,
-              GUI.this._table.getConnHostnameColumnID());
+          String sHNF = (String) GUI.this._table.getModel().getValueAt(selectedRow, GUI.this._table.getConnHostnameColumnID());
 
           if (sHNF != null) {
             GUI.this.setConnHostnameTextFilter(sHNF);
@@ -1241,61 +1227,39 @@ public class GUI implements MessageListener {
   }
 
   protected void setConnHostnameTextFilter(String text) {
-    if (text == null)
-      this._ConnHostnameTextFilter = "";
-    else
-      this._ConnHostnameTextFilter = text;
+    _ConnHostnameTextFilter = text;
   }
 
   protected void setSubjectTextFilter(String text) {
-    if (text == null)
-      _subjectTextFilter = "";
-    else
-      _subjectTextFilter = text;
+    _subjectTextFilter = text;
   }
 
   protected void filterByTID() {
-    String text = _JMSCorrelationIDTextFilter;
-    if ((text == null) || (text.length() == 0)) {
-      return;
-    }
+    if ((_JMSCorrelationIDTextFilter == null) || (_JMSCorrelationIDTextFilter.length() == 0)) return;
 
-    this._table.getFilteredLogTableModel().setLogRecordFilter(createTIDLogRecordFilter(text));
-
-    this._statusLabel.setText("Filtered by JMSCorrelationiD " + text);
+    _table.getFilteredLogTableModel().setLogRecordFilter(createTIDLogRecordFilter(_JMSCorrelationIDTextFilter));
+    _statusLabel.setText("Filtered by JMSCorrelationiD " + _JMSCorrelationIDTextFilter);
   }
 
   protected void filterByConnHostname() {
-    String text = this._ConnHostnameTextFilter;
-    if ((text == null) || (text.length() == 0)) {
-      return;
-    }
+    if ((_ConnHostnameTextFilter == null) || (_ConnHostnameTextFilter.length() == 0)) return;
 
-    this._table.getFilteredLogTableModel().setLogRecordFilter(createConnHostNameRecordFilter(text));
-
-    this._statusLabel.setText("Filtered by Connnection Hostname " + text);
+    _table.getFilteredLogTableModel().setLogRecordFilter(createConnHostNameRecordFilter(_ConnHostnameTextFilter));
+    _statusLabel.setText("Filtered by Connnection Hostname " + _ConnHostnameTextFilter);
   }
 
   protected void filterRemoveConnHostname() {
-    String text = this._ConnHostnameTextFilter;
-    if ((text == null) || (text.length() == 0)) {
-      return;
-    }
+    if ((_ConnHostnameTextFilter == null) || (_ConnHostnameTextFilter.length() == 0)) return;
 
-    this._table.getFilteredLogTableModel().setLogRecordFilter(createConnHostNameReverseRecordFilter(text));
-
-    this._statusLabel.setText("Filter Removed Connnection Hostname " + text);
+    _table.getFilteredLogTableModel().setLogRecordFilter(createConnHostNameReverseRecordFilter(_ConnHostnameTextFilter));
+    _statusLabel.setText("Filter Removed Connnection Hostname " + _ConnHostnameTextFilter);
   }
 
   protected void filterBySubject() {
-    String text = _subjectTextFilter;
-    if ((text == null) || (text.length() == 0)) {
-      return;
-    }
+    if ((_subjectTextFilter == null) || (_subjectTextFilter.length() == 0)) return;
 
-    this._table.getFilteredLogTableModel().setLogRecordFilter(createSubjectLogRecordFilter(text));
-
-    this._statusLabel.setText("Filtered by Destination  " + text);
+    _table.getFilteredLogTableModel().setLogRecordFilter(createSubjectLogRecordFilter(_subjectTextFilter));
+    _statusLabel.setText("Filtered by Destination  " + _subjectTextFilter);
   }
 
   protected LogRecordFilter createTIDLogRecordFilter(String text) {
@@ -1304,11 +1268,9 @@ public class GUI implements MessageListener {
       public boolean passes(LogRecord record) {
         String correlationID = record.getJMSCorrelationID();
 
-        if ((correlationID == null) || (GUI._JMSCorrelationIDTextFilter == null))
-          return false;
-        if (correlationID.indexOf(GUI._JMSCorrelationIDTextFilter) == -1) {
-          return false;
-        }
+        if ((correlationID == null) || (GUI._JMSCorrelationIDTextFilter == null)) return false;
+        if (correlationID.indexOf(GUI._JMSCorrelationIDTextFilter) == -1) return false;
+  
         CategoryPath path = new CategoryPath(record.getJMSDestination());
         return (GUI.this.getMenuItem(record.getType()).isSelected())
             && (GUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
@@ -1322,11 +1284,9 @@ public class GUI implements MessageListener {
     LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
         String subject = record.getJMSDestination();
-        if ((subject == null) || (GUI._subjectTextFilter == null))
-          return false;
-        if (subject.indexOf(GUI._subjectTextFilter) == -1) {
-          return false;
-        }
+        if ((subject == null) || (GUI._subjectTextFilter == null)) return false;
+        if (subject.indexOf(GUI._subjectTextFilter) == -1) return false;
+       
         CategoryPath path = new CategoryPath(subject);
         return (GUI.this.getMenuItem(record.getType()).isSelected())
             && (GUI.this._subjectExplorerTree.getExplorerModel().isCategoryPathActive(path));
@@ -1355,7 +1315,7 @@ public class GUI implements MessageListener {
   }
 
   protected LogRecordFilter createConnHostNameReverseRecordFilter(String text) {
-    this._ConnHostnameTextFilter = text;
+    _ConnHostnameTextFilter = text;
     LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
         String hostName = record.getConnHostName();
@@ -1379,8 +1339,7 @@ public class GUI implements MessageListener {
     editRestoreAllNDCMI.setAccelerator(KeyStroke.getKeyStroke("control R"));
     editRestoreAllNDCMI.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUI.this._table.getFilteredLogTableModel().setLogRecordFilter(
-            GUI.this.createLogRecordFilter());
+        GUI.this._table.getFilteredLogTableModel().setLogRecordFilter(GUI.this.createLogRecordFilter());
 
         GUI.this.setTIDTextFilter("");
         GUI.this._table.getFilteredLogTableModel().refresh();
@@ -1400,12 +1359,10 @@ public class GUI implements MessageListener {
     JComboBox rendererCombo = new JComboBox();
     this._rendererCombo = rendererCombo;
 
-    this._cl = getClass().getClassLoader();
-    if (this._cl == null) {
-      this._cl = ClassLoader.getSystemClassLoader();
-    }
-    URL newIconURL = this._cl.getResource("channelexplorer_new.gif");
+    _cl = getClass().getClassLoader();
+    if (_cl == null) _cl = ClassLoader.getSystemClassLoader();
 
+    URL newIconURL = _cl.getResource("channelexplorer_new.gif");
     ImageIcon newIcon = null;
 
     if (newIconURL != null) {
@@ -1427,7 +1384,7 @@ public class GUI implements MessageListener {
     });
     JButton newButton = new JButton("Clear Log Table");
 
-    URL tcIconURL = this._cl.getResource("trash.gif");
+    URL tcIconURL = _cl.getResource("trash.gif");
 
     ImageIcon tcIcon = null;
 
@@ -1443,8 +1400,8 @@ public class GUI implements MessageListener {
 
     newButton.addActionListener(getNewButtonActionListener());
 
-    this._pauseButton = new JButton("Pause all listeners");
-    this._pauseButton.addActionListener(getPauseButonActionListener());
+    _pauseButton = new JButton("Pause all listeners");
+    _pauseButton.addActionListener(getPauseButonActionListener());
 
     addFontsToFontCombo(fontCombo);
 
@@ -1491,10 +1448,10 @@ public class GUI implements MessageListener {
     rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringImpl");
     rendererCombo.addItem("uk.co.lecafeautomatique.zedogg.jms.MarshalJMSMsgToStringJMSStreamImpl");
 
-    String env = System.getenv("EMSSNOOP_RENDERERS");
+    String env = System.getProperty("RENDERERS");
     try {
       if (env != null) {
-        String[] result = env.split(";");
+        String[] result = env.split(",");
         for (int x = 0; x < result.length; x++)
           rendererCombo.addItem(result[x]);
       }
@@ -1533,7 +1490,7 @@ public class GUI implements MessageListener {
   private ActionListener getPauseButonActionListener() {
     return new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if (JMSController.isPaused())
+        if (zeDogg.isPaused())
           GUI.this.resumeListeners();
         else
           GUI.this.pauseListeners();
@@ -1633,9 +1590,8 @@ public class GUI implements MessageListener {
   }
 
   protected void setLeastSevereDisplayedLogLevel(EventActionType level) {
-    if ((level == null) || (this._leastSevereDisplayedMsgType == level)) {
-      return;
-    }
+    if ((level == null) || (this._leastSevereDisplayedMsgType == level)) return;
+
     this._leastSevereDisplayedMsgType = level;
     this._table.getFilteredLogTableModel().refresh();
     updateStatusLabel();
@@ -1660,18 +1616,13 @@ public class GUI implements MessageListener {
     GUIErrorDialog error;
     try {
       GUITransportInputDialog inputDialog = null;
-      if (p != null) {
-        inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", p);
-      } else {
-        inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", this._lastUsedParameters);
-      }
+      inputDialog = new GUITransportInputDialog(getBaseFrame(), "Add  Listener", (p != null)? p : this._lastUsedParameters);
 
       if (inputDialog.isOK()) {
         this._lastUsedParameters = inputDialog.getParameters();
 
-        this._lastUsedParameters.setDescription("<a href=\"" + URL + "\">" + NAME + " " + VERSION + "</a> ");
-        JMSController.startListener(this._lastUsedParameters, this);
-        updateBanner();
+        zeDogg.listen(this._lastUsedParameters);
+        updateTitle();
       }
 
     } catch (JMSException ex) {
@@ -1680,7 +1631,7 @@ public class GUI implements MessageListener {
   }
 
   protected void requestCloseListener() {
-    updateBanner();
+    updateTitle();
   }
 
   protected void requestClose() {
@@ -1699,8 +1650,6 @@ public class GUI implements MessageListener {
 
     message.append("Are you sure you want to exit?\n");
 
-    String title = "Are you sure you want to exit?";
-
     int value = JOptionPane.showConfirmDialog(this._logMonitorFrame, message.toString(),
         "Are you sure you want to exit?", 2, 3, null);
 
@@ -1717,7 +1666,7 @@ public class GUI implements MessageListener {
   }
 
   Iterator getSubscriptions() {
-    return JMSController.getTransports().iterator();
+    return zeDogg.getTransports().iterator();
   }
 
   protected static boolean loadLogFile(File file) {
@@ -1771,12 +1720,7 @@ public class GUI implements MessageListener {
   }
 
   public void onMessage(Message msg) {
-    System.err.println("DEBUG got a message");
-    if (JMSController.isPaused()) {
-      return;
-    }
-    LogRecord r = LogRecordFactory.createLogRecordFromJMSMessage(this._statusLabel, msg);
-    addMessage(r);
+    addMessage(LogRecord.create(msg));
   }
 
   void setLastUsedRenderer(String rendererClass) {
@@ -1797,13 +1741,13 @@ public class GUI implements MessageListener {
   private class AddLogRecordRunnable implements Runnable {
     private final LogRecord lr;
 
-    public AddLogRecordRunnable(LogRecord lr) {
-      this.lr = lr;
+    public AddLogRecordRunnable(LogRecord r) {
+      lr = r;
     }
 
     public void run() {
-      GUI.this._subjectExplorerTree.getExplorerModel().addLogRecord(this.lr);
-      GUI.this._table.getFilteredLogTableModel().addLogRecord(this.lr);
+      GUI.this._subjectExplorerTree.getExplorerModel().addLogRecord(lr);
+      GUI.this._table.getFilteredLogTableModel().addLogRecord(lr);
       GUI.this.updateStatusLabel();
     }
   }

@@ -1,5 +1,6 @@
 package uk.co.lecafeautomatique.zedogg.cli;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
@@ -11,40 +12,44 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
 import uk.co.lecafeautomatique.zedogg.TestServer;
+import uk.co.lecafeautomatique.zedogg.Zedogg;
 import uk.co.lecafeautomatique.zedogg.gui.GUI;
-import uk.co.lecafeautomatique.zedogg.jms.JMSController;
 import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
+import jline.console.ConsoleReader;
 
-public class CLI {
+public class CLI implements MessageListener {
 
   @Parameter(names = { "-g", "--gui" }, description = "Starts in GUI mode")
   private boolean gui;
-  
-  @Parameter(names = { "-t", "--title" }, description = "Title")
-  private String title;
+
+  @Parameter(names = { "-t", "--testServer" }, description = "Start Test server")
+  private boolean testServer;
 
   @Parameter(names = { "-v", "--version" }, description = "Displays the version")
   private boolean version;
-  
+
   @Parameter(names = { "-h", "--help" }, description = "Displays this help", help = true)
   private boolean help;
-  
+
   // receives other command line parameters than options
   @Parameter
   private List<String> arguments = new ArrayList<String>();
-  
+
   public static final void main(String[] args) {
     new CLI().doMain(args);
   }
-  
+
   public void doMain(String[] args) {
     // Parse the command line arguments and options
     JCommander parser = new JCommander(this);
     parser.setProgramName("CLI");
-    try{
+    try {
       parser.parse(args);
     } catch (ParameterException e) {
       System.err.println(e.getMessage());
@@ -64,28 +69,69 @@ public class CLI {
     }
 
     // Process options
-    if ( help ) {
+    if (help) {
       System.err.println(help(parser));
       System.exit(1);
     }
-    
-    if ( version ) {
+
+    if (version) {
       printBanner();
     }
-    
-    TestServer ts = new TestServer();
-    ts.doProducer();
-    
-    if ( gui ) {
-      GUI gui = new GUI(title);
+
+    TestServer ts  = null;
+    if (testServer) {
+      ts = new TestServer();
+      ts.doProducer();
+    }
+
+    Zedogg zeDogg = new Zedogg();
+
+    if (gui) {
+      GUI gui = new GUI(zeDogg);
       try {
-        JMSController.startListeners(setListenersParam, gui);
+        zeDogg.attach(gui);
+        zeDogg.listen(setListenersParam);
       } catch (JMSException e) {
         e.printStackTrace();
       }
       gui.show();
     } else {
-      System.out.println("Starting in command line mode");
+      try {
+        zeDogg.attach(this);
+        zeDogg.listen(setListenersParam);
+        try {
+          ConsoleReader reader = new ConsoleReader();
+          reader.setPrompt("zeDogg> ");
+          PrintWriter out = new PrintWriter(reader.getOutput());
+          String line = null;
+
+          int character = 0;
+
+          while ( (character = reader.readCharacter()) != -1 ) {
+//          while ((line = reader.readLine()) != null) {
+            if (character == 'n') {
+              System.out.println(zeDogg.recordCount());
+            }
+            if (character == 'q') {
+              zeDogg.shutdown();
+              break;
+            }
+            if ((line != null) && line.equalsIgnoreCase("quit")) {
+              zeDogg.shutdown();
+              break;
+            }
+          }
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      } catch (JMSException e) {
+        e.printStackTrace();
+      }
+    }
+    
+    if (testServer) {
+      ts.close();
     }
   }
 
@@ -95,7 +141,7 @@ public class CLI {
     sb.append("\nExample: CLI \"tcp://localhost:7222|admin||a.>,c.x\" \"tcp:7500|7501||b.>,q.b\"  \n");
     return sb;
   }
-  
+
   protected static void printBanner() {
     System.out.print(" on " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
     System.out.print(" " + System.getProperty("os.name") + " " + System.getProperty("os.arch"));
@@ -108,5 +154,13 @@ public class CLI {
     int a = Integer.parseInt(st.nextToken());
     int b = Integer.parseInt(st.nextToken());
     return (a >= 1) && (b >= 6);
+  }
+
+  public void onMessage(Message msg) {
+    try {
+      System.out.println(msg.getJMSMessageID());
+    } catch (JMSException e) {
+      System.err.println(e.getMessage());
+    }
   }
 }

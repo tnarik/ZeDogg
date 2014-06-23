@@ -12,137 +12,86 @@ public class JMSParameters implements Cloneable, Serializable {
   protected String _serverURL;
   protected String _userName;
   protected String _password;
-  protected Hashtable _sslParameters;
   protected boolean _displayEMSParameters;
   protected Set<String> _topics;
-  protected String _clientId;
 
   public JMSParameters() {
     // to simplify testing
-    this._serverURL = "tcp://localhost:2222";
-    this._userName = "";
-    this._password = "";
-    this._sslParameters = new Hashtable();
-    this._clientId = "";
-    // to simplify testing
-    HashSet h = new HashSet();
-    h.add("VirtualTopic.Mirror.>");
-    this._topics = h;
+    _serverURL = "tcp://localhost:2222";
+    _userName = "";
+    _password = "";
+    _topics = new HashSet();;
 
     calcHashCode();
   }
 
-  public JMSParameters(String serverurl, String name, String password, Hashtable SSLparameters,
-      boolean displayEMSParameters, Set<String> topics, String clientid) {
-    this._serverURL = serverurl;
-    this._userName = name;
-    this._password = password;
-    this._sslParameters = SSLparameters;
-    this._displayEMSParameters = displayEMSParameters;
-    this._topics = topics;
-    this._clientId = clientid;
+  public JMSParameters(String serverurl, String name, String password,
+      boolean displayEMSParameters, Set<String> topics) {
+    _serverURL = serverurl;
+    _userName = name;
+    _password = password;
+    _displayEMSParameters = displayEMSParameters;
+    _topics = topics;
   }
 
   public JMSParameters(Set<String> topics, String serverurl, String name, boolean displayParameters, String password,
-      String description) {
-    this._topics = new HashSet();
-    this._topics.addAll(topics);
-
-    this._serverURL = serverurl;
-    this._userName = name;
-    this._password = password;
-
-    this._displayEMSParameters = displayParameters;
-
-    this._clientId = description;
-
+      String clientid) {
+    _serverURL = serverurl;
+    _userName = name;
+    _password = password;
+    _displayEMSParameters = displayParameters;
+    _topics = new HashSet<String>(topics);
     calcHashCode();
-  }
-
-  public String getDescription() {
-    return this._clientId;
-  }
-
-  public void setDescription(String description) {
-    this._clientId = description;
   }
 
   protected void calcHashCode() {
     String hcstr = new String();
 
-    if (this._serverURL != null) {
-      hcstr = hcstr + this._serverURL;
-    }
+    if (_serverURL != null)  hcstr = hcstr + _serverURL;
+    if (_userName != null) hcstr = hcstr + _userName;
+    if (_password != null) hcstr = hcstr + _password;
 
-    if (this._userName != null) {
-      hcstr = hcstr + this._userName;
-    }
-
-    if (this._password != null) {
-      hcstr = hcstr + this._password;
-    }
-
-    this._hashCode = hcstr.hashCode();
-  }
-
-  public String getClientId() {
-    return this._clientId;
-  }
-
-  public void setClientId(String id) {
-    this._clientId = id;
-  }
-
-  public boolean isDisplayEMSParameters() {
-    return this._displayEMSParameters;
+    _hashCode = hcstr.hashCode();
   }
 
   public void setDisplayEMSParameters(boolean parameters) {
-    this._displayEMSParameters = parameters;
+    _displayEMSParameters = parameters;
   }
 
   public String getPassword() {
-    return this._password;
+    return _password;
   }
 
   public void setPassword(String _password) {
-    this._password = _password;
+    _password = _password;
   }
 
   public String getServerURL() {
-    return this._serverURL;
+    return _serverURL;
   }
 
   public void setServerURL(String _serverurl) {
-    this._serverURL = _serverurl;
-  }
-
-  public Hashtable getSSLParameters() {
-    return this._sslParameters;
-  }
-
-  public void setSSLParameters(Hashtable parameters) {
-    this._sslParameters = parameters;
+    _serverURL = _serverurl;
   }
 
   public Set<String> getTopics() {
-    return this._topics;
+    return _topics;
   }
 
   public void setTopics(Set<String> _topics) {
-    this._topics = _topics;
+    _topics = _topics;
   }
 
   public String getUserName() {
-    return this._userName;
+    return _userName;
   }
 
   public void setUserName(String name) {
-    this._userName = name;
+    _userName = name;
   }
 
   public int getHashCode() {
-    return this._hashCode;
+    return _hashCode;
   }
 
   public void configure(String lineString) {
@@ -162,9 +111,9 @@ public class JMSParameters implements Cloneable, Serializable {
       }
     }
 
-    this._serverURL = results[0];
-    this._userName = results[1];
-    this._password = results[2];
+    _serverURL = results[0];
+    _userName = results[1];
+    _password = results[2];
     String topics = results[3];
 
     StringTokenizer subjectTokenizer = new StringTokenizer(topics, ",", true);
@@ -172,7 +121,7 @@ public class JMSParameters implements Cloneable, Serializable {
     while (subjectTokenizer.hasMoreTokens()) {
       String sto = subjectTokenizer.nextToken();
       if (!",".equals(sto)) {
-        this._topics.add(sto);
+        _topics.add(sto);
       }
     }
 
@@ -180,18 +129,18 @@ public class JMSParameters implements Cloneable, Serializable {
   }
 
   public String toString() {
-    String sRetval = new String(this._serverURL);
+    String sRetval = new String(_serverURL);
 
     sRetval = sRetval + "|";
 
-    if (this._userName != null) {
-      sRetval = sRetval + this._userName;
+    if (_userName != null) {
+      sRetval = sRetval + _userName;
     }
 
     sRetval = sRetval + "|";
-    if (this._topics != null) {
+    if (_topics != null) {
       boolean first = true;
-      Iterator i = this._topics.iterator();
+      Iterator i = _topics.iterator();
       while (i.hasNext()) {
         if (!first) {
           sRetval = sRetval + ",";
@@ -204,19 +153,15 @@ public class JMSParameters implements Cloneable, Serializable {
     return sRetval;
   }
 
-  public boolean isDisplayParameters() {
-    return this._displayEMSParameters;
-  }
-
   public void setDisplayParameters(boolean displayParameters) {
-    this._displayEMSParameters = displayParameters;
+    _displayEMSParameters = displayParameters;
   }
 
   public String getTopic() {
     String sRetVal = new String();
 
     boolean first = true;
-    Iterator i = this._topics.iterator();
+    Iterator i = _topics.iterator();
     while (i.hasNext()) {
       if (!first) {
         sRetVal = sRetVal + ",";
@@ -228,7 +173,7 @@ public class JMSParameters implements Cloneable, Serializable {
   }
 
   public void setTopics(String subjects) {
-    if (this._topics == null) {
+    if (_topics == null) {
       throw new IllegalArgumentException("Topics may not be null");
     }
 
@@ -237,23 +182,22 @@ public class JMSParameters implements Cloneable, Serializable {
     while (subjectTokenizer.hasMoreTokens()) {
       String sto = subjectTokenizer.nextToken();
       if (!",".equals(sto)) {
-        this._topics.add(sto);
+        _topics.add(sto);
       }
     }
   }
 
   public Object clone() throws CloneNotSupportedException {
-    return new JMSParameters(this._serverURL, this._userName, this._password, this._sslParameters,
-        this._displayEMSParameters, this._topics, this._clientId);
+    return new JMSParameters(_serverURL, _userName, _password, _displayEMSParameters, _topics);
   }
 
   public void addTopic(String _subject) {
-    this._topics.add(_subject);
+    _topics.add(_subject);
     calcHashCode();
   }
 
   public int hashCode() {
-    return this._hashCode;
+    return _hashCode;
   }
 
   public boolean equals(Object o) {
