@@ -117,14 +117,14 @@ public class GUI implements MessageListener {
   }
 
   public GUI(List MsgTypes, Zedogg z) {
-    this.zeDogg = z;
-    this._levels = MsgTypes;
-    this._columns = LogTableColumn.getLogTableColumns();
-    this._columns = LogTableColumn.getLogTableColumns();
+    zeDogg = z;
+    _levels = MsgTypes;
+    _columns = LogTableColumn.getLogTableColumns();
+    _columns = LogTableColumn.getLogTableColumns();
     
     initComponents();
 
-    this._logMonitorFrame.addWindowListener(new LogBrokerMonitorWindowAdaptor(this));
+    _logMonitorFrame.addWindowListener(new LogBrokerMonitorWindowAdaptor(this));
     updateTitle();
   }
 
@@ -160,8 +160,8 @@ public class GUI implements MessageListener {
   }
 
   public void dispose() {
-    this._logMonitorFrame.dispose();
-    this._isDisposed = true;
+    _logMonitorFrame.dispose();
+    _isDisposed = true;
     try {
       zeDogg.shutdown();
     } catch (Exception ex) {
@@ -173,15 +173,15 @@ public class GUI implements MessageListener {
   }
 
   public void hide() {
-    this._logMonitorFrame.setVisible(false);
+    _logMonitorFrame.setVisible(false);
   }
 
   DateFormatManager getDateFormatManager() {
-    return this._table.getDateFormatManager();
+    return _table.getDateFormatManager();
   }
 
   void setDateFormatManager(DateFormatManager dfm) {
-    this._table.setDateFormatManager(dfm);
+    _table.setDateFormatManager(dfm);
   }
 
   public String getDateFormat() {
@@ -196,31 +196,29 @@ public class GUI implements MessageListener {
   }
 
   public boolean getCallSystemExitOnClose() {
-    return this._callSystemExitOnClose;
+    return _callSystemExitOnClose;
   }
 
   public void setCallSystemExitOnClose(boolean callSystemExitOnClose) {
-    this._callSystemExitOnClose = callSystemExitOnClose;
+    _callSystemExitOnClose = callSystemExitOnClose;
   }
 
   public void addMessage(LogRecord lr) {
-    if (this._isDisposed) {
-      return;
-    }
+    if (_isDisposed) return;
 
     SwingUtilities.invokeLater(new AddLogRecordRunnable(lr));
   }
 
   public void setMaxNumberOfLogRecords(int maxNumberOfLogRecords) {
-    this._table.getFilteredLogTableModel().setMaxNumberOfLogRecords(maxNumberOfLogRecords);
+    _table.getFilteredLogTableModel().setMaxNumberOfLogRecords(maxNumberOfLogRecords);
   }
 
   public JFrame getBaseFrame() {
-    return this._logMonitorFrame;
+    return _logMonitorFrame;
   }
 
   public void setTitle(String title) {
-    this._logMonitorFrame.setTitle(title);
+    _logMonitorFrame.setTitle(title);
   }
 
   public void setFrameSize(int width, int height) {
@@ -243,11 +241,11 @@ public class GUI implements MessageListener {
   }
 
   public Map getLogLevelMenuItems() {
-    return this._logLevelMenuItems;
+    return _logLevelMenuItems;
   }
 
   public Map getLogTableColumnMenuItems() {
-    return this._logTableColumnMenuItems;
+    return _logTableColumnMenuItems;
   }
 
   public JCheckBoxMenuItem getTableColumnMenuItem(LogTableColumn column) {
@@ -262,15 +260,15 @@ public class GUI implements MessageListener {
     try {
       zeDogg.pause();
     } catch (JMSException e) {
-      this._statusLabel.setText("Pause all listeners failed " + e.getMessage());
+      _statusLabel.setText("Pause all listeners failed " + e.getMessage());
       return;
     }
-    this._pauseButton.setText("Continue all listeners");
-    this._pauseButton.setToolTipText("Unpause listeners");
-    this._statusLabel.setText("All listeners are now paused");
+    _pauseButton.setText("Continue all listeners");
+    _pauseButton.setToolTipText("Unpause listeners");
+    _statusLabel.setText("All listeners are now paused");
 
     ImageIcon pbIcon = null;
-    URL pbIconURL = this._cl.getResource("restart.gif");
+    URL pbIconURL = _cl.getResource("restart.gif");
 
     if (pbIconURL != null) {
       pbIcon = new ImageIcon(pbIconURL);
@@ -284,35 +282,35 @@ public class GUI implements MessageListener {
     try {
       zeDogg.resume();
     } catch (JMSException e) {
-      this._statusLabel.setText("Resume all listeners failed " + e.getMessage());
+      _statusLabel.setText("Resume all listeners failed " + e.getMessage());
       return;
     }
-    this._pauseButton.setText("Pause all listeners");
-    this._pauseButton.setToolTipText("Put listeners on hold");
-    this._statusLabel.setText("All listeners are now active");
+    _pauseButton.setText("Pause all listeners");
+    _pauseButton.setToolTipText("Put listeners on hold");
+    _statusLabel.setText("All listeners are now active");
 
     ImageIcon pbIcon = null;
-    URL pbIconURL = this._cl.getResource("pauseon.gif");
+    URL pbIconURL = _cl.getResource("pauseon.gif");
 
     if (pbIconURL != null) {
       pbIcon = new ImageIcon(pbIconURL);
     }
 
     if (pbIcon != null)
-      this._pauseButton.setIcon(pbIcon);
+      _pauseButton.setIcon(pbIcon);
   }
 
   protected void setSearchText(String text) {
-    this._searchText = text;
+    _searchText = text;
   }
 
   protected void findSearchText() {
-    String text = this._searchText;
+    String text = _searchText;
     if ((text == null) || (text.length() == 0)) {
       return;
     }
     int startRow = getFirstSelectedRow();
-    int foundRow = findRecord(startRow, text, this._table.getFilteredLogTableModel().getFilteredRecords());
+    int foundRow = findRecord(startRow, text, _table.getFilteredLogTableModel().getFilteredRecords());
 
     selectRow(foundRow);
   }
@@ -332,9 +330,9 @@ public class GUI implements MessageListener {
   }
 
   protected int findRecord(int startRow, String searchText, List records) {
-    if (startRow < 0)
+    if (startRow < 0) {
       startRow = 0;
-    else {
+    } else {
       startRow++;
     }
     int len = records.size();
@@ -376,11 +374,11 @@ public class GUI implements MessageListener {
   }
 
   protected void refreshDetailTextArea() {
-    refresh(this._table._detailTextArea);
+    refresh(_table._detailTextArea);
   }
 
   protected void clearDetailTextArea() {
-    this._table._detailTextArea.setText("");
+    _table._detailTextArea.setText("");
   }
 
   public static int changeIntCombo(JComboBox box, int requestedSize) {
@@ -444,40 +442,40 @@ public class GUI implements MessageListener {
   }
 
   protected void initComponents() {
-    this._logMonitorFrame = new JFrame();
-    this._logMonitorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    _logMonitorFrame = new JFrame();
+    _logMonitorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
     URL iconURL = getClass().getResource("/eye.gif");
 
     if (iconURL != null) {
-      this._logMonitorFrame.setIconImage(new ImageIcon(iconURL).getImage());
+      _logMonitorFrame.setIconImage(new ImageIcon(iconURL).getImage());
     }
     updateFrameSize();
 
     JTextArea detailTA = createDetailTextArea();
     JScrollPane detailTAScrollPane = new JScrollPane(detailTA);
-    this._table = new LogTable(detailTA, _marshalImpl);
-    setView(this._currentView, this._table);
-    this._table.setFont(new Font(getFontName(), 0, getFontSize()));
-    this._logTableScrollPane = new JScrollPane(this._table);
+    _table = new LogTable(detailTA, _marshalImpl);
+    setView(_currentView, _table);
+    _table.setFont(new Font(getFontName(), 0, getFontSize()));
+    _logTableScrollPane = new JScrollPane(_table);
 
-    if (this._trackTableScrollPane) {
-      this._logTableScrollPane.getVerticalScrollBar().addAdjustmentListener(new TrackingAdjustmentListener());
+    if (_trackTableScrollPane) {
+      _logTableScrollPane.getVerticalScrollBar().addAdjustmentListener(new TrackingAdjustmentListener());
     }
 
     JSplitPane tableViewerSplitPane = new JSplitPane();
     tableViewerSplitPane.setOneTouchExpandable(true);
     tableViewerSplitPane.setOrientation(0);
-    tableViewerSplitPane.setLeftComponent(this._logTableScrollPane);
+    tableViewerSplitPane.setLeftComponent(_logTableScrollPane);
     tableViewerSplitPane.setRightComponent(detailTAScrollPane);
 
     tableViewerSplitPane.setDividerLocation(350);
 
     setSplitPaneTableViewer(tableViewerSplitPane);
 
-    this._subjectExplorerTree = new CategoryExplorerTree();
+    _subjectExplorerTree = new CategoryExplorerTree();
 
-    this._table.getFilteredLogTableModel().setLogRecordFilter(createLogRecordFilter());
+    _table.getFilteredLogTableModel().setLogRecordFilter(createLogRecordFilter());
 
     JScrollPane categoryExplorerTreeScrollPane = new JScrollPane(this._subjectExplorerTree);
 
@@ -641,7 +639,7 @@ public class GUI implements MessageListener {
 
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg, NAME + " " + VERSION ,
+              GUIFileHandler.saveMsgAsTextFile(sSubject, sMsg,
                   GUI.this.getBaseFrame(), GUI.this._statusLabel);
             }
           });
@@ -883,8 +881,7 @@ public class GUI implements MessageListener {
     result.setMnemonic('h');
     result.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        GUIFileHandler.saveTableToHtml(NAME + " " + VERSION, GUI.this.getBaseFrame(),
-            GUI.this._statusLabel, GUI.this._table);
+        GUIFileHandler.saveTableToHtml(GUI.this.getBaseFrame(), GUI.this._statusLabel, GUI.this._table);
       }
     });
     return result;
@@ -896,8 +893,7 @@ public class GUI implements MessageListener {
       public void actionPerformed(ActionEvent e) {
         GUIErrorDialog error;
         try {
-          GUIFileHandler.saveTableToTextFile(NAME+" "+VERSION, GUI.this.getBaseFrame(),
-              GUI.this._statusLabel, GUI.this._table);
+          GUIFileHandler.saveTableToTextFile(GUI.this.getBaseFrame(), GUI.this._statusLabel, GUI.this._table);
         } catch (Exception ex) {
           error = new GUIErrorDialog(GUI.this.getBaseFrame(), ex.getMessage());
         }
@@ -1299,7 +1295,7 @@ public class GUI implements MessageListener {
     this._ConnHostnameTextFilter = text;
     LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
-        String hostName = record.getConnHostName();
+        String hostName = record.getConnectionHostName();
         if ((hostName == null) || (GUI.this._ConnHostnameTextFilter == null))
           return false;
         if (hostName.indexOf(GUI.this._ConnHostnameTextFilter) == -1) {
@@ -1318,7 +1314,7 @@ public class GUI implements MessageListener {
     _ConnHostnameTextFilter = text;
     LogRecordFilter result = new LogRecordFilter() {
       public boolean passes(LogRecord record) {
-        String hostName = record.getConnHostName();
+        String hostName = record.getConnectionHostName();
         if ((hostName == null) || (GUI.this._ConnHostnameTextFilter == null))
           return true;
         if (hostName.compareTo(GUI.this._ConnHostnameTextFilter) == 0) {
@@ -1590,7 +1586,7 @@ public class GUI implements MessageListener {
   }
 
   protected void setLeastSevereDisplayedLogLevel(EventActionType level) {
-    if ((level == null) || (this._leastSevereDisplayedMsgType == level)) return;
+    if ((level == null) || (this._leastSevereDisplayedMsgType.equals(level))) return;
 
     this._leastSevereDisplayedMsgType = level;
     this._table.getFilteredLogTableModel().refresh();

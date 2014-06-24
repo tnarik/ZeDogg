@@ -1,6 +1,5 @@
 package uk.co.lecafeautomatique.zedogg.cli;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
@@ -19,7 +18,6 @@ import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.TextMessage;
 
 import jline.console.ConsoleReader;
 
@@ -37,6 +35,9 @@ public class CLI implements MessageListener {
   @Parameter(names = { "-h", "--help" }, description = "Displays this help", help = true)
   private boolean help;
 
+  @Parameter(names = { "-p", "--provider" }, description = "Use this server type [tibco|activemq]") 
+  private String provider = "activemq";
+  
   // receives other command line parameters than options
   @Parameter
   private List<String> arguments = new ArrayList<String>();
@@ -64,7 +65,7 @@ public class CLI implements MessageListener {
       setListenersParam.add(p);
     }
 
-    if (!checkJavaVersion()) {
+    if (!isValidJavaVersion()) {
       System.err.println("Warning: Java JRE Version 1.6.x or higher is required");
     }
 
@@ -84,7 +85,7 @@ public class CLI implements MessageListener {
       ts.doProducer();
     }
 
-    Zedogg zeDogg = new Zedogg();
+    Zedogg zeDogg = new Zedogg(provider);
 
     if (gui) {
       GUI gui = new GUI(zeDogg);
@@ -102,7 +103,6 @@ public class CLI implements MessageListener {
         try {
           ConsoleReader reader = new ConsoleReader();
           reader.setPrompt("zeDogg> ");
-          PrintWriter out = new PrintWriter(reader.getOutput());
           String line = null;
 
           int character = 0;
@@ -148,7 +148,7 @@ public class CLI implements MessageListener {
     System.out.println(" " + System.getProperty("os.version"));
   }
 
-  protected static boolean checkJavaVersion() {
+  protected static boolean isValidJavaVersion() {
     String ver = System.getProperty("java.version");
     StringTokenizer st = new StringTokenizer(ver, "._-");
     int a = Integer.parseInt(st.nextToken());
@@ -158,7 +158,9 @@ public class CLI implements MessageListener {
 
   public void onMessage(Message msg) {
     try {
-      System.out.println(msg.getJMSMessageID());
+      System.out.println(provider);
+      System.out.println(msg.getJMSMessageID()+" " +msg.getJMSCorrelationID());
+      
     } catch (JMSException e) {
       System.err.println(e.getMessage());
     }

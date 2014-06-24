@@ -147,10 +147,8 @@ public class CategoryExplorerModel extends DefaultTreeModel {
 
     if (addedCategory) {
       for (int i = 0; i < path.size(); i++) {
-        CategoryElement element = path.categoryElementAt(i);
         Enumeration children = parent.children();
 
-        boolean categoryAlreadyExists = false;
         while (children.hasMoreElements()) {
           CategoryNode node = (CategoryNode) children.nextElement();
           refresh(node);

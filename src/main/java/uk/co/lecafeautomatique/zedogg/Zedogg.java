@@ -1,17 +1,17 @@
 package uk.co.lecafeautomatique.zedogg;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.TopicConnection;
-import javax.jms.TopicSession;
-import javax.jms.TopicSubscriber;
+
+
+
 
 import uk.co.lecafeautomatique.zedogg.jms.JMSController;
 import uk.co.lecafeautomatique.zedogg.jms.JMSParameters;
@@ -20,19 +20,18 @@ import uk.co.lecafeautomatique.zedogg.jms.LogRecord;
 public class Zedogg implements MessageListener {
   private JMSController jmsController;
   
-  private List<MessageListener> messageListeners = new ArrayList();
+  private List<MessageListener> messageListeners = new ArrayList(5);
   
-  protected List<LogRecord> records = new ArrayList();
+  protected List<LogRecord> records = new ArrayList(1000);
 
-  public Zedogg() {
-    jmsController = new JMSController();
+  public Zedogg(String provider) {
+    jmsController = new JMSController(provider);
   }
 
   public void onMessage(Message msg) {
     if (isPaused()) return;
 
     LogRecord r = LogRecord.create(msg);
-    System.out.println(r);
     records.add(r);
     
     for(MessageListener ml : messageListeners) {

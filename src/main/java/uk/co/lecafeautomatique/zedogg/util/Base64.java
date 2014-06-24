@@ -60,7 +60,6 @@ public class Base64 {
 
     switch (leftover) {
     case 0:
-    default:
       break;
     case 1:
       linePos += 4;
@@ -87,6 +86,7 @@ public class Base64 {
       sb.append(encode(new byte[] { b[len], b[(len + 1)], 0 }).substring(0, 3));
 
       sb.append('=');
+     
     }
 
     if (outputLength != sb.length()) {
@@ -110,7 +110,7 @@ public class Base64 {
     int dummies = 0;
     for (int i = 0; i < len; i++) {
       int c = s.charAt(i);
-      int value = c <= 255 ? charToValue[c] : -1;
+      int value = (c <= 255) ? charToValue[c] : -1;
 
       switch (value) {
       case -1:
@@ -145,6 +145,7 @@ public class Base64 {
           b[j] = (byte) combined;
           j += 3;
           cycle = 0;
+          default:
         }
         break;
       }

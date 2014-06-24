@@ -232,9 +232,9 @@ public class FilteredLogTableModel extends AbstractTableModel {
     case 7:
       return lr.getServer();
     case 8:
-      return lr.getConnHostName();
+      return lr.getConnectionHostName();
     case 9:
-      return lr.getConnUserName();
+      return lr.getConnectionUserName();
     case 10:
       return lr.getTargetObject();
     case 11:
@@ -242,9 +242,10 @@ public class FilteredLogTableModel extends AbstractTableModel {
     case 12:
       return lr.getTargetDestType();
     case 13:
-      return lr.getConnType();
+      return lr.getConnectionType();
     case 999:
       return lr.getMessage();
+     default:
     }
     String message = "The column number " + col + " must be between 0 and 13";
     throw new IllegalArgumentException(message);
@@ -285,10 +286,10 @@ public class FilteredLogTableModel extends AbstractTableModel {
       sb.append(lr.getServer());
       break;
     case 8:
-      sb.append(lr.getConnHostName());
+      sb.append(lr.getConnectionHostName());
       break;
     case 9:
-      sb.append(lr.getConnUserName());
+      sb.append(lr.getConnectionUserName());
       break;
     case 10:
       sb.append(lr.getTargetObject());
@@ -300,7 +301,7 @@ public class FilteredLogTableModel extends AbstractTableModel {
       sb.append(lr.getTargetDestType());
       break;
     case 13:
-      sb.append(lr.getConnType());
+      sb.append(lr.getConnectionType());
       break;
     case 999:
       sb.append(lr.getMessageAsStringBuffer());
@@ -320,34 +321,24 @@ public class FilteredLogTableModel extends AbstractTableModel {
   }
 
   protected void trimRecords() {
-    if (needsTrimming())
-      trimOldestRecords();
-  }
+    if (_allRecords.size() > _maxNumberOfLogRecords) {
+      synchronized (_allRecords) {
+        int trim = (_allRecords.size() - _maxNumberOfLogRecords);
+        if (trim > 1) {
+          List oldRecords = _allRecords.subList(0, trim);
 
-  protected boolean needsTrimming() {
-    return this._allRecords.size() > this._maxNumberOfLogRecords;
-  }
-
-  protected void trimOldestRecords() {
-    synchronized (this._allRecords) {
-      int trim = numberOfRecordsToTrim();
-      if (trim > 1) {
-        List oldRecords = this._allRecords.subList(0, trim);
-
-        Iterator records = oldRecords.iterator();
-        while (records.hasNext()) {
-          LogRecord.freeInstance((LogRecord) records.next());
+          /*Iterator records = oldRecords.iterator();
+          while (records.hasNext()) {
+            LogRecord.freeInstance((LogRecord) records.next());
+          }*/
+          oldRecords.clear();
+          refresh();
+        } else {
+          _allRecords.remove(0);
+          fastRefresh();
         }
-        oldRecords.clear();
-        refresh();
-      } else {
-        this._allRecords.remove(0);
-        fastRefresh();
       }
     }
   }
 
-  private int numberOfRecordsToTrim() {
-    return this._allRecords.size() - this._maxNumberOfLogRecords;
-  }
 }

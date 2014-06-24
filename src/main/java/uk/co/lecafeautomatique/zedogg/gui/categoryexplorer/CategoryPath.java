@@ -60,12 +60,12 @@ public class CategoryPath {
 
     out.append("\nTopicPath:\n\t");
 
-    if (size() > 0)
+    if (size() > 0) {
       for (int i = 0; i < size(); i++) {
         out.append(categoryElementAt(i).toString());
         out.append("\n\t");
       }
-    else {
+    } else {
       out.append("<<NONE>>");
     }
 

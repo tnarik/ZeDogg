@@ -38,7 +38,7 @@ public class CategoryImmediateEditor extends DefaultTreeCellEditor {
     return rv;
   }
 
-  public boolean inCheckBoxHitRegion(MouseEvent e) {
+  public boolean isCheckBoxHitRegion(MouseEvent e) {
     TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
 
     if (path == null) {
@@ -58,14 +58,12 @@ public class CategoryImmediateEditor extends DefaultTreeCellEditor {
   }
 
   protected boolean canEditImmediately(EventObject e) {
-    boolean rv = false;
-
     if ((e instanceof MouseEvent)) {
       MouseEvent me = (MouseEvent) e;
-      rv = inCheckBoxHitRegion(me);
+      return isCheckBoxHitRegion(me);
     }
 
-    return rv;
+    return false;
   }
 
   protected void determineOffset(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {

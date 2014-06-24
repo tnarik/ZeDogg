@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
+
 import javax.jms.MessageListener;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
@@ -16,20 +16,27 @@ import javax.jms.TopicSubscriber;
 
 public class JMSController {
  
+  private String provider;
+  
   private boolean paused = false;
   private Map<JMSParameters, TopicConnection> JMSConnections = new HashMap();
 
-  public JMSController() {  
+  public JMSController(String prov) {
+    provider = prov;
   }
   
   public synchronized TopicConnection getTopicConnection(JMSParameters p) throws JMSException {
     try {
       if (JMSConnections.containsKey(p)) return JMSConnections.get(p);
 
+      Class topicConnectionFactoryClass = null;
       TopicConnectionFactory factory = null;
-
-      //Class topicConnectionFactoryClass = Class.forName("com.tibco.tibjms.TibjmsTopicConnectionFactory");
-      Class topicConnectionFactoryClass = Class.forName("org.apache.activemq.ActiveMQConnectionFactory");
+      if (provider.equals("tibco")) {
+        topicConnectionFactoryClass = Class.forName( (new uk.co.lecafeautomatique.zedogg.jms.provider.EMS()).getTopicConnectionFactoryClassName() );
+      } else if (provider.equals("activemq")) {
+        topicConnectionFactoryClass = Class.forName( (new uk.co.lecafeautomatique.zedogg.jms.provider.ActiveMQ()).getTopicConnectionFactoryClassName() );
+      }
+      
       Constructor constructors[] = topicConnectionFactoryClass.getDeclaredConstructors();
       for (Constructor ctor : constructors) {
         Class<?>[] pType = ctor.getParameterTypes();

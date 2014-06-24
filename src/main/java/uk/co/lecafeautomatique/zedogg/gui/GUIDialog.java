@@ -13,7 +13,7 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-public abstract class GUIDialog extends JDialog {
+public class GUIDialog extends JDialog {
   protected static final Font DISPLAY_FONT = new Font("Arial", 1, 12);
 
   protected GUIDialog(JFrame jframe, String message, boolean modal) {

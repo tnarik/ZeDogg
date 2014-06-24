@@ -55,6 +55,7 @@ public class HTMLEncoder {
       return "&amp;";
     case '\n':
       return "<BR>";
+    default:
     }
     return null;
   }

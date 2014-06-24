@@ -80,7 +80,7 @@ public class CategoryAbstractCellEditor implements TableCellEditor, TreeCellEdit
     Object[] listeners = this._listenerList.getListenerList();
 
     for (int i = listeners.length - 2; i >= 0; i -= 2)
-      if (listeners[i] == CellEditorListener.class) {
+      if (listeners[i].equals(CellEditorListener.class)) {
         if (this._changeEvent == null) {
           this._changeEvent = new ChangeEvent(this);
         }
@@ -93,7 +93,7 @@ public class CategoryAbstractCellEditor implements TableCellEditor, TreeCellEdit
     Object[] listeners = this._listenerList.getListenerList();
 
     for (int i = listeners.length - 2; i >= 0; i -= 2)
-      if (listeners[i] == CellEditorListener.class) {
+      if (listeners[i].equals(CellEditorListener.class)) {
         if (this._changeEvent == null) {
           this._changeEvent = new ChangeEvent(this);
         }

@@ -18,10 +18,8 @@ public class MarshalJMSMsgToStringJMSStreamImpl implements MarshalJMSToString {
   protected SimpleDateFormat _dfXML = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
   public String JMSMsgToString(Message message, String name) throws JMSException {
-    String strTextBuffer = "";
     StringBuffer strXmlBuffer = new StringBuffer();
     StringBuffer strHeader = new StringBuffer();
-    String strCsvFields = "";
 
     Destination destReplyTo = message.getJMSReplyTo();
     String strJMSReplyTo;
@@ -40,9 +38,9 @@ public class MarshalJMSMsgToStringJMSStreamImpl implements MarshalJMSToString {
     String strJMSCorrelationID = message.getJMSCorrelationID();
     String strJMSDeliveryMode = String.valueOf(message.getJMSDeliveryMode());
     String strJMSPriority = String.valueOf(message.getJMSPriority());
-    String strJMSType = message.getJMSType() == null ? null : message.getJMSType().toString();
-    String strJMSExpiration = message.getJMSExpiration() == 0L ? null : String.valueOf(message.getJMSExpiration());
-    String strJMSTimestamp = message.getJMSTimestamp() == 0L ? null : String.valueOf(message.getJMSTimestamp());
+    String strJMSType = (message.getJMSType() == null) ? null : message.getJMSType().toString();
+    String strJMSExpiration = (message.getJMSExpiration() == 0L) ? null : String.valueOf(message.getJMSExpiration());
+    String strJMSTimestamp = (message.getJMSTimestamp() == 0L) ? null : String.valueOf(message.getJMSTimestamp());
     Enumeration map = message.getPropertyNames();
 
     strXmlBuffer.append("<message type=\"");

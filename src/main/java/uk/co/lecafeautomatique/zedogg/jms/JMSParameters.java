@@ -2,7 +2,7 @@ package uk.co.lecafeautomatique.zedogg.jms;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Hashtable;
+
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -20,23 +20,21 @@ public class JMSParameters implements Cloneable, Serializable {
     _serverURL = "tcp://localhost:2222";
     _userName = "";
     _password = "";
-    _topics = new HashSet();;
+    _topics = new HashSet();
 
     calcHashCode();
   }
 
-  public JMSParameters(String serverurl, String name, String password,
-      boolean displayEMSParameters, Set<String> topics) {
-    _serverURL = serverurl;
+  public JMSParameters(String url, String name, String password, boolean displayEMSParameters, Set<String> topics) {
+    _serverURL = url;
     _userName = name;
     _password = password;
     _displayEMSParameters = displayEMSParameters;
     _topics = topics;
   }
 
-  public JMSParameters(Set<String> topics, String serverurl, String name, boolean displayParameters, String password,
-      String clientid) {
-    _serverURL = serverurl;
+  public JMSParameters(Set<String> topics, String url, String name, boolean displayParameters, String password, String clientid) {
+    _serverURL = url;
     _userName = name;
     _password = password;
     _displayEMSParameters = displayParameters;
@@ -62,8 +60,8 @@ public class JMSParameters implements Cloneable, Serializable {
     return _password;
   }
 
-  public void setPassword(String _password) {
-    _password = _password;
+  public void setPassword(String p) {
+    _password = p;
   }
 
   public String getServerURL() {
@@ -78,8 +76,8 @@ public class JMSParameters implements Cloneable, Serializable {
     return _topics;
   }
 
-  public void setTopics(Set<String> _topics) {
-    _topics = _topics;
+  public void setTopics(Set<String> t) {
+    _topics = t;
   }
 
   public String getUserName() {
@@ -114,15 +112,10 @@ public class JMSParameters implements Cloneable, Serializable {
     _serverURL = results[0];
     _userName = results[1];
     _password = results[2];
-    String topics = results[3];
 
-    StringTokenizer subjectTokenizer = new StringTokenizer(topics, ",", true);
-
-    while (subjectTokenizer.hasMoreTokens()) {
-      String sto = subjectTokenizer.nextToken();
-      if (!",".equals(sto)) {
-        _topics.add(sto);
-      }
+    String topics[] = results[3].split(",");
+    for(String topic: topics) {
+      _topics.add(topic);
     }
 
     calcHashCode();
@@ -177,13 +170,9 @@ public class JMSParameters implements Cloneable, Serializable {
       throw new IllegalArgumentException("Topics may not be null");
     }
 
-    StringTokenizer subjectTokenizer = new StringTokenizer(subjects, ",", true);
-
-    while (subjectTokenizer.hasMoreTokens()) {
-      String sto = subjectTokenizer.nextToken();
-      if (!",".equals(sto)) {
-        _topics.add(sto);
-      }
+    String topics[] = subjects.split(",");
+    for(String topic: topics) {
+      _topics.add(topic);
     }
   }
 

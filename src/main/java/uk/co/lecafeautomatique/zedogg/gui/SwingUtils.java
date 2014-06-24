@@ -10,12 +10,10 @@ import javax.swing.table.TableModel;
 
 public class SwingUtils {
   public static void selectRow(int row, JTable table, JScrollPane pane) {
-    if ((table == null) || (pane == null)) {
-      return;
-    }
-    if (!contains(row, table.getModel())) {
-      return;
-    }
+    if ((table == null) || (pane == null)) return;
+
+    if (!contains(row, table.getModel())) return;
+
     moveAdjustable(row * table.getRowHeight(), pane.getVerticalScrollBar());
     selectRow(row, table.getSelectionModel());
 
@@ -23,43 +21,34 @@ public class SwingUtils {
   }
 
   public static void makeScrollBarTrack(Adjustable scrollBar) {
-    if (scrollBar == null) {
-      return;
-    }
+    if (scrollBar == null) return;
+
     scrollBar.addAdjustmentListener(new TrackingAdjustmentListener());
   }
 
   public static void makeVerticalScrollBarTrack(JScrollPane pane) {
-    if (pane == null) {
-      return;
-    }
+    if (pane == null) return;
+ 
     makeScrollBarTrack(pane.getVerticalScrollBar());
   }
 
   protected static boolean contains(int row, TableModel model) {
-    if (model == null) {
-      return false;
-    }
-    if (row < 0) {
-      return false;
-    }
-    if (row >= model.getRowCount()) {
-      return false;
-    }
+    if (model == null) return false;
+    if (row < 0) return false;
+    if (row >= model.getRowCount()) return false;
+
     return true;
   }
 
   protected static void selectRow(int row, ListSelectionModel model) {
-    if (model == null) {
-      return;
-    }
+    if (model == null) return;
+
     model.setSelectionInterval(row, row);
   }
 
   protected static void moveAdjustable(int location, Adjustable scrollBar) {
-    if (scrollBar == null) {
-      return;
-    }
+    if (scrollBar == null) return;
+    
     scrollBar.setValue(location);
   }
 

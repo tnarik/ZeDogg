@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class GUIFileHandler {
-  static void saveMsgAsTextFile(String sSubject, String sMsg, String infostr, JFrame jdBase, JLabel statusLabel) {
-    File f = null;
+  static void saveMsgAsTextFile(String sSubject, String sMsg, JFrame jdBase, JLabel statusLabel) {
+    File file = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
     try {
@@ -24,13 +24,13 @@ public class GUIFileHandler {
       String filename = fd.getDirectory() + fd.getFile();
 
       if (fd.getFile() != null) {
-        f = new File(filename);
-        f.createNewFile();
+        file = new File(filename);
+        file.createNewFile();
 
-        writer = new FileWriter(f);
+        writer = new FileWriter(file);
         buf_writer = new BufferedWriter(writer);
         buf_writer.write(sMsg);
-        statusLabel.setText("Saved text file " + f.toString());
+        statusLabel.setText("Saved text file " + file.toString());
       }
     } catch (Exception ex) {
       new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
@@ -45,13 +45,12 @@ public class GUIFileHandler {
           writer.close();
         } catch (IOException e1) {
         }
-      if (f != null)
-        f = null;
+      if (file != null) file = null;
     }
   }
 
-  static void saveTableToTextFile(String infostr, JFrame jdBase, JLabel statusLabel, LogTable table) {
-    File f = null;
+  static void saveTableToTextFile(JFrame jdBase, JLabel statusLabel, LogTable table) {
+    File file = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
     try {
@@ -62,15 +61,13 @@ public class GUIFileHandler {
       String filename = fd.getDirectory() + fd.getFile();
 
       if (fd.getFile() != null) {
-        f = new File(filename);
-
-        f.createNewFile();
-
-        writer = new FileWriter(f);
+        file = new File(filename);
+        file.createNewFile();
+        writer = new FileWriter(file);
         buf_writer = new BufferedWriter(writer);
 
         buf_writer.write(table.getFilteredLogTableModel().createFilteredTextFromMsg().toString());
-        statusLabel.setText("Saved text file " + f.toString());
+        statusLabel.setText("Saved text file " + file.toString());
       }
     } catch (Exception ex) {
       new GUIErrorDialog(jdBase, "File save error " + ex.getMessage());
@@ -86,13 +83,12 @@ public class GUIFileHandler {
         } catch (IOException e1) {
         }
       }
-      if (f != null)
-        f = null;
+      if (file != null) file = null;
     }
   }
 
-  static void saveTableToHtml(String sVersion, JFrame jfBase, JLabel statusLabel, LogTable table) {
-    File f = null;
+  static void saveTableToHtml(JFrame jfBase, JLabel statusLabel, LogTable table) {
+    File file = null;
     FileWriter writer = null;
     BufferedWriter buf_writer = null;
     try {
@@ -103,17 +99,15 @@ public class GUIFileHandler {
       String filename = fd.getDirectory() + fd.getFile();
 
       if (fd.getFile() != null) {
-        f = new File(filename);
+        file = new File(filename);
+        file.createNewFile();
 
-        f.createNewFile();
-
-        writer = new FileWriter(f);
+        writer = new FileWriter(file);
         buf_writer = new BufferedWriter(writer);
         DateFormatManager dfm = new DateFormatManager("yyyy-MM-dd HH:mm:ss.S");
         buf_writer.write("<html><head>\n");
         buf_writer.write("<title>ZeDogg HTML Output Page </title>\n");
-        buf_writer.write("<META http-equiv=\"content-type\" content=\"text/html;\" charset="
-            + System.getProperty("file.encoding") + "\">");
+        buf_writer.write("<META http-equiv=\"content-type\" content=\"text/html;\" charset=" + System.getProperty("file.encoding") + "\">");
         buf_writer.write("\n<META NAME=\"description\" CONTENT=\"ems html output file.\">");
         buf_writer.write("\n<META NAME=\"keywords\" CONTENT=\"ems,tibco,zedogg\">");
         buf_writer.write("\n<META NAME=\"Author\" CONTENT=\"" + System.getProperty("user.name", "unknown") + "\">");
@@ -124,7 +118,7 @@ public class GUIFileHandler {
         buf_writer.write(table.getFilteredLogTableModel().createFilteredHTMLTable(dfm).toString());
 
         buf_writer.write("\n</body>\n</html>");
-        statusLabel.setText("Saved HTML file " + f.toString());
+        statusLabel.setText("Saved HTML file " + file.toString());
       }
     } catch (Exception ex) {
       new GUIErrorDialog(jfBase, "File save error " + ex.getMessage());
@@ -140,8 +134,7 @@ public class GUIFileHandler {
         } catch (IOException e1) {
         }
       }
-      if (f != null)
-        f = null;
+      if (file != null) file = null;
     }
   }
 }
