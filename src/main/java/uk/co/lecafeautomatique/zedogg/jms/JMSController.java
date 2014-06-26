@@ -7,36 +7,45 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.jms.JMSException;
-
 import javax.jms.MessageListener;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
 
+import uk.co.lecafeautomatique.zedogg.Zedogg;
+import uk.co.lecafeautomatique.zedogg.jms.provider.Provider;
+
 public class JMSController {
- 
+
+  private Zedogg zeDogg;
   private String provider;
-  
+
   private boolean paused = false;
   private Map<JMSParameters, TopicConnection> JMSConnections = new HashMap();
-
-  public JMSController(String prov) {
+  
+  public JMSController(Zedogg zed, String prov) {
+    zeDogg = zed;
     provider = prov;
   }
-  
+
   public synchronized TopicConnection getTopicConnection(JMSParameters p) throws JMSException {
     try {
-      if (JMSConnections.containsKey(p)) return JMSConnections.get(p);
+      if (JMSConnections.containsKey(p))
+        return JMSConnections.get(p);
 
-      Class topicConnectionFactoryClass = null;
       TopicConnectionFactory factory = null;
+      Provider prov = zeDogg.getProvider(provider);
+      Class topicConnectionFactoryClass = Class.forName(prov.getTopicConnectionFactoryClassName() );
+      /*
       if (provider.equals("tibco")) {
-        topicConnectionFactoryClass = Class.forName( (new uk.co.lecafeautomatique.zedogg.jms.provider.EMS()).getTopicConnectionFactoryClassName() );
+        topicConnectionFactoryClass = Class.forName((new uk.co.lecafeautomatique.zedogg.jms.provider.EMS())
+            .getTopicConnectionFactoryClassName());
       } else if (provider.equals("activemq")) {
-        topicConnectionFactoryClass = Class.forName( (new uk.co.lecafeautomatique.zedogg.jms.provider.ActiveMQ()).getTopicConnectionFactoryClassName() );
-      }
-      
+        topicConnectionFactoryClass = Class.forName((new uk.co.lecafeautomatique.zedogg.jms.provider.ActiveMQ())
+            .getTopicConnectionFactoryClassName());
+      }*/
+
       Constructor constructors[] = topicConnectionFactoryClass.getDeclaredConstructors();
       for (Constructor ctor : constructors) {
         Class<?>[] pType = ctor.getParameterTypes();
@@ -64,7 +73,8 @@ public class JMSController {
 
       while (i.hasNext()) {
         JMSParameters par = (JMSParameters) i.next();
-        if (par.equals(p)) par.setTopics(p.getTopics());
+        if (par.equals(p))
+          par.setTopics(p.getTopics());
       }
     }
 
@@ -73,7 +83,7 @@ public class JMSController {
     while (i.hasNext()) {
       String n = (String) i.next();
       TopicConnection connection = getTopicConnection(p);
-      String id = String.valueOf(connection.hashCode() + n); //this leaks one
+      String id = String.valueOf(connection.hashCode() + n); // this leaks one
 
       if (!JMSConnections.containsKey(id)) {
         TopicSession session = connection.createTopicSession(false, 1);
@@ -99,46 +109,46 @@ public class JMSController {
 
   public synchronized void shutdownAll() throws JMSException {
     Iterator<TopicConnection> i = JMSConnections.values().iterator();
-    while ((i!=null) && i.hasNext()) {
-        TopicConnection tc = i.next();
-        tc.stop();
-        tc.close();
+    while ((i != null) && i.hasNext()) {
+      TopicConnection tc = i.next();
+      tc.stop();
+      tc.close();
     }
 
     JMSConnections.clear();
   }
-  
+
   public synchronized void pauseAll() throws JMSException {
     Iterator<TopicConnection> i = JMSConnections.values().iterator();
 
-    while ((i!=null) && i.hasNext()) {
-        TopicConnection tc = i.next();
-        tc.stop();
+    while ((i != null) && i.hasNext()) {
+      TopicConnection tc = i.next();
+      tc.stop();
     }
     pause();
   }
-  
+
   public synchronized void resumeAll() throws JMSException {
     Iterator<TopicConnection> i = JMSConnections.values().iterator();
 
-    while ((i!=null) && i.hasNext()) {
+    while ((i != null) && i.hasNext()) {
       (i.next()).start();
     }
     resume();
   }
-  
+
   public void pause() {
     paused = true;
   }
-  
+
   public void resume() {
     paused = false;
   }
-  
+
   public boolean isPaused() {
     return paused;
   }
-  
+
   public void startListeners(Set listeners, MessageListener callback) throws JMSException {
     Iterator itrl = listeners.iterator();
     while (itrl.hasNext()) {

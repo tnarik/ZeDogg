@@ -1,0 +1,10 @@
+[
+    {
+        "symbol": "tibco",
+        "className": "uk.co.lecafeautomatique.zedogg.jms.provider.EMS"
+    },
+    {
+        "symbol": "activemq",
+        "className": "uk.co.lecafeautomatique.zedogg.jms.provider.ActiveMQ"
+    }
+]

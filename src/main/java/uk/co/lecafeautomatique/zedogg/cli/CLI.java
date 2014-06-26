@@ -35,7 +35,7 @@ public class CLI implements MessageListener {
   @Parameter(names = { "-h", "--help" }, description = "Displays this help", help = true)
   private boolean help;
 
-  @Parameter(names = { "-p", "--provider" }, description = "Use this server type [tibco|activemq]") 
+  @Parameter(names = { "-p", "--provider" }, description = "Use this jms provider type [tibco|activemq]") 
   private String provider = "activemq";
   
   // receives other command line parameters than options
